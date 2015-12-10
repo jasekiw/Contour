@@ -5,7 +5,9 @@
  * Date: 9/9/2015
  * Time: 4:13 PM
  */
+use app\libraries\tags\DataTag;
 
+/* @var DataTag $currently_viewing */
 ?>
 
 
@@ -79,64 +81,55 @@
         </ul>
 
 
-    <ul class="tags tag_{{ isset($currently_viewing) ? $currently_viewing->get_id() : -1 }}">
+    <ul class="tags tag_{!! isset($currently_viewing) ? $currently_viewing->get_id() : -1 !!}">
 
-        {{
-         /**
-         * @var app\libraries\tags\collection\TagCollection $tags
-         */
-        /* @var app\libraries\tags\DataTag $currently_viewing */
+        <?php
+             /**
+            * @var app\libraries\tags\collection\TagCollection $tags
+            */
+
         $parent = null;
-        if(isset($currently_viewing))
-        {
+        if (isset($currently_viewing)) {
             $parent = $currently_viewing->get_parent();
 
-
-            if( isset($parent ) )
-            {
+            if (isset($parent)) {
                 echo '<li><a class="tag excluded tag_' . $parent->get_id() . '" href="' . URL::action('TagController@show', [$parent->get_id()]) . '">';
                 echo '...';
                 echo '</a></li>';
-            }
-            else
-            {
+            } else {
                 echo '<li><a class="tag excluded tag_-1" href="' . route('index_tags') . '">';
                 echo '...';
                 echo '</a></li>';
             }
         }
-        foreach($tags->getAsArray() as $tag)
-        {
+        foreach ($tags->getAsArray() as $tag) {
             /**
              * @var app\libraries\tags\DataTag $tag
              */
-            if($tag->has_children())
-            {
+            if ($tag->has_children()) {
                 $contextmenue = UserInterface::makeContextMenu(array(
-                    array('title' =>'open as Excel', 'url' => URL::action('ExcelController@edit', [$tag->get_id()])),
-                    array('title' =>'rename', 'url' => 'javascript: editor.rename(' . $tag->get_id() . ')' ),
-                    array('title' =>'delete', 'url' => 'javascript: editor.delete(' . $tag->get_id() . ')' )
+                        array('title' => 'open as Excel', 'url' => URL::action('ExcelController@edit', [$tag->get_id()])),
+                        array('title' => 'rename', 'url' => 'javascript: editor.rename(' . $tag->get_id() . ')'),
+                        array('title' => 'delete', 'url' => 'javascript: editor.delete(' . $tag->get_id() . ')')
 
                 ));
-                    echo '<li><a class="tag has_menu tag_' . $tag->get_id() . ' hasChildren context type_' . $tag->get_type()->getName() .'" data-toggle="context" data-target="#' . $contextmenue . '" href="' . URL::action('TagController@show', [$tag->get_id()]) . '">';
-                    echo $tag->get_name();
-                    echo '</a></li>';
-            }
-            else
-            {
-                 $contextmenue = UserInterface::makeContextMenu(array(
-                    array('title' =>'rename', 'url' => 'javascript: editor.rename(' . $tag->get_id() . ')' ),
-                    array('title' =>'delete', 'url' => 'javascript: editor.delete(' . $tag->get_id() . ')' )
+                echo '<li><a class="tag has_menu tag_' . $tag->get_id() . ' hasChildren context type_' . $tag->get_type()->getName() . '" data-toggle="context" data-target="#' . $contextmenue . '" href="' . URL::action('TagController@show', [$tag->get_id()]) . '">';
+                echo $tag->get_name();
+                echo '</a></li>';
+            } else {
+                $contextmenue = UserInterface::makeContextMenu(array(
+                        array('title' => 'rename', 'url' => 'javascript: editor.rename(' . $tag->get_id() . ')'),
+                        array('title' => 'delete', 'url' => 'javascript: editor.delete(' . $tag->get_id() . ')')
 
                 ));
 
-                echo '<li><a class="tag has_menu tag_' . $tag->get_id() . ' context type_' . $tag->get_type()->getName() .'" data-toggle="context" data-target="#' . $contextmenue . '" href="#" >';
+                echo '<li><a class="tag has_menu tag_' . $tag->get_id() . ' context type_' . $tag->get_type()->getName() . '" data-toggle="context" data-target="#' . $contextmenue . '" href="#" >';
                 echo $tag->get_name();
                 echo '</a></li>';
             }
 
         }
-        }}
+        ?>
 
 
     </ul>

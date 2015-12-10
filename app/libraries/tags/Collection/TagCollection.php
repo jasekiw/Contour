@@ -27,6 +27,10 @@ class TagCollection
     public $tags = array();
     private $sorted = false;
 
+    const SORT_TYPE_BY_LAYERS = "BY_LAYERS";
+    const SORT_TYPE_NONE = "NONE";
+    const SORT_TYPE_BY_SORT_NUMBER = "BY_SORT_NUMBER";
+
     /**
      * Creates a new Collection Of tags. This does not change anything in the database but allows easy reference to multiple tags
      * @param DataTag[] | DataTag $inputTags
@@ -87,18 +91,26 @@ class TagCollection
 //   }
 
     /**
-     * @return DataTag[]
+     * Gets the tags as an array. Sort options are available use TagCollection::SORT_TYPE*
+     * @param string $sort The sort method to use, defaults to sort by layers
+     * @return \app\libraries\tags\DataTag[]
      */
-    public function getAsArray()
+    public function getAsArray($sort = self::SORT_TYPE_BY_LAYERS)
     {
-        if(!$this->sorted && sizeOf($this->tags) > 0)
+        if($sort == self::SORT_TYPE_NONE)
+            return $this->tags;
+        switch($sort)
         {
-            $this->sortByLayers();
+            case self::SORT_TYPE_BY_LAYERS:
+                $this->sortByLayers();
+                break;
+            case self::SORT_TYPE_BY_SORT_NUMBER:
+                $this->sortBySortNumber();
+                break;
         }
-
         return $this->tags;
-
     }
+
 
     /**
      * Gets all tags that start with the specified string. good for seperating by starting letter
@@ -318,6 +330,52 @@ class TagCollection
         return true;
     }
 
+    /**
+     * Sorts the internal array of tags by their sort numbers
+     */
+    private function sortBySortNumber()
+    {
+        if(sizeOf($this->tags) == 0)
+            return;
+
+        $oldArray = $this->tags;
+        $satisfied = false;
+        $newArray = array();
+        while(!$satisfied)
+        {
+            $count = 0;
+            $lowest = null;
+            $lowestIndex = -1;
+
+            foreach($oldArray as $index => $tag)
+            {
+                /** @var DataTag $tag */
+                if($count == 0)
+                {
+                    $lowest = $tag->get_sort_number();
+                    $lowestIndex = $index;
+                }
+                else
+                {
+                    $current = $tag->get_sort_number();
+                    if( $current < $lowest)
+                    {
+                        $lowest = $current;
+                        $lowestIndex = $index;
+                    }
+                }
+                $count++;
+            }
+            array_push($newArray, $oldArray[$lowestIndex]);
+            unset($oldArray[$lowestIndex]);
+            if(sizeOf($oldArray) == 0)
+            {
+                $satisfied = true;
+            }
+        }
+        $this->tags = $newArray;
+        $this->sorted = true;
+    }
 
     /**
      * Sorts the internal array of tags by how deep they are. Low to High

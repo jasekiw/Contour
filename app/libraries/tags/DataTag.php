@@ -292,6 +292,10 @@ class DataTag extends DatabaseObject
     }
 
 
+
+
+
+
     /**
      * Finds a child tag with name == $tagname
      * @param String $tagname
@@ -314,31 +318,37 @@ class DataTag extends DatabaseObject
 
 
 
+
+
     /**
+     * Gets a child by the sort number. WARNING: this is a recursive statement and can be slow
      * @param int $sortnumber
      * @param Type $type
      * @return DataTag
      */
     public function findChildBySortNumber($sortnumber, $type)
     {
-        $children = $this->get_children();
-        $children = $children->getAsArray();
-        foreach($children as $child)
+        $children = $this->get_children()->getAsArray(TagCollection::SORT_TYPE_BY_SORT_NUMBER);
+        foreach($children as $index => $child)
         {
-            if($child->get_type()->getName() == $type->getName()) // is of right type
+            if(($index +1) >= sizeOf($children))
+                $nextChild = null;
+            else
+                $nextChild = $children[$index +1];
+            if($child->get_type()->getName() != $type->getName()) // is not of right type
+                continue;
+            if($child->get_sort_number() == $sortnumber )
+                return $child;
+
+            // if sort number less than required sort number and this has children, and the next child has a sort number grator than required
+            if($child->get_sort_number() <= $sortnumber &&  $child->has_children())
             {
-                if($child->get_sort_number() <= $sortnumber && $child->findChildBySortNumber($sortnumber, $type) != null)
-                {
+                if($nextChild == null) // this is the last child :(
                     return $child->findChildBySortNumber($sortnumber, $type);
-                }
-                else if($child->get_sort_number() == $sortnumber  )
-                {
-                    return $child;
-                }
+                else if($nextChild->get_sort_number() > $sortnumber) // the next child is passed the sort number
+                    return $child->findChildBySortNumber($sortnumber, $type);
             }
-
         }
-
         return null;
     }
 

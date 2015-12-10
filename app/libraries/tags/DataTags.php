@@ -175,6 +175,7 @@ class DataTags
 
 
     /**
+     * Use this function only if you do not have the datatag object. This is slower than calling findChildBySortNumber
      * @param integer $sort_number
      * @param Type $type
      * @param integer $parent_id

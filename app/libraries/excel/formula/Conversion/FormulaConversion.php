@@ -37,7 +37,17 @@ class FormulaConversion{
 
     const EVALUATION_TYPE_SINGLE = "SINGLE";
     const EVALUATION_TYPE_RANGE = "RANGE";
+    const EVALUATION_RANGE_BEGINNING = "START";
+    const EVALUATION_RANGE_END = "STOP";
     private $evaluationType = "";
+    /**
+     * @var Point
+     */
+    private $rangeStart = null;
+    /**
+     * @var Point
+     */
+    private $rangeEnd = null;
 
 
 
@@ -49,6 +59,16 @@ class FormulaConversion{
      */
     public function ConvertToTagFormat($datablock)
     {
+        /**
+         * Speed up debugging, remove later
+         */
+//            if(!str_contains($datablock->getValue(), "Saluda"))
+//            {
+//                return $datablock->getValue();
+//            }
+        /**
+         *
+         */
         if(strContains($datablock->getValue(), '#(')) //already in tag format
             return $datablock->getValue(); // does nothing and escapes
 
@@ -130,60 +150,16 @@ class FormulaConversion{
             throw new Exception("Cannot give a range with more then one colon! range: " . print_r($ranges, true));
 
 
-        $left = $this->handleCellTags($ranges[0]);
-        $right = $this->handleCellTags($ranges[1]);
+        $left = $this->handleCellTags($ranges[0], self::EVALUATION_RANGE_BEGINNING);
+        $this->rangeStart =
+        $right = $this->handleCellTags($ranges[1], self::EVALUATION_RANGE_END);
 
-
-//        $start = $ranges[0];
-//        $stop = $ranges[1];
-//        $converter = new ChangeBase();
-//        $sheet = null;
-//        if(strContains($range, "!"))
-//            $sheet = $this->get_sheet($start);
-//        else
-//            $sheet = $this->current_sheet;
-
-
-//        $start_row = (int)regex_match(/** @lang RegExp */ "/[A-Z](\d+)/",$start ); // gets the excel start row
-//        $start_column = regex_match(/** @lang RegExp */"/([A-Z]+)\d/", $start); // get the excel start column
-//        $start_column = $converter->getNumberValue($start_column); // gets the number value of the start column
-//
-//        $stop_row = (int)regex_match(/**@lang RegExp*/"/[A-Z](\d+)/",$stop );
-//        $stop_column = regex_match(/** @lang RegExp */"/([A-Z]+)\d/", $stop);
-//        $stop_column = $converter->getNumberValue($stop_column);
 
         $answer = "(";
-//        for($y = $start_row; $y <= $stop_row; $y++)
-//        {
-//            for($x = $start_column; $x <= $stop_column; $x++)
-//            {
-//                try
-//                {
-//                    $tag = $this->lookupTagsByCell(new Point($x, $y), $sheet);
-//                    if(isset($tag))
-//                    {
-//                        $answer .= empty($tag) ? "" :  $tag ;
-//                    }
-//
-//                }
-//                catch(\Exception $e)
-//                {
-//
-//                }
-//
-//
-//            }
-//        }
-//        if(strrpos($answer, ",") == (strlen($answer) - 1))
-//        {
-//            $answer = substr($answer, 0, (strlen($answer) - 1));
-//        }
         $answer .= $left;
         $answer .= ":" . $right;
-
         $answer.= ")";
         return $answer;
-       // return $left . ":" . $right;
     }
 
 
@@ -194,6 +170,7 @@ class FormulaConversion{
      */
     private function get_sheet($operand)
     {
+
         $sheet = regex_match("/(.+?)!/", $operand);
         $sheet = str_replace(" ", "_",$sheet);
         $sheet = str_replace("'", "", $sheet);
@@ -214,21 +191,22 @@ class FormulaConversion{
     /**
      * this function assumes there are no ranges
      * @param string $location
+     * @param string $startOrFinish
      * @return string
+     * @throws \Exception
      */
-    private function handleCellTags($location)
+    private function handleCellTags($location, $startOrFinish = null)
     {
 
         if(strContains($location, "!"))
         {
-
             $sheet = $this->get_sheet($location);
-            $tag_collection = $this->lookupTagsByCell($this->remove_sheet_from_operand($location),$sheet); // location is a string
+            $tag_collection = $this->lookupTagsByCell($this->remove_sheet_from_operand($location),$sheet, $startOrFinish); // location is a string
             return $tag_collection;
         }
         else
         {
-            return $this->lookupTagsByCell($location, $this->current_sheet);
+            return $this->lookupTagsByCell($location, $this->current_sheet, $startOrFinish);
         }
 
     }
@@ -237,10 +215,11 @@ class FormulaConversion{
      * This is the lowest level method, gets the #() form
      * @param String $location The row and column
      * @param DataTag $sheet The sheet to look in
+     * @param string $startOrFinish
      * @return string
      * @throws \Exception
      */
-    private function lookupTagsByCell($location, $sheet)
+    private function lookupTagsByCell($location, $sheet, $startOrFinish = null)
     {
 
         $row = null;
@@ -260,19 +239,23 @@ class FormulaConversion{
         $column = $converter->getNumberValue($column);
 
 
+        $answer = $this->getTagCollectionFromLocation($row, $column, $sheet);
 
-        if(isset($sheet))
+        /**
+         * Location guessing, if the end of the range is whitespace we must predict where it should go
+         */
+        if(!isset($answer) && $this->evaluationType == self::EVALUATION_TYPE_RANGE && $startOrFinish == self::EVALUATION_RANGE_END)
         {
-            $rowBlock = DataTags::get_by_sort_id($row, Types::get_type_row(),$sheet->get_id());
-            if(isset($rowBlock))
+            if($this->rangeStart->getY() - $row == 0)
             {
-                $columnBlock = DataTags::get_by_sort_id($column, Types::get_type_column(), $sheet->get_id());
-                if(isset($columnBlock))
-                {
-                    $answer = new TagCollection(array($rowBlock, $columnBlock));
-                }
+                $answer = $this->getTagCollectionFromLocation($row, $column - 1, $sheet);
+            }
+            else if($this->rangeStart->getX() - $column == 0)
+            {
+                $answer = $this->getTagCollectionFromLocation($row -1, $column, $sheet);
             }
         }
+
 
         if(!isset($answer))
         {
@@ -286,10 +269,15 @@ class FormulaConversion{
         $lastIndex = (sizeOf($answer->getAsArray()) - 1);
         $lastSheet = $this->current_sheet->get_name();
 
-//        if($sheet == $this->current_sheet)
-//        {
-//
-//        }
+        /**
+         * set the locations of the start and stop of the current range set for guessing tags when the cell is blank
+         */
+        if($startOrFinish == self::EVALUATION_RANGE_BEGINNING)
+            $this->rangeStart = new Point($column, $row);
+        else if($startOrFinish == self::EVALUATION_RANGE_END)
+            $this->rangeEnd = new Point($column, $row);
+
+
         foreach($answer->getAsArray() as $tag)
         {
             if($count == $lastIndex)
@@ -308,6 +296,37 @@ class FormulaConversion{
         return $newvalue;
 
 
+    }
+
+    /**
+     * Gets the tag collection of the current row and column, if the it is not found then null is returned
+     * @param int $row
+     * @param int $column
+     * @param DataTag $sheet
+     * @return TagCollection
+     */
+    private function getTagCollectionFromLocation($row, $column, $sheet = null)
+    {
+        $answer = null;
+        if(isset($sheet))
+        {
+            if($sheet->get_name() == "Saluda" )
+            {
+                echo "STOP!";
+            }
+
+            $rowBlock = $sheet->findChildBySortNumber($row, Types::get_type_row());
+
+            if(isset($rowBlock))
+            {
+                $columnBlock = DataTags::get_by_sort_id($column, Types::get_type_column(), $sheet->get_id());
+                if(isset($columnBlock))
+                {
+                    $answer = new TagCollection(array($rowBlock, $columnBlock));
+                }
+            }
+        }
+        return $answer;
     }
 
 
