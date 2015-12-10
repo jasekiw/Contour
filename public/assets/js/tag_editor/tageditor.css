@@ -1,0 +1,26 @@
+.tag_editor {
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.7);
+    padding:20px;
+    display:none;
+    background-color:#F1F1F1;
+}
+.tag_editor .title {
+    margin-top:0;
+}
+/**
+ ***Rename UI
+ **/
+.tag_editor.rename_ui input[type=submit] {
+    margin: 5px 0;
+    float:right;
+}
+/**
+ ***Delete UI
+ **/
+.tag_editor.delete_ui .decision {
+    text-align:center;
+}
+.tag_editor.delete_ui input[type=submit] {
+    margin: 5px 10px;
+}

@@ -1,0 +1,11 @@
+<div class="tag_editor create_ui">
+    <h3 class="title">Create</h3>
+    <form method="POST" action="/tags/create">
+        <label>Type the name of the new tag and select the type</label>
+        <input type="hidden" name="parent_id" value="" />
+        <input type="text" name="name" value="" />
+        <select name="type"></select>
+        <input type="submit" value="Cancel" class="btn btn-danger cancel" />
+        <input type="submit" value="Create" class="btn btn-primary submit" />
+    </form>
+</div>
