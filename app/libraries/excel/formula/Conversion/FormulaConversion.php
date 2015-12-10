@@ -247,23 +247,18 @@ class FormulaConversion{
         $column = null;
         $answer = null;
 
-        if(is_string($location))
-        {
-            $converter = new ChangeBase();
-            $row = regex_match(/**@lang RegExp*/"/[A-Z](\d+)/",$location );
-            $column = regex_match(/**@lang RegExp*/"/([A-Z]+)\d/", $location);
-            if(!isset($row) || !isset($column))
-                return $location;
-            // gets the column and row values
-            $row = (int)$row;
-            $column = $converter->getNumberValue($column);
-        }
-        else
-        {
-            $pointlocation = $location;
-            $row = $pointlocation->getY();
-            $column = $pointlocation->getX();
-        }
+        /**
+         * Gets the row and column as integers
+         */
+        $converter = new ChangeBase();
+        $row = regex_match(/**@lang RegExp*/"/[A-Z](\d+)/",$location );
+        $column = regex_match(/**@lang RegExp*/"/([A-Z]+)\d/", $location);
+        if(!isset($row) || !isset($column))
+            return $location;
+        // gets the column and row values
+        $row = (int)$row;
+        $column = $converter->getNumberValue($column);
+
 
 
         if(isset($sheet))
