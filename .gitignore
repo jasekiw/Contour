@@ -4,3 +4,8 @@ Homestead.yaml
 Homestead.json
 .env
 .idea
+.idea/
+*.xls
+app/docs/
+app/phpDocumentor.phar
+app/docs.zip

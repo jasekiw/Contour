@@ -35,8 +35,9 @@ class FormulaConversion{
      */
     private $current_token = null;
 
-
-
+    const EVALUATION_TYPE_SINGLE = "SINGLE";
+    const EVALUATION_TYPE_RANGE = "RANGE";
+    private $evaluationType = "";
 
 
 
@@ -96,14 +97,22 @@ class FormulaConversion{
     {
         if(strContains($operand, ":") || strContains($operand, "!") ) //the value contains more than just
         {
-            if(strContains($operand, ":"))
+            if (strContains($operand, ":"))
+            {
+                $this->evaluationType = self::EVALUATION_TYPE_RANGE;
                 return $this->evaluate_range($operand);
+            }
             else
+            {
+                $this->evaluationType = self::EVALUATION_TYPE_SINGLE;
                 return $this->handleCellTags($operand);
+            }
+
         }
         else // the value is a single cell inside the same sheet
         {
-           $tags =  $this->lookupTagsByCell($operand, $this->current_sheet);
+            $this->evaluationType = self::EVALUATION_TYPE_SINGLE;
+            $tags =  $this->lookupTagsByCell($operand, $this->current_sheet);
             return $tags;
         }
     }
@@ -237,6 +246,7 @@ class FormulaConversion{
         $row = null;
         $column = null;
         $answer = null;
+
         if(is_string($location))
         {
             $converter = new ChangeBase();
@@ -254,6 +264,7 @@ class FormulaConversion{
             $row = $pointlocation->getY();
             $column = $pointlocation->getX();
         }
+
 
         if(isset($sheet))
         {
