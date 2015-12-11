@@ -25,7 +25,7 @@
 Route::get('/',array('as' => 'home', 'middleware' => 'auth', 'uses' => 'HomeController@index' ));
 //Route::get('/',array('as' => 'home',  'uses' => 'TestController@index' ));
 
-
+Route::get('/multithread',array('as' => 'multithreading', 'middleware' => 'auth', 'uses' => 'TestMultithreadingController@index' ));
 Route::get('login', 'Auth\AuthController@getLogin');
 Route::post('login', 'Auth\AuthController@postLogin');
 Route::get('logout', array('as' => 'logout', 'uses' => 'Auth\AuthController@getLogout'));
