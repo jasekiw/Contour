@@ -12,19 +12,19 @@ class CreateParentTagsReference extends Migration
      */
     public function up()
     {
-        Schema::create('parent_tags_reference', function(Blueprint $table)
-        {
-            DB::statement('
-                            CREATE TABLE parent_tags_reference (
-							tag_id INT UNSIGNED,
-							parent_tag_id INT UNSIGNED,
-							FOREIGN KEY (tag_id) REFERENCES tags (id),
-							FOREIGN KEY (parent_tag_id) REFERENCES tags (id)
-                            );
-                            ');
-            DB::statement("ALTER TABLE `parent_tags_reference` ADD `created_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ;");
-            DB::statement("ALTER TABLE `parent_tags_reference` ADD `updated_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ;");
-        });
+//        Schema::create('parent_tags_reference', function(Blueprint $table)
+//        {
+//            DB::statement('
+//                            CREATE TABLE parent_tags_reference (
+//							tag_id INT UNSIGNED,
+//							parent_tag_id INT UNSIGNED,
+//							FOREIGN KEY (tag_id) REFERENCES tags (id),
+//							FOREIGN KEY (parent_tag_id) REFERENCES tags (id)
+//                            );
+//                            ');
+//            DB::statement("ALTER TABLE `parent_tags_reference` ADD `created_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ;");
+//            DB::statement("ALTER TABLE `parent_tags_reference` ADD `updated_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ;");
+//        });
     }
 
     /**
@@ -34,6 +34,6 @@ class CreateParentTagsReference extends Migration
      */
     public function down()
     {
-        Schema::drop('parent_tags_reference');
+//        Schema::drop('parent_tags_reference');
     }
 }

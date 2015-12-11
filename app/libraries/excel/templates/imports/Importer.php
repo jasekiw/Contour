@@ -16,6 +16,7 @@ use \app\libraries\excel\templates\imports\tags\ImportHandler;
 use \app\libraries\excel\templates\imports\Datablocks\DataBlockImporter;
 use \app\libraries\excel\templates\imports\tags\RuleConstruction;
 use app\libraries\types\Types;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Importer
 {
@@ -36,7 +37,7 @@ class Importer
         $reports->create();
         $template_sheets = (new RuleConstruction())->construct();
 
-        \Excel::load(storage_path() . DIRECTORY_SEPARATOR . 'excel' . DIRECTORY_SEPARATOR .'file.xls', function($reader) use (&$all_cells, &$template_sheets, &$reports, &$facilities ){
+        Excel::load(storage_path() . DIRECTORY_SEPARATOR . 'excel' . DIRECTORY_SEPARATOR .'file.xls', function($reader) use (&$all_cells, &$template_sheets, &$reports, &$facilities ){
 
             /** @var \Maatwebsite\Excel\Readers\LaravelExcelReader $reader */
             $reader->calculate(false);
@@ -46,7 +47,7 @@ class Importer
                 /** @var \Maatwebsite\Excel\Collections\ $sheet */
                 /** @noinspection PhpUndefinedMethodInspection */
                 $sheetTitle = $sheet->getTitle();
-
+                $sheetTitle = str_replace("'", "", $sheetTitle);
                 $importer = new ImportHandler();
                 $importer->runImport($sheet,$sheetTitle, $count, $template_sheets, $reports, $facilities);
 

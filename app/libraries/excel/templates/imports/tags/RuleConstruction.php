@@ -212,6 +212,9 @@ class RuleConstruction
         $saluda->getRules()->add(ImportRule::createChildOf( new Point(2,19),new Point(2,29), new Point(2,17), Types::get_type_row()  ));
         $saluda->getRules()->add( ImportRule::createChildOf( new Point(2,33),new Point(2,39), new Point(2,31), Types::get_type_row() ) );
         $saluda->getRules()->add( ImportRule::headerTag(new Point(16,17), new Point(16,17), Types::get_type_column() ));
+
+
+
         $saluda->getRules()->add(ImportRule::createExclusion(new Point(16 ,4), new Point(16, 6)) );
         $saluda->getRules()->add(ImportRule::createExclusion(new Point(1 ,1), new Point(14, 2)) );
         $saluda->getRules()->add(ImportRule::createExclusion(new Point(1 ,20), new Point(28, 20)) );
@@ -231,7 +234,7 @@ class RuleConstruction
         $saluda->getRules()->add(ImportRule::createExclusion(new Point(3 ,40), new Point(29, 40)) );
         $saluda->getRules()->add(ImportRule::createExclusion(new Point(3 ,42), new Point(29, 42)) );
 
-        $saluda->getRules()->add(ImportRule::createExclusion(new Point(2 ,46), new Point(29, 49)) );
+        //$saluda->getRules()->add(ImportRule::createExclusion(new Point(2 ,46), new Point(29, 49)) );
         $template_sheets->add($saluda);
 
 

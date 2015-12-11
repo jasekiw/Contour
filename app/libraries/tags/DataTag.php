@@ -73,7 +73,7 @@ class DataTag extends DatabaseObject
         //$this->process_argument($type, array("string", "integer"), "type");
         if(isset($name))
         {
-            $this->name = str_replace(" ", "_", $name);
+            $this->name = DataTags::validate_name($name);
         }
         if(isset($parent_id))
         {
@@ -164,13 +164,14 @@ class DataTag extends DatabaseObject
 
 
     /**
+     * Sets the name of the tag. $name cannot be null or be blank
      * @param string $name
      */
     public function set_name($name)
     {
-        if(isset($name))
+        if(isset($name) && strlen($name) > 0)
         {
-            $this->name = str_replace(" ", "_", $name);
+            $this->name = DataTags::validate_name($name);
         }
     }
 
@@ -331,7 +332,15 @@ class DataTag extends DatabaseObject
         $children = $this->get_children()->getAsArray(TagCollection::SORT_TYPE_BY_SORT_NUMBER);
         foreach($children as $index => $child)
         {
-            if(($index +1) >= sizeOf($children))
+            if($child->get_type()->getName() != $type->getName()) // is not of right type
+               unset($children[$index]);
+        }
+
+        $children = array_values($children); // reindex the array to not have gaps
+        /** @var DataTag[] $children */
+        foreach($children as $index => $child)
+        {
+            if(($index +1) >= sizeOf($children)) //next child assignment
                 $nextChild = null;
             else
                 $nextChild = $children[$index +1];
@@ -341,7 +350,7 @@ class DataTag extends DatabaseObject
                 return $child;
 
             // if sort number less than required sort number and this has children, and the next child has a sort number grator than required
-            if($child->get_sort_number() <= $sortnumber &&  $child->has_children())
+            if($child->get_sort_number() < $sortnumber &&  $child->has_children())
             {
                 if($nextChild == null) // this is the last child :(
                     return $child->findChildBySortNumber($sortnumber, $type);

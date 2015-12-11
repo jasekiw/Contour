@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a75c81737cfca1cd89276af0374137c2",
+    "hash": "119ce9ae0445211821cbc7d5a1691ad1",
     "content-hash": "5d0f13981604e1b0a47603e498d78f80",
     "packages": [
         {
@@ -1374,16 +1374,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.1",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "a208865a5aeffc2dbbef2a5b3409887272d93f32"
+                "reference": "d762ee5b099a29044603cd4649851e81aa66cb47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a208865a5aeffc2dbbef2a5b3409887272d93f32",
-                "reference": "a208865a5aeffc2dbbef2a5b3409887272d93f32",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/d762ee5b099a29044603cd4649851e81aa66cb47",
+                "reference": "d762ee5b099a29044603cd4649851e81aa66cb47",
                 "shasum": ""
             },
             "require": {
@@ -1418,7 +1418,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2015-12-01 02:52:15"
+            "time": "2015-12-10 14:48:13"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -2612,16 +2612,16 @@
         },
         {
             "name": "venturecraft/revisionable",
-            "version": "1.23.0",
+            "version": "1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/VentureCraft/revisionable.git",
-                "reference": "75af7add8d857ac0dfcb41398f1958c7ac51d72c"
+                "reference": "99c27d94f80ae9240cec89c4276f61e748e989a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VentureCraft/revisionable/zipball/75af7add8d857ac0dfcb41398f1958c7ac51d72c",
-                "reference": "75af7add8d857ac0dfcb41398f1958c7ac51d72c",
+                "url": "https://api.github.com/repos/VentureCraft/revisionable/zipball/99c27d94f80ae9240cec89c4276f61e748e989a5",
+                "reference": "99c27d94f80ae9240cec89c4276f61e748e989a5",
                 "shasum": ""
             },
             "require": {
@@ -2656,7 +2656,7 @@
                 "model",
                 "revision"
             ],
-            "time": "2015-11-09 22:01:31"
+            "time": "2015-12-09 21:48:10"
         },
         {
             "name": "vlucas/phpdotenv",

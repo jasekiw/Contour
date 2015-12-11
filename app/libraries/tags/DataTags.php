@@ -147,6 +147,48 @@ class DataTags
     }
 
 
+    /**
+     * @param string $text
+     * @param Type $type
+     * @param int $parent_id
+     * @return DataTag|null
+     */
+    public static function get_by_string_and_type($text, $type, $parent_id = null)
+    {
+
+        $query = self::getDataTagsQueryBuilder();
+        $text = str_replace(" ", "_", $text);
+        $tag = $query->where("tags.name", "=", $text );
+        $tag->where("type_id", "=", $type->get_id());
+        if(isset($parent_id))
+            $tag->where("parent_tag_id", "=", $parent_id);
+        $tag = $tag->first();
+
+        if( isset($tag) )
+        {
+            $datatag = DataTags::get_by_row($tag);
+            return $datatag;
+        }
+
+        return null;
+    }
+
+    /**
+     * Removes unworthy characters from the tag Identifier
+     */
+    public static function validate_name($name)
+    {
+        $name = str_replace(" ", "_",$name);
+        $name = str_replace("'", "", $name);
+        $name = str_replace("\\", "", $name);
+        $name = str_replace("/", "", $name);
+        $name = str_replace("/", "", $name);
+        $name = str_replace("(", "", $name);
+        $name = str_replace(")", "", $name);
+        return $name;
+    }
+
+
 
 
     /**

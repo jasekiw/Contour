@@ -62,7 +62,7 @@ class FormulaConversion{
         /**
          * Speed up debugging, remove later
          */
-//            if(!str_contains($datablock->getValue(), "Saluda"))
+//            if(!str_contains($datablock->getValue(), "River''s Bend'"))
 //            {
 //                return $datablock->getValue();
 //            }
@@ -73,6 +73,7 @@ class FormulaConversion{
             return $datablock->getValue(); // does nothing and escapes
 
         $this->datablock = $datablock;
+
 
 
 
@@ -174,7 +175,11 @@ class FormulaConversion{
         $sheet = regex_match("/(.+?)!/", $operand);
         $sheet = str_replace(" ", "_",$sheet);
         $sheet = str_replace("'", "", $sheet);
-        $sheet = DataTags::get_by_string($sheet);
+        $sheet = DataTags::get_by_string_and_type($sheet, Types::get_type_sheet());
+        if(!isset($sheet))
+        {
+            echo "STOP!";
+        }
         return $sheet;
     }
 
@@ -310,16 +315,14 @@ class FormulaConversion{
         $answer = null;
         if(isset($sheet))
         {
-            if($sheet->get_name() == "Saluda" )
-            {
-                echo "STOP!";
-            }
+
 
             $rowBlock = $sheet->findChildBySortNumber($row, Types::get_type_row());
-
+            //$rowBlock = DataTags::get_by_sort_id($row, Types::get_type_row(), $sheet->get_id());
             if(isset($rowBlock))
             {
-                $columnBlock = DataTags::get_by_sort_id($column, Types::get_type_column(), $sheet->get_id());
+                //$columnBlock = DataTags::get_by_sort_id($column, Types::get_type_column(), $sheet->get_id());
+                $columnBlock = $sheet->findChildBySortNumber($column, Types::get_type_column());
                 if(isset($columnBlock))
                 {
                     $answer = new TagCollection(array($rowBlock, $columnBlock));
