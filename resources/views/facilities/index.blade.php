@@ -19,13 +19,13 @@ use \app\libraries\tags\DataTag;
 @section('content')
 
     <div class="facility_navigation">
-        <a class="{{ $current === "all" ? "current" : ""  }}" href="{{ route("facilities") }}">View All</a>
+        <a class="{!! $current === "all" ? "current" : ""  !!}" href="{!!   route("facilities") !!}">View All</a>
         <?php
         $alphabet = range('A', 'Z');
         foreach ($alphabet as $alpha)
         {
             ?>
-             <a class="{{ $current === $alpha ? "current" : ""  }}" href="{{route("letter_facilities", array($alpha)) }}">{{$alpha}}</a>
+             <a class="{!! $current === $alpha ? "current" : ""  !!}" href="{!! route("letter_facilities", array($alpha)) !!}">{!!$alpha!!}</a>
             <?php
         }
         ?>

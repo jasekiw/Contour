@@ -50,6 +50,7 @@ class HeaderTasks {
         View::share('logo_url', $logo_url);
         View::share('company_name', $company_name);
 
+
         //if logged in
         if(Auth::check())
         {
@@ -70,6 +71,7 @@ class HeaderTasks {
             View::share('user_id', Auth::user()->id);
             View::share('username', $username);
             View::share('user_pic', $user_pic);
+            view::share('isAdmin',  \Auth::user()->user_access_group_id == 1 ? true : false);
         }
         else
         {

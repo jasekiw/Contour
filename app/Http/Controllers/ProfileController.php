@@ -1,10 +1,20 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\user\UserMeta;
+use Auth;
+use Date;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Input;
+use Response;
+
+/**
+ * Class ProfileController
+ * @package App\Http\Controllers
+ */
 class ProfileController extends Controller {
 
 	/**

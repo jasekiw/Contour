@@ -8,10 +8,13 @@
 
 namespace app\libraries\user;
 
-
 use App\Models\User_Meta;
 use Auth;
 
+/**
+ * Class UserMeta
+ * @package app\libraries\user
+ */
 class UserMeta
 {
 
@@ -81,15 +84,13 @@ class UserMeta
      * @param $name
      * @return string
      */
-    public function save_file($name)
+    public static function save_file($name)
     {
-
         if(\Input::hasFile($name))
         {
-
             $filename = \Input::file($name)->getClientOriginalName();
             \Input::file($name)->move( \Contour::getConfigManager()->get('constants.uploads_folder'), $filename);
-            $this->save($name, \Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
+            self::save($name, \Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
             return \Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename;
         }
         return '';

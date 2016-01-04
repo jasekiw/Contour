@@ -115,24 +115,16 @@ class DataBlocks
     /**
      * This function is used to reduce the queries needed to just get the value of a datablock
      * @param DataTag[] $dataTags
-     * @return DataBlock
+     * @return Data_block
      */
     public static function getValueByTagsArray($dataTags)
     {
-
-
-
-
-
         $data = self::getQuery();
         $data = self::add_tags_to_query($data, $dataTags);
-
         $data = $data->first();
-
-        if (isset($data)) {
-            return  $data->value;
-        }
-        return null;
+        if (!isset($data))
+            return null;
+        return  $data;
     }
 
     /**

@@ -13,6 +13,13 @@ use app\libraries\tags\DataTag;
 use \app\libraries\excel\templates\imports\tags\RuleConstruction;
 use app\libraries\theme\menu\item\MenuItem;
 use app\libraries\types\Types;
+use Response;
+use Theme;
+
+/**
+ * Class UnitTestController
+ * @package App\Http\Controllers
+ */
 class UnitTestController extends Controller {
 
 	/**
@@ -40,6 +47,7 @@ class UnitTestController extends Controller {
 				return $datablock['value'];
 			}
 		}
+		return null;
 	}
 
 	/**

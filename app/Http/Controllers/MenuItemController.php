@@ -1,10 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
+use Contour;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Input;
+use Response;
+use Route;
+
 class MenuItemController extends Controller {
 
 	/**

@@ -14,7 +14,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property string $username
  * @property string $email
  * @property string $activation_code
- * @property string $user_access_level_id
+ * @property string $user_access_group_id
  * @property string $password
  * @property string $remember_token
  * @property \Carbon\Carbon $created_at

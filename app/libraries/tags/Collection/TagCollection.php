@@ -97,6 +97,7 @@ class TagCollection
      */
     public function getAsArray($sort = self::SORT_TYPE_BY_LAYERS)
     {
+
         if($sort == self::SORT_TYPE_NONE)
             return $this->tags;
         switch($sort)
@@ -335,6 +336,7 @@ class TagCollection
      */
     private function sortBySortNumber()
     {
+
         if(sizeOf($this->tags) == 0)
             return;
 
@@ -382,6 +384,7 @@ class TagCollection
      */
     private function sortByLayers()
     {
+
         if(sizeOf($this->tags) == 0)
         {
             return;
@@ -400,7 +403,9 @@ class TagCollection
                 /** @var DataTag $tag */
                 if($count == 0)
                 {
+
                     $lowest = $tag->get_layers_deep();
+
                     $lowestIndex = $index;
                 }
                 else
@@ -414,6 +419,7 @@ class TagCollection
                 }
                 $count++;
             }
+
             array_push($newArray, $oldArray[$lowestIndex]);
             unset($oldArray[$lowestIndex]);
             if(sizeOf($oldArray) == 0)

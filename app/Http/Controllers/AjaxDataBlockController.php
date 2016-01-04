@@ -5,7 +5,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
 
+/**
+ * Class AjaxDataBlockController
+ * @package App\Http\Controllers
+ */
 class AjaxDataBlockController extends Controller {
 
 	/**
@@ -42,30 +47,17 @@ class AjaxDataBlockController extends Controller {
 	 */
 	public function store()
 	{
-		//
-	}
-
-	/**
-	 *Post tag ids to get all associates datablocks
-     */
-	public function get_multiple_by_tags()
-	{
-
-		$tagIds = Input::get("tags");
-		foreach($tagIds as $id)
-		{
-			//TODO: add logic
-		}
-		var_dump($tagIds);
 
 	}
+
+
 
 	/**
 	 * Display the specified resource.
 	 * GET /ajaxdatablock/{id}
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return \Response
 	 */
 	public function show($id)
 	{
@@ -77,7 +69,7 @@ class AjaxDataBlockController extends Controller {
 	 * GET /ajaxdatablock/{id}/edit
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return \Response
 	 */
 	public function edit($id)
 	{
@@ -89,7 +81,7 @@ class AjaxDataBlockController extends Controller {
 	 * PUT /ajaxdatablock/{id}
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return \Response
 	 */
 	public function update($id)
 	{

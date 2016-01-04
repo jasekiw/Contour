@@ -5,7 +5,13 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
+use Theme;
 
+/**
+ * Class AjaxController
+ * @package App\Http\Controllers
+ */
 class AjaxController extends Controller {
 
 
@@ -23,7 +29,7 @@ class AjaxController extends Controller {
 		$parameters = explode("/",$id);
 		$id = $parameters[0];
 		array_shift($parameters);
-		Theme::get_ajax_manager()->call_script_get($id, $parameters );
+		\Theme::get_ajax_manager()->call_script_get($id, $parameters );
 	}
 
 

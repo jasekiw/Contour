@@ -1,12 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use app\libraries\excel\templates\imports\Importer;
 use \app\libraries\excel\templates\imports\Datablocks\DataBlockImporter;
+use Response;
+use URL;
 
 /**
  * Class ExcelController
@@ -80,26 +83,13 @@ class ExcelController extends Controller {
 	 */
 	public function store()
 	{
-		//
-
-		//require storage_path() . '/kint/Kint.class.php';
 		$this->turn_on_error_reporting();
 		$importer = new Importer();
 		$importer->run();
 
 	}
 
-	/**
-	 * Display the specified resource.
-	 * GET /excel/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
 
-	}
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -110,7 +100,8 @@ class ExcelController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$datatag = \app\libraries\tags\DataTags::get_by_id($id);
+		\Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
+		$datatag = DataTags::get_by_id($id);
 		$view = \View::make('excel.index');
 		$view->title = "Excel Editor";
 		$view->subtitle = $datatag->get_name();
@@ -130,27 +121,22 @@ class ExcelController extends Controller {
 	}
 
 	/**
-	 * Update the specified resource in storage.
-	 * PUT /excel/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
+	 * @param $id
+     */
+	public function show($id)
 	{
-		//
+		\Theme::enqueue_script('data_block_editor', "assets/js/datablock_viewer/main.js");
+		$datatag = DataTags::get_by_id($id);
+		$view = \View::make('excel.calculated');
+		$view->title = "Excel Viewer";
+		$view->subtitle = $datatag->get_name();
+		$parent_id = $datatag->get_parent_id();
+		$url = null;
+		$view->backtoLink = '';
+		$view->sheet = $datatag;
+		$view->sheetId = $datatag->get_id();
+		return $view;
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 * DELETE /excel/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
 
 }

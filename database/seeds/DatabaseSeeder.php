@@ -3,6 +3,9 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class DatabaseSeeder
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,12 +17,13 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call(UserTableSeeder::class);
+         //$this->call(UserTableSeeder::class);
         $this->call('UserTableSeeder');
         $this->call('UserMetaTableSeeder');
         $this->call('TypeCategoriesTableSeeder');
         $this->call('TypesTableSeeder');
         $this->call('ConfigurationSeeder');
+        $this->call('UserAccessTableSeeder');
         Model::reguard();
     }
 }

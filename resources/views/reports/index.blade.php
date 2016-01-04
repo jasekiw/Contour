@@ -15,14 +15,14 @@
 @section('content')
 
         <div class="facility_navigation">
-                <a class="{{ $current === "all" ? "current" : ""  }}" href="{{ route("facilities") }}">View All</a>
+                <a class="{!! $current === "all" ? "current" : ""  !!}" href="{!! route("facilities") !!}">View All</a>
                 <?php $alphabet = range('A', 'Z'); ?>
                 <?php
 
                 foreach ($alphabet as $alpha) {
 
                 ?>
-                <a class="{{ $current === $alpha ? "current" : ""  }}" href="{{route("letter_facilities", array($alpha)) }}">{{$alpha}}</a>
+                <a class="{!! $current === $alpha ? "current" : ""  !!}" href="{!!route("letter_facilities", array($alpha)) !!}">{!!$alpha!!}</a>
                 <?php
                 }
                 ?>
@@ -35,7 +35,7 @@
 
                 @foreach($reports as $report)
 
-                        <div class="report"><a href="{{route("get_facility", array( $report->get_id() ) ) }}">{{$report->get_name(); }}</a></div>
+                        <div class="report"><a href="{!!route("get_facility", array( $report->get_id() ) ) !!}">{!!$report->get_name(); !!}</a></div>
                 @endforeach
         @else
                 <?php $lastLetter = "A" ?>
@@ -51,7 +51,7 @@
                                 }
 
                                 ?>
-                                <div class="report"><a href="{{route("get_facility", array( $report->get_id() ) ) }}">{{$report->get_name(); }}</a></div>
+                                <div class="report"><a href="{!!route("get_facility", array( $report->get_id() ) ) !!}">{!!$report->get_name(); !!}</a></div>
                         @endforeach
                 </div>
         @endif

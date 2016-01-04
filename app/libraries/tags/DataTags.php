@@ -14,15 +14,12 @@ use App\Models\Tag;
 use \app\libraries\types\Type;
 use App\Models\TypeModel;
 use App\Models\Type_category;
-
 /**
  * Class DataTags: The static class used to manage a tags
  * @package app\libraries\tags
  */
 class DataTags
 {
-
-
 
     /**
      * Gets a type object by id
@@ -46,7 +43,6 @@ class DataTags
         return TypeModel::where("name", "=", $name )->exists() ? TypeModel::where("name", "=", $name )->first()->id : null;
     }
 
-
     /**
      * Gets a datatag object by the row id. return null if none found.
      * @param int $id
@@ -57,9 +53,9 @@ class DataTags
         /** @var Tag $data_tag */
         $data_tag = self::getDataTagsQueryBuilder();
         $data_tag = $data_tag->where('tags.id', '=', $id)->first();
-        return self::get_by_row($data_tag);
+        $datatag = self::get_by_row($data_tag);
+        return $datatag;
     }
-
 
     /**
      * Gets a TagCollection of all the tags with the given parent id
@@ -69,6 +65,8 @@ class DataTags
     public static function get_by_parent_id($id)
     {
         $collection = new TagCollection();
+        if($id == -1)
+            $id = 0;
         $data_tags = Tag::where("parent_tag_id", "=", $id )->get();
         foreach($data_tags as $data_tag)
         {
@@ -78,46 +76,36 @@ class DataTags
         return $collection;
     }
 
-
-
     /**
      * @requires a row is already picked from the Query
-     * @param \Illuminate\Database\Eloquent\Model $data_tag
+     * @param \App\Models\Tag $data_tag
      * @return \app\libraries\tags\DataTag
      */
     public static function get_by_row($data_tag)
     {
-        if( isset($data_tag) )
+        if(!isset($data_tag))
+            return null;
+
+        $tag = new DataTag();
+        $tag->set_name($data_tag->name);
+        if(isset($data_tag->type_name))
         {
-            $tag = new DataTag();
-            $tag->set_name($data_tag->name);
-            if(isset($data_tag->type_name))
+            $type = new Type();
+            $type->set_id($data_tag->type_id);
+            $type->setName($data_tag->type_name);
+            if(isset($data_tag->type_category_name))
             {
-                $type = new Type();
-                $type->set_id($data_tag->type_id);
-                $type->setName($data_tag->type_name);
-                if(isset($data_tag->type_category_name))
-                {
-                    $category = new TypeCategory();
-                    $category->set_id($data_tag->type_category_id);
-                    $category->setName( $data_tag->type_category_name);
-                    $type->setCategory($category);
-                }
-                $tag->set_type($type);
-
+                $category = new TypeCategory();
+                $category->set_id($data_tag->type_category_id);
+                $category->setName( $data_tag->type_category_name);
+                $type->setCategory($category);
             }
-
-            $tag->set_parent_id($data_tag->parent_tag_id);
-
-
-            $tag->set_sort_number($data_tag->sort_number);
-            $tag->set_id($data_tag->id);
-
-            return $tag;
+            $tag->set_type($type);
         }
-        return null;
-
-
+        $tag->set_parent_id($data_tag->parent_tag_id);
+        $tag->set_sort_number($data_tag->sort_number);
+        $tag->set_id($data_tag->id);
+        return $tag;
     }
 
     /**
@@ -128,24 +116,76 @@ class DataTags
      */
     public static function get_by_string( $text, $parent_id = null)
     {
-
         $query = self::getDataTagsQueryBuilder();
         $text = str_replace(" ", "_", $text);
         $tag = $query->where("tags.name", "=", $text );
-         if(isset($parent_id))
+
+         if(isset($parent_id) && $parent_id !== -1)
              $tag->where("parent_tag_id", "=", $parent_id);
-
-        $tag = $tag->first();
-
-        if( isset($tag) )
+        else if($parent_id === 0 || $parent_id === -1)
         {
-            $datatag = DataTags::get_by_row($tag);
-            return $datatag;
-        }
+            $tag->Where(function ($query) { // advanced where statement to fix the issue where the tag.name was included as an optional where
+                foreach(\Contour::getConfigManager()->getPathTags() as $index => $id)
+                {
+                    if($index === 0)
+                        $query->where("parent_tag_id", "=", $id);
+                    else
+                        $query->orwhere("parent_tag_id", "=", $id);
+                }
+            });
 
+        }
+        $tag = $tag->first();
+        if( isset($tag) )
+            return DataTags::get_by_row($tag);
         return null;
     }
 
+    /**
+     * Gets a Datatag by the name and parent id.
+     * @param String $text
+     * @return DataTag[]
+     */
+    public static function get_multiple_by_string( $text)
+    {
+        $query = self::getDataTagsQueryBuilder();
+        $text = str_replace(" ", "_", $text);
+        $tagQuery = $query->where("tags.name", "=", $text );
+        $tags = $tagQuery->get();
+        $realTags = array();
+        /** @var Tag[] $tags*/
+        foreach($tags as $tag)
+            $realTags[] = DataTags::get_by_row($tag);
+        return $realTags;
+    }
+
+    /**
+     * Gets a tag that matches the given name and the children tree
+     * @param $name
+     * @param $children
+     * @return DataTag|null
+     */
+    public static function getTagByChildren($name, $children)
+    {
+        $tags = self::get_multiple_by_string($name);
+        foreach($tags as $tag)
+        {
+            $currentChild = null;
+            foreach($children as $index => $child)
+            {
+                if($index == 0)
+                    $currentChild = $tag->findChild($children[0]);
+                if($currentChild === null)
+                    break;
+                $currentChild = $currentChild->findChild($child);
+                if($currentChild === null)
+                    break;
+                if($index == (sizeOf($children) - 1)) // last child
+                    return $tag;
+            }
+        }
+        return null;
+    }
 
     /**
      * @param string $text
@@ -155,26 +195,28 @@ class DataTags
      */
     public static function get_by_string_and_type($text, $type, $parent_id = null)
     {
-
         $query = self::getDataTagsQueryBuilder();
         $text = str_replace(" ", "_", $text);
         $tag = $query->where("tags.name", "=", $text );
         $tag->where("type_id", "=", $type->get_id());
         if(isset($parent_id))
             $tag->where("parent_tag_id", "=", $parent_id);
-        $tag = $tag->first();
-
-        if( isset($tag) )
+        else if($parent_id === 0 || $parent_id === -1)
         {
-            $datatag = DataTags::get_by_row($tag);
-            return $datatag;
+            foreach(\Contour::getConfigManager()->getPathTags() as $id)
+                $tag->orwhere("parent_tag_id", "=", $id);
         }
-
+        $tag = $tag->first();
+        if( isset($tag) )
+            return DataTags::get_by_row($tag);
         return null;
     }
 
+
     /**
      * Removes unworthy characters from the tag Identifier
+     * @param string $name The string to validate
+     * @return string
      */
     public static function validate_name($name)
     {
@@ -188,9 +230,6 @@ class DataTags
         return $name;
     }
 
-
-
-
     /**
      * Gets the Query object for gathering datablock information
      * @return \Illuminate\Database\Query\Builder
@@ -201,8 +240,6 @@ class DataTags
         $datatag = \DB::table('tags')
             ->leftJoin('types', 'tags.type_id', '=', 'types.id')
             ->leftJoin('type_categories as type_category', 'types.type_category_id', '=', 'type_category.id')
-
-
             ->select('tags.id as id',
                 'tags.name as name',
                 'tags.type_id as type_id',
@@ -214,8 +251,6 @@ class DataTags
         return $datatag;
     }
 
-
-
     /**
      * Use this function only if you do not have the datatag object. This is slower than calling findChildBySortNumber
      * @param integer $sort_number
@@ -225,15 +260,10 @@ class DataTags
      */
     public static function get_by_sort_id( $sort_number,  $type,  $parent_id)
     {
-
         $parent = DataTags::get_by_id($parent_id);
         $datatag = $parent->findChildBySortNumber($sort_number, $type);
         return $datatag;
-
     }
-
-
-
 
     /**
      * @param String|integer $nameorID
@@ -243,41 +273,21 @@ class DataTags
     public static function exists($nameorID, $parentID = null)
     {
         if(strtoupper(gettype($nameorID)) == "INTEGER")
-        {
-
             return Tag::where("id", "=", $nameorID)->exists();
-
-        }
-        else
-        {
-            if(isset($parentID))
-            {
-                if(DataTags::get_by_string($nameorID, $parentID) != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            else
-            {
-                return false;
-            }
-
-        }
+        if(!isset($parentID))
+            return false;
+        if(DataTags::get_by_string($nameorID, $parentID) !== null)
+            return true;
+        return false;
     }
 
     public function createTagTypeCategory()
     {
-        if(!Type_category::where('name', '=', 'tag')->exists())
-        {
-            $typeCategory = new Type_category();
-            $typeCategory->name = 'tag';
-            $typeCategory->save();
-        }
+        if(Type_category::where('name', '=', 'tag')->exists())
+            return;
+        $typeCategory = new Type_category();
+        $typeCategory->name = 'tag';
+        $typeCategory->save();
     }
 
 

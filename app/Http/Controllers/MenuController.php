@@ -5,6 +5,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
+
+/**
+ * Class MenuController
+ * @package App\Http\Controllers
+ */
 class MenuController extends Controller {
 
 	/**

@@ -15,10 +15,11 @@ class CreateUserMetaTable extends Migration {
 		Schema::create('user_meta', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('user_id');
+			$table->unsignedInteger('user_id');
 			$table->string('key');
 			$table->string('value');
 			$table->timestamps();
+
 		});
 	}
 

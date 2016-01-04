@@ -73,7 +73,7 @@ class FormulaParser {
     	if (is_null($pFormula)) {
     		throw new Exception("Invalid parameter passed: formula");
     	}
-    	
+
     	// Initialise values
     	$this->_formula				= trim($pFormula);
     	

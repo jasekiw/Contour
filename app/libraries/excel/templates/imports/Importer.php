@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class Importer
 {
+    public static $multithreaded = false;
     public function run()
     {
 
@@ -48,11 +49,22 @@ class Importer
                 /** @noinspection PhpUndefinedMethodInspection */
                 $sheetTitle = $sheet->getTitle();
                 $sheetTitle = str_replace("'", "", $sheetTitle);
-                $importer = new ImportHandler();
-                $importer->runImport($sheet,$sheetTitle, $count, $template_sheets, $reports, $facilities);
+
+
+
+                if(!Importer::$multithreaded)
+                {
+                    $importer = new ImportHandler();
+                    $importer->runImport($sheet,$sheetTitle, $count, $template_sheets, $reports, $facilities);
+                }
+                else
+                {
+                    //TODO: add multithreaded import
+                }
 
                 echo "  " . $sheetTitle . "<br />";
                 echo  "current_sheet: " . $count . "<br />";
+                flush();
                 \UserMeta::save('importProgressSheet', $sheetTitle);
                 \UserMeta::save('importProgress', $count . "/" . "94");
                 $count++;

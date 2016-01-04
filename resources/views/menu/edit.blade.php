@@ -37,22 +37,17 @@ use app\libraries\theme\menu\item\MenuItem;
             border-bottom:1px solid black;
         }
     </style>
-    {{
-    Form::open(
-    array(
-    "action" => "create_menu_item",
-    'method' => "POST"
-    ));
-    }}
-    {{Form::hidden('menu', $menu->get_id())}}
-    {{Form::label('Name')}}
-    {{Form::input('text', 'name')}}
-    {{Form::label('Link')}}
-    {{Form::input('text', 'link')}}
-    {{Form::label('Icon')}}
-    {{Form::input('text', 'icon')}}
-    {{Form::submit("Create")}}
-    {{Form::close()}}
+    {!!
+    Form::open( ["url" => route("create_menu_item"), 'method' => "POST" ])!!}
+    {!!Form::hidden('menu', $menu->get_id())!!}
+    {!!Form::label('Name')!!}
+    {!!Form::input('text', 'name')!!}
+    {!!Form::label('Link')!!}
+    {!!Form::input('text', 'link')!!}
+    {!!Form::label('Icon')!!}
+    {!!Form::input('text', 'icon')!!}
+    {!!Form::submit("Create")!!}
+    {!!Form::close()!!}
 
 
     <table class="menuItemEditor">
@@ -73,9 +68,9 @@ use app\libraries\theme\menu\item\MenuItem;
 
         ?>
             <tr>
-                <td><a href="{{ route("get_menu", array($menuItem->get_id())) }}">{{ $menuItem->getName()}} </a></td>
-                <td>{{$menuItem->get_href()}}</td>
-                <td>{{$menuItem->get_icon()}}</td>
+                <td><a href="{!! route("get_menu", array($menuItem->get_id())) !!}">{!! $menuItem->getName()!!} </a></td>
+                <td>{!!$menuItem->get_href()!!}</td>
+                <td>{!!$menuItem->get_icon()!!}</td>
             </tr>
         <?php
         }
@@ -90,7 +85,7 @@ use app\libraries\theme\menu\item\MenuItem;
             @if(strlen($route->getName()) > 0)
                 <tr>
                     <td>
-                        {{$route->getName()}}
+                        {!!$route->getName()!!}
                     </td>
                 </tr>
             @endif

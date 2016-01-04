@@ -13,7 +13,7 @@ function DataBlockInterfacer() {
     this.get_multiple_by_tags = function(tags, functiontoCall)
     {
         var object = {tags: tags};
-        ajaxPost('/ajaxdatablocks/get_multiple_by_tags' + id, object, functiontoCall);
+        ajaxPost('/ajaxdatablocks/get_multiple_by_tags', object, functiontoCall);
     };
 
 

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use app\libraries\theme\data\TableConstructor;
+use app\libraries\user\UserMeta;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Response;
 
-use app\libraries\excel\templates\imports\Importer;
-use \app\libraries\excel\templates\imports\Datablocks\DataBlockImporter;
+/**
+ * Class AjaxExcelController
+ * @package App\Http\Controllers
+ */
 class AjaxExcelController extends Controller
 {
 
@@ -20,9 +22,7 @@ class AjaxExcelController extends Controller
      */
     public function index()
     {
-
-
-
+        //
     }
 
     /**
@@ -35,7 +35,7 @@ class AjaxExcelController extends Controller
     public function get($id)
     {
 
-        \app\libraries\theme\data\TableConstructor::printTable($id);
+        TableConstructor::printTable($id);
 
     }
 

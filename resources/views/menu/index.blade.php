@@ -18,24 +18,25 @@ use app\libraries\theme\menu\item\MenuItem;
 
 @section('content')
 
-    {{
-    Form::open(
-    array(
-    "action" => "create_menu",
-    'method' => "POST"
-    ));
-    }}
+    {!!
+        Form::open(
+            array(
+            "url" => route("create_menu"),
+            'method' => "POST"
+            )
+        )
+    !!}
 
-    {{Form::input('text', 'name')}}
-    {{Form::submit("Create")}}
-    {{Form::close()}}
+    {!!Form::input('text', 'name')!!}
+    {!!Form::submit("Create")!!}
+    {!!Form::close()!!}
 
     <?php
     $menus =  Contour::getThemeManager()->getMenuManager()->getMenus();
     foreach($menus as $menu)
     {
     ?>
-    <a href="{{ route("get_menu", array($menu->get_id())) }}">{{ $menu->getName()}} </a>
+    <a href="{!! route("get_menu", array($menu->get_id())) !!}">{!! $menu->getName()!!} </a>
     <?php
     }
     ?>

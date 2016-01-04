@@ -15,6 +15,8 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property String $updated_at
  * @method Tag static first() first() returns
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @property mixed type_category_id
+ * @property mixed sort_number
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Tag whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Tag whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Tag whereTypeId($value)

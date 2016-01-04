@@ -16,6 +16,9 @@ class DefaultTheme extends ThemeOptions
 
     private $includes = null;
 
+    /**
+     * DefaultTheme constructor.
+     */
     public function __construct()
     {
         $this->includes = new Includes();

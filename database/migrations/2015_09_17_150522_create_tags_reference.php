@@ -20,11 +20,13 @@ class CreateTagsReference extends Migration {
 		DB::statement('CREATE TABLE tags_reference (
 							tag_id INT UNSIGNED,
 							data_block_id INT UNSIGNED,
-							UNIQUE KEY (tag_id, data_block_id),
-							FOREIGN KEY (data_block_id) REFERENCES data_blocks (id)
+							created_at TIMESTAMP NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+							updated_at TIMESTAMP NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+							UNIQUE KEY (tag_id, data_block_id)
+
 						);');
-		DB::statement("ALTER TABLE `tags_reference` ADD `created_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ;");
-		DB::statement("ALTER TABLE `tags_reference` ADD `updated_at` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ;");
+//		FOREIGN KEY (data_block_id) REFERENCES data_blocks (id),
+//							FOREIGN KEY (tag_id) REFERENCES tags (id)
 	}
 
 

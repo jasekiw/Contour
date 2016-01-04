@@ -1,11 +1,17 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
 
+/**
+ * Class AjaxTagController
+ * @package App\Http\Controllers
+ */
 class AjaxTagController extends Controller {
 
 	/**
@@ -49,7 +55,7 @@ class AjaxTagController extends Controller {
 	public function get_children($id)
 	{
 		$answer = new \stdClass();
-		$parent = \app\libraries\tags\DataTags::get_by_id($id);
+		$parent = DataTags::get_by_id($id);
 		if(isset($parent))
 		{
 			$children = $parent->get_children()->getAsArray();
@@ -72,8 +78,8 @@ class AjaxTagController extends Controller {
 
 	public function get_children_recursive($id)
 	{
-		$answer = new stdClass();
-		$parent = \app\libraries\tags\DataTags::get_by_id($id);
+		$answer = new \stdClass();
+		$parent = DataTags::get_by_id($id);
 		if(isset($parent))
 		{
 			$children = $parent->get_children_recursive()->getAsArray();

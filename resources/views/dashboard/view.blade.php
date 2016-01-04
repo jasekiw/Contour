@@ -11,6 +11,7 @@
 
 
 @section('content')
+
    <h1 class="heading">Welcome Back
    @if(isset($first_name))
       {{", " . $first_name}}

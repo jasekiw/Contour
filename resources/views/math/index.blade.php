@@ -13,24 +13,24 @@
  @section('content')
 <h1>Evaluator</h1>
 <p>
-Answer:  {{$answer }}
+Answer:  {!!$answer !!}
 </p>
-{{Form::open(array('url' => 'math', 'method' => 'POST'))}}
+{!!Form::open(array('url' => 'math', 'method' => 'POST'))!!}
 
 <p>
-{{Form::label('variables', 'Equation:')}}<br/>
-{{Form::Text('variables', $variables)}}
+{!!Form::label('variables', 'Equation:')!!}<br/>
+{!!Form::Text('variables', $variables)!!}
 </p>
 
 
 <p>
-{{Form::label('equation', 'Equation:')}}<br/>
-{{Form::Text('equation', $equation)}}
+{!!Form::label('equation', 'Equation:')!!}<br/>
+{!!Form::Text('equation', $equation)!!}
 </p>
 
-<p>{{Form::submit('Evaluate')}}</p>
+<p>{!!Form::submit('Evaluate')!!}</p>
 
-{{Form::close()}}
+{!!Form::close()!!}
 
 
  @endsection

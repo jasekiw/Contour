@@ -16,9 +16,10 @@ class CreateTypesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name');
-			$table->integer('type_category_id');
+			$table->unsignedInteger('type_category_id');
 			$table->timestamps();
 		});
+
 	}
 
 

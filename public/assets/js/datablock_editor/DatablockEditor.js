@@ -9,6 +9,7 @@ function DatablockEditor() {
     var datatagInterfacer = new DatatagInterfacer();
 
     var dataBlockEditor = $("#DatablockEditor");
+    var dataBlockFormula = dataBlockEditor.find("input[name='datablock_value']");
     var dataBlockContainer = dataBlockEditor.find(".datablocks");
     var head = dataBlockEditor.find(".header_container");
     var body = dataBlockEditor.find(".row_and_datablock_container");
@@ -58,17 +59,19 @@ function DatablockEditor() {
     /**
      * Show the editor with the current sheet it
      * @param id
+     * @param value
      */
-    this.show = function(id)
+    this.show = function(id, value)
     {
         datatagInterfacer.getChildrenRecursive(id, populateEditor );
+        dataBlockFormula.val(value);
 
         dataBlockEditor.show();
     };
     var populateEditor = function(data)
     {
         var thisfunction = this;
-       // console.log(data);
+        // console.log(data);
         if(data.success)
         {
             removeHeadTags();
@@ -154,8 +157,6 @@ function DatablockEditor() {
                 }
 
             }
-
-
 
         });
     };

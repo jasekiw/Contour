@@ -23,12 +23,13 @@ class TableConstructor
     private static $start_queries;
     private static $end_queries;
     private static $readOnly = false;
+
     /**
      * @param DataTag $parent
      * @param DataTag[] $columns
-     * @throws \TijsVerkoyen\CssToInlineStyles\Exception
+     * @param bool $caculated
      */
-    public static function printChildColumns($parent, $columns)
+    public static function printChildColumns($parent, $columns, $calculated = false)
     {
 
 
@@ -59,15 +60,19 @@ class TableConstructor
 
 
 
+                    $datablock = null;
+                    if($calculated)
+                        $datablock = DataBlocks::getByTagsArray(array($child, $column));
+                    else
+                        $datablock = DataBlocks::getValueByTagsArray(array($child, $column));
 
 
-                    $datablock = DataBlocks::getValueByTagsArray(array($child, $column));
                     //self::getByTagsArray(array($child, $column));
                     //$finish = sizeOf($GLOBALS['queries']);
                     //echo $finish - $start;
                     if(isset($datablock))
                     {
-                        ?> <input type="text" class="form-control input-sm" value="<?php echo $datablock; ?>" > <?php
+                        ?> <input type="text" class="form-control input-sm" datablock="<?php echo $calculated ? $datablock->get_id() : $datablock->id ?>" value="<?php echo  $calculated ? $datablock->getProccessedValue() : $datablock->value; ?>" > <?php
                     }
                     self::$progress += 1;
 
@@ -88,8 +93,9 @@ class TableConstructor
     /**
      * Prints the Excel Sheet onto the screen
      * @param $id
+     * @param bool $caculated
      */
-    public static function printTable($id)
+    public static function printTable($id, $calculated = false)
     {
        //\DB::connection()->enableQueryLog();
         //self::$start_queries = sizeof($GLOBALS['queries']);
@@ -129,7 +135,7 @@ class TableConstructor
        // UserMeta::save('tableLoading', self::$progress . "/" . self::$progress_max_value);
 
         ?>
-        <table class="excel_editor">
+        <table class="excel_editor" sheet="<?php echo $sheet->get_id() ?>">
         <thead>
         <tr>
             <td>
@@ -173,14 +179,18 @@ class TableConstructor
                 echo '<td class="cell">';
 
 
-                $datablock = DataBlocks::getValueByTagsArray(array($row, $column));
+                $datablock = null;
+                if($calculated)
+                    $datablock = DataBlocks::getByTagsArray(array($row, $column));
+                else
+                    $datablock = DataBlocks::getValueByTagsArray(array($row, $column));
                 //\app\libraries\datablocks\DataBlock::getByTagsArray(array($row, $column));
 
 
 
                 if(isset($datablock))
                 {
-                    ?> <input type="text" class="form-control input-sm" value="<?php echo $datablock; ?>" > <?php
+                    ?> <input type="text" class="form-control input-sm" datablock="<?php echo $calculated ? $datablock->get_id() : $datablock->id ?>" value="<?php echo  $calculated ? $datablock->getProccessedValue() : $datablock->value; ?>" > <?php
                 }
                 echo '</td>';
                 self::$progress += 1;

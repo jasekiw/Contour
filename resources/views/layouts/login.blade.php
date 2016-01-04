@@ -7,9 +7,11 @@
  */
 ?>
 @include("includes.login.header")
-@if(Session::has('message'))
-    <p style="color:green;">{{Session::get('message')}}</p>
-@endif
+@if( session('message'))
+    <div class="alert alert-danger">
+        <strong>{{ session('message') }}</strong>
+    </div>
+    @endif
 
 @yield('content')
 

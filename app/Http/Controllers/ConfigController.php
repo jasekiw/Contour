@@ -1,10 +1,16 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use ConfigHelper;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Input;
+use Redirect;
+use Response;
+
+/**
+ * Class ConfigController
+ * @package App\Http\Controllers
+ */
 class ConfigController extends Controller {
 
 	/**

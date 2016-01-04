@@ -9,6 +9,7 @@ use app\libraries\tags\DataTag;
 use app\libraries\tags\DataTags;
 use app\libraries\types\Types;
 use TijsVerkoyen\CssToInlineStyles\Exception;
+use Log;
 
 /**
  * Created by PhpStorm.
@@ -21,7 +22,11 @@ class FormulaConversion{
     /**
      * @var DataTag $current_sheet
      */
-    private $current_sheet = "";
+    private $current_sheet;
+    /**
+     * @var DataTag $current_sheet
+     */
+    private $current_parent;
     /**
      * @var DataBlock $datablock
      */
@@ -51,6 +56,7 @@ class FormulaConversion{
 
 
 
+
     /**
      * Converts a datablock value to tag format
      * @param DataBlock $datablock
@@ -66,18 +72,15 @@ class FormulaConversion{
 //            {
 //                return $datablock->getValue();
 //            }
-        /**
-         *
-         */
-        if(strContains($datablock->getValue(), '#(')) //already in tag format
+
+        if(str_contains($datablock->getValue(), '#(')) //already in tag format
             return $datablock->getValue(); // does nothing and escapes
 
         $this->datablock = $datablock;
 
 
-
-
         $this->current_sheet = $datablock->getTags()->getAsArray()[0]->get_a_parent_of_type(Types::get_type_sheet());
+        $this->current_parent = $datablock->getTags()->getAsArray()[0]->get_parent();
         $this->parser = new FormulaParser($datablock->getValue());
 
 
@@ -150,11 +153,9 @@ class FormulaConversion{
         if(sizeOf($ranges) != 2)
             throw new Exception("Cannot give a range with more then one colon! range: " . print_r($ranges, true));
 
-
         $left = $this->handleCellTags($ranges[0], self::EVALUATION_RANGE_BEGINNING);
-        $this->rangeStart =
-        $right = $this->handleCellTags($ranges[1], self::EVALUATION_RANGE_END);
 
+        $right = $this->handleCellTags($ranges[1], self::EVALUATION_RANGE_END);
 
         $answer = "(";
         $answer .= $left;
@@ -162,9 +163,6 @@ class FormulaConversion{
         $answer.= ")";
         return $answer;
     }
-
-
-
     /**
      * @param $operand
      * @return DataTag
@@ -177,9 +175,8 @@ class FormulaConversion{
         $sheet = str_replace("'", "", $sheet);
         $sheet = DataTags::get_by_string_and_type($sheet, Types::get_type_sheet());
         if(!isset($sheet))
-        {
             echo "STOP!";
-        }
+
         return $sheet;
     }
 
@@ -210,10 +207,7 @@ class FormulaConversion{
             return $tag_collection;
         }
         else
-        {
             return $this->lookupTagsByCell($location, $this->current_sheet, $startOrFinish);
-        }
-
     }
 
     /**
@@ -252,27 +246,32 @@ class FormulaConversion{
         if(!isset($answer) && $this->evaluationType == self::EVALUATION_TYPE_RANGE && $startOrFinish == self::EVALUATION_RANGE_END)
         {
             if($this->rangeStart->getY() - $row == 0)
-            {
                 $answer = $this->getTagCollectionFromLocation($row, $column - 1, $sheet);
-            }
             else if($this->rangeStart->getX() - $column == 0)
-            {
                 $answer = $this->getTagCollectionFromLocation($row -1, $column, $sheet);
-            }
         }
 
 
         if(!isset($answer))
         {
-            \Kint::dump($this);
-            throw new \Exception("Tags Not Found for the value '" . $location . "'" . " with sheet '" . $sheet->get_name() . "'");
-            exit;
+            //\Kint::dump($this);
+            $tags = $this->datablock->getTags()->getAsArray(TagCollection::SORT_TYPE_BY_SORT_NUMBER);
+            foreach($tags as $index => $tag)
+                $tags[$index] = "name: " . $tag->get_name() . ", sort_number: " . $tag->get_sort_number();
+            $thesheet = $this->datablock->getTags()->getColumnsAsArray()[0]->get_a_parent_of_type(Types::get_type_sheet())->get_name();
+            $thedatablock = print_r($tags, true);
+            $thedatablock .= "\r\nSheet: " . $thesheet;
+            Log::info("reference from: " . $thedatablock ."\r\nTags Not Found for the value '" . $location . "'" . " with sheet '" . $sheet->get_name() . "'");
+            //throw new \Exception("Tags Not Found for the value '" . $location . "'" . " with sheet '" . $sheet->get_name() . "'");
+            return $this->datablock->getValue();
+
         }
 
         $newvalue = "#(" ;
         $count = 0;
         $lastIndex = (sizeOf($answer->getAsArray()) - 1);
         $lastSheet = $this->current_sheet->get_name();
+        $lastParent = $this->current_parent->get_id();
 
         /**
          * set the locations of the start and stop of the current range set for guessing tags when the cell is blank
@@ -282,25 +281,41 @@ class FormulaConversion{
         else if($startOrFinish == self::EVALUATION_RANGE_END)
             $this->rangeEnd = new Point($column, $row);
 
-
-        foreach($answer->getAsArray() as $tag)
+        $answer = $answer->getAsArray();
+        foreach($answer as $index => $tag)
         {
-            if($count == $lastIndex)
+            if($tag->get_type()->get_id() == Types::get_type_row()->get_id())
             {
-                $newvalue .= ($sheet->get_name() == $lastSheet ? "" : ($sheet->get_name() . "/")) . $tag->get_name();
+                $temp = $answer[0];
+                $answer[0] = $tag;
+                $answer[$index] = $temp;
             }
-            else
+        }
+        foreach($answer as $tag)
+        {
+            $parent_prefix = "";
+            if($lastParent != $tag->get_parent_id())
             {
-                $newvalue .=  ($sheet->get_name() == $lastSheet ? "" : ($sheet->get_name() . "/")) . $tag->get_name() . ", ";
+                $trace = $tag->getParentTrace($sheet);
+                foreach($trace as $tracedTag)
+                    $parent_prefix .= $tracedTag->get_name() . "/";
             }
-            $lastSheet = $sheet->get_name();
+            $originParentId = $this->datablock->getTags()->getRowsAsArray()[0]->get_parent_id();
 
-                $count++;
+            $sheetPrefix = $sheet->get_name() == $lastSheet ? "" : ("/" . $sheet->get_name() . "/");
+            if($sheetPrefix === "" && $parent_prefix === "" &&
+                $tag->get_parent_id() == $sheet->get_id() &&
+                $originParentId != $this->current_sheet->get_id() && $tag->get_a_parent_of_type(Types::get_type_sheet())->get_id() ==  $this->current_sheet->get_id()) // fixes loop references & refers to this sheet
+                $sheetPrefix = '&/';
+            if($count == $lastIndex)
+                $newvalue .= $sheetPrefix . $parent_prefix . $tag->get_name();
+            else
+                $newvalue .=  $sheetPrefix . $parent_prefix . $tag->get_name() . ", ";
+            $lastSheet = $sheet->get_name();
+            $count++;
         }
         $newvalue .= ")";
         return $newvalue;
-
-
     }
 
     /**
@@ -315,18 +330,12 @@ class FormulaConversion{
         $answer = null;
         if(isset($sheet))
         {
-
-
             $rowBlock = $sheet->findChildBySortNumber($row, Types::get_type_row());
-            //$rowBlock = DataTags::get_by_sort_id($row, Types::get_type_row(), $sheet->get_id());
             if(isset($rowBlock))
             {
-                //$columnBlock = DataTags::get_by_sort_id($column, Types::get_type_column(), $sheet->get_id());
                 $columnBlock = $sheet->findChildBySortNumber($column, Types::get_type_column());
                 if(isset($columnBlock))
-                {
                     $answer = new TagCollection(array($rowBlock, $columnBlock));
-                }
             }
         }
         return $answer;

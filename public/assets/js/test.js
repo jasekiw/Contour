@@ -10,4 +10,5 @@ var Test = (function () {
     return Test;
 })();
 var mytest = new Test();
+mystest.;
 //# sourceMappingURL=test.js.map

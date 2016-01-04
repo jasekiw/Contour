@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\User_Access_Group;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
 
+/**
+ * Class UserController
+ * @package App\Http\Controllers
+ */
 class UserController extends Controller {
 
 	/**
@@ -17,7 +24,11 @@ class UserController extends Controller {
 	 */
 	public function index()
 	{
-		//
+		$view = \View::make('user.index');
+		$view->title = "Users";
+		$users = User::all();
+		$view->users = $users;
+		return $view;
 	}
 
 	/**
@@ -28,7 +39,11 @@ class UserController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		$view = \View::make('user.create');
+		$groups = User_Access_Group::all();
+		$view->title = "Create a new user";
+		$view->groups = $groups;
+		return $view;
 	}
 
 	/**
@@ -39,7 +54,17 @@ class UserController extends Controller {
 	 */
 	public function store()
 	{
-		//
+		$username = \Input::get("username");
+		$password = \Input::get("password");
+		$userAccessId = \Input::get("group");
+		$email = \Input::get("email");
+		$user = new User();
+		$user->username = $username;
+		$user->password = \Hash::make($password);
+		$user->user_access_group_id = $userAccessId;
+		$user->email = $email;
+		$user->save();
+		return redirect()->route("users_index")->with('message', "New user created!");
 	}
 
 	/**
@@ -51,7 +76,13 @@ class UserController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		$user = User::where('id', '=',$id )->first();
+		$view = \View::make('user.show');
+		$view->title = "User - " . $user->username;
+		$groups = User_Access_Group::all();
+		$view->groups = $groups;
+		$view->user = $user;
+		return $view;
 	}
 
 	/**
@@ -74,8 +105,15 @@ class UserController extends Controller {
 	 * @return Response
 	 */
 	public function update($id)
-	{
-		//
+	{	$userID = \Input::get("user");
+		$user = User::where('id', '=', $userID)->first();
+		$newPassword = \Input::get('password');
+		if($newPassword !== null || strlen($newPassword) != 0)
+			$user->password = \Hash::make(\Input::get('password'));
+		$user->user_access_group_id = \Input::get('group');
+		$user->save();
+		return redirect()->route('users_show', [$userID])->with("message", "Successfully Saved");
+
 	}
 
 	/**

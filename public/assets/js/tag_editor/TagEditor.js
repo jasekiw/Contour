@@ -40,7 +40,7 @@ function TagEditor()
 
     this.initialize = function()
     {
-        $('head').append('<link href="/assets/js/tag_editor/tageditor.css" rel="stylesheet" /> ');
+        $('head').append('<link href="/assets/js/tag_editor/tageditor.css" rel="stylesheet" />');
 
         $('body').append(renameUI);
 

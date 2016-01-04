@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -12,28 +11,27 @@
 */
 
 
-
-
-
-
-//
-//Route::get('/test', function()
-//{
-//    dd( Route::getRoutes()->getRoutes() );
-//});
-
+/**
+ * Home Route
+ */
 Route::get('/',array('as' => 'home', 'middleware' => 'auth', 'uses' => 'HomeController@index' ));
-//Route::get('/',array('as' => 'home',  'uses' => 'TestController@index' ));
 
-Route::get('/multithread',array('as' => 'multithreading', 'middleware' => 'auth', 'uses' => 'TestMultithreadingController@index' ));
+/**
+ * Installation
+ */
+Route::get('install', 'InstallController@index');
+Route::post('install', 'InstallController@store');
+
+
+/**
+ * Login and registration
+ */
 Route::get('login', 'Auth\AuthController@getLogin');
 Route::post('login', 'Auth\AuthController@postLogin');
 Route::get('logout', array('as' => 'logout', 'uses' => 'Auth\AuthController@getLogout'));
-
 // Registration routes...
 Route::get('users/register', 'Auth\AuthController@getRegister');
 Route::post('users/register', 'Auth\AuthController@postRegister');
-
 
 /**
  * Examples of usages of routes
@@ -47,84 +45,144 @@ Route::post('users/register', 'Auth\AuthController@postRegister');
 //Route::delete('author/delete', array('before' => 'csrf', 'uses' => 'AuthorsController@delete_destroy'));
 //Route::resource('excel', 'ExcelController');
 
-
-Route::get('excel/import',array('as' => 'import_excel','middleware' => 'auth', 'uses' => 'ExcelController@store'));
-Route::get('excel/convert',array('as' => 'convert_excel','middleware' => 'auth', 'uses' => 'ExcelController@convert'));
-
 Route::get('sandbox',array('as' => 'sandbox','middleware' => 'auth', 'uses' => 'SandboxController@index'));
 Route::get( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'get_ajax','middleware' => 'auth', 'uses' => 'AjaxController@get'))->where('id', '(.*)');
 Route::post( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'post_ajax','middleware' => 'auth', 'uses' => 'AjaxController@post'))->where('id', '(.*)');
 
+
+/**
+ * Excel Handlers
+ */
 Route::get('excel/edit/{id}',array('as' => 'edit_excel','middleware' => 'auth', 'uses' => 'ExcelController@edit'));
+Route::get('excel/show/{id}',array('as' => 'edit_excel','middleware' => 'auth', 'uses' => 'ExcelController@show'));
+Route::get('excel/import',array('as' => 'import_excel','middleware' => 'auth', 'uses' => 'ExcelController@store'));
+Route::get('excel/convert',array('as' => 'convert_excel','middleware' => 'auth', 'uses' => 'ExcelController@convert'));
+
+/**
+ * Ajax Excel Handlers
+ */
 Route::get('ajax_excel_status',array('as' => 'status_ajax_excel','middleware' => 'auth', 'uses' => 'AjaxExcelController@status'));
 Route::get('ajax_excel_reset',array('as' => 'reset_ajax_excel','middleware' => 'auth', 'uses' => 'AjaxExcelController@reset'));
 Route::get('ajax_excel/{id}',array('as' => 'get_ajax_excel','middleware' => 'auth', 'uses' => 'AjaxExcelController@get'));
 
+/**
+ * Tags
+ */
 
-Route::get('tags',array('as' => 'index_tags','middleware' => 'auth', 'uses' => 'TagController@index'));
-Route::post('tags/move',array('as' => 'move_tags','middleware' => 'auth', 'uses' => 'TagController@move'));
+Route::get('tags',['as' => 'index_tags','middleware' => 'auth', 'uses' => 'TagController@index']);
+Route::post('tags/move',['as' => 'move_tags','middleware' => 'auth', 'uses' => 'TagController@move']);
 Route::post('tags/create',array('as' => 'create_tags','middleware' => 'auth', 'uses' => 'TagController@create'));
 Route::post('tags/delete',array('as' => 'delete_tags','middleware' => 'auth', 'uses' => 'TagController@destroy'));
 Route::get('tags/types',array('as' => 'type_tags','middleware' => 'auth', 'uses' => 'TagController@getTypes'));
 Route::get('tags/{id}',array('as' => 'index_tag','middleware' => 'auth', 'uses' => 'TagController@show'));
 
+/**
+ * Ajax Datablock routes, will be removed in the future and replace with api routes
+ */
+Route::post('ajaxdatablocks/get_multiple_by_tags',['as' => 'multiple_ajax_datablock','middleware' => 'auth', 'uses' => 'AjaxDataBlockController@get_multiple_by_tags']);
+Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' => 'auth', 'uses' => 'AjaxDataBlockController@show']);
+Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' => 'auth', 'uses' => 'AjaxDataBlockController@show']);
 
-Route::get('ajaxtags/get_children/{id}',array('as' => 'get_children_ajaxtag','middleware' => 'auth', 'uses' => 'AjaxTagController@get_children'));
-Route::get('ajaxtags/get_children_recursive/{id}',array('as' => 'get_children_ajaxtag','middleware' => 'auth', 'uses' => 'AjaxTagController@get_children_recursive'));
+/**
+ * API ROUTES
+ */
+    /**
+     *  Tags subsection
+     */
+        Route::get('api/tags/get_children/{id}',['as' => 'api_tags_get_children','middleware' => 'auth', 'uses' => 'api\ApiTagController@get_children']);
+        Route::get('api/tags/get_children_recursive/{id}',['as' => 'api_tags_get_children_recursive','middleware' => 'auth', 'uses' => 'api\ApiTagController@get_children_recursive']);
+        Route::post('api/tags/getParentTrace',['as' => 'api_tag_getParentTrace','middleware' => 'auth', 'uses' => 'api\ApiTagController@getParentTrace']);
 
+    /**
+     *  Datablocks subsection
+     */
+        Route::post('api/datablocks/get_by_tags',['as' => 'api_datablocks_get_by_tags','middleware' => 'auth', 'uses' => 'api\ApiDataBlockController@getByTagIds']);
+        Route::post('api/getValue',['as' => 'api_getValue','middleware' => 'auth', 'uses' => 'DataBlockTranslatorController@getValue']);
+        Route::post('api/datablocks/save/{id}',['as' => 'api_datablocks_save','middleware' => 'auth', 'uses' => 'api\ApiDataBlockController@save']);
+/**
+ * END API ROUTES
+ */
+/**
+ * Testing Datablock translating
+ */
+Route::get('testDataBlocktranslator', ['as' => 'api_datablocks_test','middleware' => 'auth', 'uses' => 'DataBlockTranslatorController@getValueTest']);
 
-Route::get('ajaxdatablocks/get_multiple_by_tags',array('as' => 'multiple_ajax_datablock_index','middleware' => 'auth', 'uses' => 'AjaxDataBlockController@index'));
-Route::post('ajaxdatablocks/get_multiple_by_tags',array('as' => 'multiple_ajax_datablock','middleware' => 'auth', 'uses' => 'AjaxDataBlockController@get_multiple_by_tags'));
-Route::get('ajaxdatablocks/{id}',array('as' => 'index_ajax_datablock','middleware' => 'auth', 'uses' => 'AjaxDataBlockController@show'));
-
-
-Route::post('api/getValue',['as' => 'api_getValue','middleware' => 'auth', 'uses' => 'DataBlockTranslatorController@getValue']);
-
+/**
+ * Math Testing
+ */
 Route::resource('math', 'MathController');
 
+/**
+ * User Management
+ */
+Route::get('users',['as' => 'users_index', 'middleware' => 'auth', 'uses' => 'UserController@index']);
+Route::get('users/create',['as' => 'users_create', 'middleware' => 'auth', 'uses' => 'UserController@create']);
+Route::post('users/create',['as' => 'users_create', 'middleware' => 'auth', 'uses' => 'UserController@store']);
+Route::get('users/{id}',['as' => 'users_show', 'middleware' => 'auth', 'uses' => 'UserController@show']);
+Route::put('users/{id}',['as' => 'users_save', 'middleware' => 'auth', 'uses' => 'UserController@update']);
 
+
+
+/**
+ * Profile Pages
+ */
 Route::get('profile',array('as' => 'view_profile', 'middleware' => 'auth', 'uses' => 'ProfileController@show'));
 Route::post('profile/save',array('as' => 'save_profile','middleware' => 'auth', 'uses' => 'ProfileController@save'));
 
+/**
+ * User Access Groups
+ */
+Route::get('usersaccessgroups',array('as' => 'user_access_groups_index', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@index'));
+Route::get('usersaccessgroups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@create'));
+Route::post('usersaccessgroups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@store'));
+Route::get('usersaccessgroups/{id}',array('as' => 'user_access_groups_show', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@show'));
+Route::put('usersaccessgroups/{id}',array('as' => 'user_access_groups_save', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@update'));
 
-
+/**
+ * Config Routes
+ */
 Route::get('config',array('as' => 'view_config','middleware' => 'auth', 'uses' => 'ConfigController@show'));
 Route::post('config',array('as' => 'save_congfig','middleware' => 'auth', 'uses' => 'ConfigController@save'));
 
-
-
-
+/**
+ * Unit Testing
+ */
 Route::get('unittest',array('as' => 'unit_test','middleware' => 'auth', 'uses' => 'UnitTestController@index'));
 
-
+/**
+ * Facilities
+ */
 Route::get('facilities',array('as' => 'facilities','middleware' => 'auth', 'uses' => 'FacilityController@index'));
 Route::get('facilities/letter/{id}',array('as' => 'letter_facilities','middleware' => 'auth', 'uses' => 'FacilityController@index'));
-
-Route::get('reports',array('as' => 'reports','middleware' => 'auth', 'uses' => 'ReportsController@index'));
 Route::get('facilities/{id}',array('as' => 'get_facility','middleware' => 'auth', 'uses' => 'FacilityController@show'));
 
-Route::get('menu',array('as' => 'get_menus','middleware' => 'auth', 'uses' => 'MenuController@index'));
-Route::post('menu',array('as' => 'create_menu','middleware' => 'auth', 'uses' => 'MenuController@store'));
+/**
+ * Reports
+ */
+Route::get('reports',array('as' => 'reports','middleware' => 'auth', 'uses' => 'ReportsController@index'));
 
+
+/**
+ * Menus
+ */
+Route::get('menu', array('as' => 'get_menus','middleware' => 'auth', 'uses' => 'MenuController@index'));
+Route::post('menu', array('as' => 'create_menu','middleware' => 'auth', 'uses' => 'MenuController@store'));
 Route::get('menu/{id}',array('as' => 'get_menu','middleware' => 'auth', 'uses' => 'MenuController@show'));
 Route::post('menu/{id}',array('as' => 'edit_menu','middleware' => 'auth', 'uses' => 'MenuController@edit'));
 Route::delete('menu/{id}',array('as' => 'edit_menu','middleware' => 'auth', 'uses' => 'MenuController@destroy'));
-
-
 Route::post('menuitem',array('as' => 'create_menu_item','middleware' => 'auth', 'uses' => 'MenuItemController@store'));
 
+/**
+ * Jobs
+ */
+Route::post('jobs/start',array('as' => 'async_jobs', 'uses' => 'AsyncController@launch'));
+Route::post('jobs/{id}',array('as' => 'async_jobs', 'uses' => 'AsyncController@handle'));
 
 
 
 /**
  * Dynamic Routes. Always be routes last or else other routes will be overided
  */
-
 Route::get('/{id}',array('as' => 'get_dynamic', 'uses' => 'DynamicRouteController@get'))->where('id', '(.*)');
 Route::post('/{id}',array('as' => 'post_dynamic','uses' => 'DynamicRouteController@post'))->where('id', '(.*)');
-
-//Route::get('/testphp', function() {
-//    echo "test";
-//});
-
 

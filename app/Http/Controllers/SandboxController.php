@@ -61,7 +61,7 @@ class SandboxController extends Controller {
 
 		Theme::enqueue_script('datatagInterfacer', "assets/js/datablock_editor/DatatagInterfacer.js");
 		Theme::enqueue_script('dataBlock_interfacer', "assets/js/datablock_editor/DatablockInterfacer.js");
-		Theme::enqueue_script('tag_editor', "assets/js/datablock_editor/DatablockEditor.js");
+		//Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
 		$view = \View::make("sandbox.index");
 		$view->title = "sandbox";
 

@@ -40,7 +40,7 @@ class ImportHandler {
 
 			$match = $template_sheets->find($sheet_title);
 
-			if($match != null)
+			if($match !== null)
             {
 
 

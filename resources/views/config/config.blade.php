@@ -20,30 +20,30 @@
             <h3><i class="fa fa-edit"></i> Basic Input</h3>
         </div>
         <div class="widget-content">
-            {{ Form::open(array('url' => route('save_congfig'), 'id' => 'configuration', 'class' => 'form-horizontal', 'role' => 'form', 'enctype' => 'multipart/form-data')) }}
+            {!! Form::open(array('url' => route('save_congfig'), 'id' => 'configuration', 'class' => 'form-horizontal', 'role' => 'form', 'enctype' => 'multipart/form-data')) !!}
                 <div class="form-group">
                     <label class="col-md-2 control-label">Company Name</label>
                     <div class="col-md-10">
-                        {{Form::input('text', 'company_name', $company_name, array('class' => 'form-control'))}}
+                        {!!Form::input('text', 'company_name', $company_name, array('class' => 'form-control'))!!}
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-md-2 control-label">Website Name</label>
                     <div class="col-md-10">
-                        {{Form::input('text', 'website_name', $website_name, array('class' => 'form-control'))}}
+                        {!! Form::input('text', 'website_name', $website_name, array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">Website Description</label>
                     <div class="col-md-10">
-                        {{Form::input('text', 'website_description', $website_description, array('class' => 'form-control'))}}
+                        {!! Form::input('text', 'website_description', $website_description, array('class' => 'form-control')) !!}
                     </div>
                 </div>
             <div class="form-group">
                 <label for="favicon" class="col-md-2 control-label">Fav Icon</label>
                 <div class="col-md-10">
-                    {{Form::file('favicon')}}
+                    {!!Form::file('favicon')!!}
                     <img src="{{$favicon_url}}" />
                     {{--<input type="file" id="favicon">--}}
                     <p class="help-block"><em>Upload the favicon to be used</em></p>
@@ -52,7 +52,7 @@
             <div class="form-group">
                 <label for="logo" class="col-md-2 control-label">Upload a Logo</label>
                 <div class="col-md-10">
-                    {{Form::file('logo')}}
+                    {!!Form::file('logo')!!}
                     <img src="{{$logo_url}}" />
                     {{--<input type="file" id="logo">--}}
                     <p class="help-block"><em>Upload the logo to be used</em></p>
@@ -167,10 +167,10 @@
                 <div class="form-group">
 
                     <div class="col-sm-10">
-                        {{Form::button('Save', array('type' => 'submit', 'class' => 'btn btn-custom-primary btn-lg btn-auth', 'style' => 'float:right'))}}
+                        {!! Form::button('Save', array('type' => 'submit', 'class' => 'btn btn-custom-primary btn-lg btn-auth', 'style' => 'float:right')) !!}
                     </div>
                 </div>
-            {{Form::close();}}
+            {!! Form::close() !!}
         </div>
     </div>
 @endsection

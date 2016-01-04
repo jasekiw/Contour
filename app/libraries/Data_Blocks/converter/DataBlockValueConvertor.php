@@ -34,10 +34,10 @@ class DataBlockValueConvertor
     /**
      * @return string
      */
-    public function getProcessedValue($value)
+    public function getProcessedValue($value, $context)
     {
         $parser = new Parser($this->datablock);
-        return $parser->parse($value);
+        return $parser->parse($value, $context);
 
     }
 

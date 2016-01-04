@@ -135,7 +135,7 @@ class AuthController extends Controller
             } else {
 
                 // validation not successful, send back to form
-                return \Redirect::to('login');
+                return \Redirect::to('login')->with('message', "login attempt failed!");
 
             }
 
@@ -146,7 +146,7 @@ class AuthController extends Controller
      * Store a newly created resource in storage.
      * GET /auth/lougout
      *
-     * @return Response
+     * @return \Response
      */
     public function getLogout()
     {

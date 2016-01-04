@@ -13,10 +13,12 @@ use app\libraries\tags\DataTag;
 use app\libraries\tags\DataTags;
 use app\libraries\types\Types;
 use App\Models\Configuration;
+use App\Models\Tag;
 
 class Config
 {
 
+    private $cachedPATH = null;
     private $cachedSystemTag = null;
 
     /**
@@ -31,11 +33,8 @@ class Config
         $answer = Configuration::where("key", "=", $var)->first(array('value'));
         if(!isset($answer))
         {
-            if(isset($default))
-            {
-                return $default;
-            }
-            return ''; // returns an empty string if nothing found
+
+            return $default; // returns an empty string if nothing found
         }
         return $answer->value;
     }
@@ -113,4 +112,68 @@ class Config
         }
     }
 
+    /**
+     * Gets the tag id's that are considered in root
+     * @return int[]
+     */
+    public function getPathTags() {
+        if(isset($this->cachedPATH))
+            return $this->cachedPATH;
+        $path = $this->get("PATH");
+        if($path == null)
+        {
+            return $this->createPath();
+        }
+        else
+        {
+            $path = unserialize($path);
+            $this->cachedPATH = $path;
+            return $path;
+        }
+    }
+
+    /**
+     * Adds the tag id to the current path
+     * @param int $id
+     */
+    public function addPathId($id)
+    {
+        if(isset($this->cachedPATH))
+        {
+            array_push($this->cachedPATH, $id);
+            $this->save("PATH", serialize($this->cachedPATH));
+            return;
+        }
+
+        $path = $this->get("PATH");
+        if($path == null)
+        {
+            $path = $this->createPath();
+            array_push($path, $id);
+            $this->cachedPATH = $path;
+            $this->save("PATH", serialize($this->cachedPATH));
+        }
+        else
+        {
+            $path = unserialize($path);
+            array_push($path, $id);
+            $this->cachedPATH = $path;
+            $this->save("PATH", serialize($this->cachedPATH));
+        }
+
+
+    }
+
+    /**
+     * @return int[]
+     */
+    private function createPath()
+    {
+        $reportsId = Tag::where('name', '=', 'reports')->where('type_id', '=', Types::get_type_folder()->get_id())->first()->id;
+        $facilitiesId =  Tag::where('name', '=', 'facilities')->where('type_id', '=', Types::get_type_folder()->get_id())->first()->id; //DataTags::get_by_string_and_type("facilities", Types::get_type_sheet());
+        $path = array($reportsId, $facilitiesId, 0);
+        $this->save("PATH", serialize($path));
+        $this->cachedPATH = $path;
+        return $path;
+    }
 }

@@ -102,6 +102,7 @@ use app\libraries\tags\DataTag;
                 echo '</a></li>';
             }
         }
+
         foreach ($tags->getAsArray() as $tag) {
             /**
              * @var app\libraries\tags\DataTag $tag

@@ -5,13 +5,17 @@
  * Date: 11/4/2015
  * Time: 2:04 AM
  */
-
+use app\libraries\theme\UserInterface\DataBlockEditor;
         ?>
+<?php
+echo DataBlockEditor::get();
+?>
 
 <script type="text/javascript">
-//        var datablockEditor = new DatablockEditor();
-//        datablockEditor.show(518);
+        //var dataBlockEditor = new DataBlockEditor();
+        //dataBlockEditor.open( $('input[name=test]'), 11, "#(EG__OP_Summary/Total_Revenues, Jan)");
 </script>
+
 <script type="text/javascript">
 
         $.fn.serializeObject = function()
@@ -38,11 +42,19 @@
                 var dynamicEditor = $(".dynamic_editor");
                 var inputName = dynamicEditor.find("input[name='name']");
                 var inputValue = dynamicEditor.find("input[name='value']");
-                dynamicEditor.find("input[type='submit']").on("click", function(e) {
-                        console.log("test");
+                dynamicEditor.find("input[name='add_attribute']").on("click", function(e) {
+
                         if(inputName.val() != "" && inputValue.val() != "")
                         {
                                 form.append('<input type="text" value="' + inputValue.val() + '" name="' + inputName.val() + '" />');
+                        }
+                });
+                var inputUrl = dynamicEditor.find("input[name='request']");
+                dynamicEditor.find("input[name='change_request']").on("click", function(e) {
+
+                        if(inputUrl.val() != "")
+                        {
+                                form.attr("action", inputUrl.val());
                         }
                 });
 
@@ -58,7 +70,7 @@
 //
 //                        });
 
-                        $.ajax("/api/getValue", {
+                        $.ajax(form.attr("action"), {
                                 type: "POST",
                                 data: submission,
                                 dataType: "json",
@@ -66,6 +78,12 @@
                                 {
                                         console.log("got a response");
                                         console.log(e);
+                                        $("#result").val(JSON.stringify(e));
+                                },
+                                error: function(e){
+                                       console.log(e);
+                                        $('.error_output').html(e.responseText);
+                                       // $("#result").val(e);
                                 }
 
                         });
@@ -76,4 +94,5 @@
 
         }
         dynamicEditor();
+
 </script>

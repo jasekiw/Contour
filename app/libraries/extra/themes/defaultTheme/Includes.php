@@ -11,9 +11,16 @@ namespace app\libraries\extra\themes\defaultTheme;
 
 use Theme;
 
+/**
+ * Class Includes
+ * @package app\libraries\extra\themes\defaultTheme
+ */
 class Includes
 {
 
+    /**
+     * Includes constructor.
+     */
     function __construct()
     {
         $this->run();

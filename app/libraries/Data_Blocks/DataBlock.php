@@ -104,7 +104,7 @@ class DataBlock extends DatabaseObject{
     public function getProccessedValue()
     {
         $converter = new DataBlockValueConvertor($this);
-        return $converter->getProcessedValue($this->getValue());
+        return $converter->getProcessedValue($this->getValue(), $this->getTags()->getRowsAsArray()[0]->get_parent_id());
     }
 
 

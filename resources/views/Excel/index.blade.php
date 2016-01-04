@@ -5,8 +5,8 @@
  * Date: 7/2/2015
  * Time: 8:43 AM
  */
-
-
+use app\libraries\theme\UserInterface\DataBlockEditor;
+use app\libraries\theme\data\TableConstructor;
 
 ?>
 
@@ -65,12 +65,16 @@
     /**
      * @var \app\libraries\tags\DataTag $sheet
      */
-    \app\libraries\theme\data\TableConstructor::printTable($sheet->get_id());
+    TableConstructor::printTable($sheet->get_id());
     ?>
 </div>
+
 
 @endsection
 
 @section('scripts')
+    <?php
+    echo DataBlockEditor::get();
+    ?>
     @include('excel.scripts')
 @endsection

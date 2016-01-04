@@ -13,6 +13,10 @@ use app\libraries\tags\DataTag;
 use \app\libraries\tags\DataTags;
 use app\libraries\user\UserMeta;
 
+/**
+ * Class HomeController
+ * @package App\Http\Controllers
+ */
 class HomeController extends Controller {
 
 
@@ -48,11 +52,26 @@ class HomeController extends Controller {
 			$view->first_name = $first_name;
 		}
 
-		$rows = Revision::limit(30)->groupBy("revisionable_id")->get();
-		$type = Types::get_type_sheet();
+
+
+			$rows = Revision::limit(30)->groupBy("revisionable_id")->get();
+			$this->gatherDatafromRows($rows);
+
 		/** @var Revision $row */
 
 
+
+		$view->recentReports = $this->reports;
+		$view->recentFacilities = $this->facilities;
+
+
+		return $view;
+	}
+
+
+	public function gatherDatafromRows($rows)
+	{
+		$type = Types::get_type_sheet();
 		foreach($rows as $row)
 		{
 
@@ -61,7 +80,7 @@ class HomeController extends Controller {
 			{
 				break;
 			}
-			if($row->revisionable_type == "Tag")
+			if(str_contains($row->revisionable_type, "Tag"))
 			{
 
 				$tag = DataTags::get_by_id($row->revisionable_id);
@@ -73,13 +92,13 @@ class HomeController extends Controller {
 				$date = new \DateTime($tag->updated_at());
 				$this->addSheet($sheet, $date );
 			}
-			else if($row->revisionable_type == "Data_block")
+			else if(str_contains($row->revisionable_type,"Data_block"))
 			{
 				$block = DataBlocks::getByID($row->revisionable_id);
 				$tags = $block->getTags();
 				$tagsArray = $tags->getAsArray();
 				if(sizeof($tagsArray) > 0)
-				$tag = $tagsArray[0];
+					$tag = $tagsArray[0];
 				else
 					continue;
 				$sheet = $tag->get_a_parent_of_type($type);
@@ -90,11 +109,6 @@ class HomeController extends Controller {
 
 		}
 
-		$view->recentReports = $this->reports;
-		$view->recentFacilities = $this->facilities;
-
-
-		return $view;
 	}
 
 	/**
@@ -110,7 +124,7 @@ class HomeController extends Controller {
 			$sheet_array["name"] =  $sheet->get_name();
 			$sheet_array["updated"] =  $date->format("m-d-Y @ h:i A");
 			$sheet_array["link"] =  \URL::action('ExcelController@edit', [$sheet->get_id()]);
-			if($parent != null && strtoupper($parent->get_name()) === "FACILITIES")
+			if($parent !== null && strtoupper($parent->get_name()) === "FACILITIES")
 			{
 				if($this->facilitiesDisplayed >= 4)
 					return;

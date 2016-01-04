@@ -10,10 +10,10 @@
 
 
 
- /**
- * @param $str
- */
-function writeLine($str)
-{
-    echo $str . "<br/>";
-}
+// /**
+// * @param $str
+// */
+//function writeLine($str)
+//{
+//    echo $str . "<br/>";
+//}

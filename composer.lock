@@ -4,9 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "119ce9ae0445211821cbc7d5a1691ad1",
-    "content-hash": "5d0f13981604e1b0a47603e498d78f80",
+    "hash": "c970da76e9b63ab456a26f0ecc72f655",
+    "content-hash": "a5af9b183923ca7a381694c7709356ed",
     "packages": [
+        {
+            "name": "barryvdh/laravel-async-queue",
+            "version": "v0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-async-queue.git",
+                "reference": "d523c513a553d2632781d4a93dfcefa544d13066"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-async-queue/zipball/d523c513a553d2632781d4a93dfcefa544d13066",
+                "reference": "d523c513a553d2632781d4a93dfcefa544d13066",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "5.0.x|5.1.x",
+                "illuminate/support": "5.0.x|5.1.x",
+                "php": ">=5.4.0",
+                "symfony/process": "~2.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\Queue\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Async Queue Driver for Laravel (Push to background)",
+            "keywords": [
+                "async",
+                "background",
+                "laravel",
+                "queue"
+            ],
+            "time": "2015-08-07 12:37:11"
+        },
         {
             "name": "barryvdh/laravel-ide-helper",
             "version": "v2.1.0",

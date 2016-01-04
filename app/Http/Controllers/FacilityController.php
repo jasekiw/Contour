@@ -1,12 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use app\libraries\theme\data\TableBuilder;
 use \app\libraries\types\Types;
+use Response;
 
 /**
  * Class FacilityController
@@ -22,7 +25,7 @@ class FacilityController extends Controller {
 	public function index($letter= null)
 	{
 		$view = \View::make("facilities.index");
-		$facilities = \app\libraries\tags\DataTags::get_by_string("excel", -1)->findChild("facilities")->get_children();
+		$facilities = DataTags::get_by_string("excel", -1)->findChild("facilities")->get_children();
 
 		if(isset($letter))
 		{
@@ -74,7 +77,7 @@ class FacilityController extends Controller {
 	public function show($id)
 	{
 		$view = \View::make("facilities.editor"); // gets the editor view
-		$facility = \app\libraries\tags\DataTags::get_by_id($id); // gets the facility tag
+		$facility = DataTags::get_by_id($id); // gets the facility tag
 		$view->title = $facility->get_name();
 		$summary= $facility->get_children();
 		$revenue = $summary->get("revenue")->get_children();
@@ -90,7 +93,7 @@ class FacilityController extends Controller {
 		{
 			foreach($columns as $column)
 			{
-				$datablock = \app\libraries\datablocks\staticform\DataBlocks::getByTagsArray(array($tag,$column ));
+				$datablock = DataBlocks::getByTagsArray(array($tag,$column ));
 				array_push($summaryBlocks, $datablock);
 			}
 		}
@@ -100,7 +103,7 @@ class FacilityController extends Controller {
 		{
 			foreach($columns as $column)
 			{
-				$datablock = \app\libraries\datablocks\staticform\DataBlocks::getByTagsArray(array($tag,$column ));
+				$datablock = DataBlocks::getByTagsArray(array($tag,$column ));
 				array_push($expenseBlocks, $datablock);
 			}
 		}
@@ -110,7 +113,7 @@ class FacilityController extends Controller {
 		{
 			foreach($columns as $column)
 			{
-				$datablock = \app\libraries\datablocks\staticform\DataBlocks::getByTagsArray(array($tag,$column ));
+				$datablock = DataBlocks::getByTagsArray(array($tag,$column ));
 				array_push($revenueBlocks, $datablock);
 			}
 		}

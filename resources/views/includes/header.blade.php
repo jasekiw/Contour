@@ -274,6 +274,16 @@
 
                                                 @endif
 
+                                                @if($isAdmin)
+
+                                                    <li>
+                                                        <a href="{{ route('users_index') }}">
+                                                            <i class="fa fa-user"></i>
+                                                            <span class="text">Edit Users</span>
+                                                        </a>
+                                                    </li>
+
+                                                @endif
                                                 <li>
                                                     <a href="{{ route('logout') }}">
                                                         <i class="fa fa-power-off"></i>
@@ -319,7 +329,7 @@
                                         ?>
                                         @if(isset($main_menu))
                                             @foreach(Contour::getThemeManager()->getMenuManager()->get_menu("Main_Menu")->getMenuItems() as $menuItem)
-                                                <li class="active"><a href="{{ $menuItem->get_href() }}"><span class="text">{{$menuItem->getName()}}</span></a></li>
+                                                <li class="active"><a href="{!! $menuItem->get_href() !!}"><span class="text">{{$menuItem->getName()}}</span></a></li>
                                             @endforeach
                                         @endif
                                         {{--<li class="active"><a href="{{ route('home') }}"><span class="text">Dashboard</span></a></li>--}}
