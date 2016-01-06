@@ -11,6 +11,7 @@ namespace app\libraries\Data_Blocks\formula;
 
 use app\libraries\datablocks\DataBlock;
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\helpers\StringStack;
 use app\libraries\tags\DataTag;
 use app\libraries\tags\DataTags;
 use app\libraries\types\Types;
@@ -23,6 +24,7 @@ class Parser
 {
 
     private $error = false;
+    private $error_type = null;
     private $error_message = "";
     private $context = -1;
     /** @var DataBlock */
@@ -41,11 +43,15 @@ class Parser
     const COMMA         = ',';
     const IDENTIFIER_START   = '#';
     const NUMBERS = '0123456789';
+    const FUNCTION_TYPE_SUM = "SUM_FUNCTION";
 
     const NOT_IDENTIFIERS = "\" \\][(){};#+-*^=><";
     const OPERATORS_SN 			= "+-";
     const OPERATORS_INFIX 		= "+-*/^&=><";
     const OPERATORS_POSTFIX 	= "%";
+    const ERROR_TYPE_WARNING    = 'WARNING';
+    const ERROR_TYPE_FATAL      = 'FATAL';
+    const IGNORE_WARNINGS           = "INGORE_WARNINGS";
     /**
      * @var Token[]
      */
@@ -63,6 +69,10 @@ class Parser
      * @var int
      */
     private $recursiveCheckID;
+    /**
+     * @var TokenStack
+     */
+    private $functionStack = null;
 
     /**
      * Parser constructor.
@@ -70,6 +80,7 @@ class Parser
     function __construct()
     {
         $this->tokenStack = array();
+        $this->functionStack = new StringStack();
         //$this->postfix = new TokenStack();
         set_time_limit (10);
 
@@ -84,12 +95,8 @@ class Parser
      */
     function parse($value, $context = -1, $recursiveCheckID = null)
     {
-        if(str_contains($value, "Part_A"))
-        {
-            $test = 5-4;
-        }
-        $this->recursiveCheckID = isset($recursiveCheckID) ? $recursiveCheckID : -1;
-        $this->context = $context;
+        $this->recursiveCheckID = isset($recursiveCheckID) ? $recursiveCheckID : -1; // recursive check id is used to see if any of the parsed datablocks referr to itself.
+        $this->context = $context; // the context to be searching within
         $this->input = $value;
         $index = 0;
         $length =  strlen($value);
@@ -98,15 +105,25 @@ class Parser
             $char = $value[$index];
             $nextChar = isset($value[$index + 1]) ? $value[$index + 1] : null;
 
-            if($char === "7")
-            {
-                $test = 5-4;
-            }
-            if($char == " ")
-            {
+            if($char == " ") {
                 $index++;
                 continue;
             }
+            if(strtoupper($this->getNCharacters($index, 4)) == "SUM(")
+            {
+                $index+= 4;
+                $tokenToAdd = new Token(self::FUNCTION_TYPE_SUM, Token::TOKEN_TYPE_FUNCTION, Token::TOKEN_SUBTYPE_START);
+                $this->addToken($tokenToAdd);
+                $this->functionStack->push(self::FUNCTION_TYPE_SUM);
+                continue;
+            }
+            if($char == ":")
+            {
+                $this->addToken(new Token($char, Token::TOKEN_TYPE_FUNCTION, Token::TOKEN_SUBTYPE_RANGE));
+                $index++;
+                continue;
+            }
+
             /**
              * checks for identifier starts
              */
@@ -149,9 +166,15 @@ class Parser
                 continue;
             }
 
-            if($char == self::PAREN_CLOSE)
+            if($char == self::PAREN_CLOSE && $this->functionStack->top() === null)
             {
                 $this->addToken(new Token($char , Token::TOKEN_TYPE_SUBEXPRESSION, Token::TOKEN_SUBTYPE_STOP));
+                $index++;
+                continue;
+            }
+            else if ($char == self::PAREN_CLOSE ) // function is in the stack
+            {
+                $this->addToken(new Token( $this->functionStack->pop() , Token::TOKEN_TYPE_FUNCTION, Token::TOKEN_SUBTYPE_STOP));
                 $index++;
                 continue;
             }
@@ -181,9 +204,109 @@ class Parser
             }
             $index++;
         }
+        //$this->preprocessSUM();
+        $this->preprocessIdentifiers();
+        if ($this->error && $this->error_type == self::ERROR_TYPE_FATAL) return $this->error_message;
 
+        return $this->processTokens();
+    }
 
-       return $this->processTokens();
+    /**
+     * Checks the string for the sum function
+     */
+    private function prepxrocessSUM()
+    {
+        $infixExpression = []; //the infix expression to insert tokens into after the datablocks have been converted
+        $index = 0; // the starting index to cycle through the tokens with
+        $length = sizeOf($this->tokenStack); // the size of the token stack
+        $startingTags = null;
+        $endingTags = null;
+        while($index < $length)
+        {
+            $token = $this->tokenStack[$index];
+            /**
+             * Proccess the identifier. Gets the value recursively
+             */
+            if($token->getValue() == self::FUNCTION_TYPE_SUM && $token->getTokenType() == Token::TOKEN_TYPE_FUNCTION &&  $token->getTokenSubType() == Token::TOKEN_SUBTYPE_START) // process identifier
+            {
+                $identifier = array(); // store current tokens into an array for processing by the processIdentifer method
+                $index+= 2; //skips the original ( and starting #(
+                while ($this->tokenStack[$index]->getTokenType() == Token::TOKEN_TYPE_IDENTIFIER && $this->tokenStack[$index]->getTokenSubType() !== Token::TOKEN_SUBTYPE_STOP && $index < $length) {
+                    $identifier[] = $this->tokenStack[$index];
+                    $index++;
+                }
+                $index++; // skips the ending token
+                $startingTags = $this->getDataTags($identifier);
+            }
+
+            $infixExpression[] = $token;
+            $index++;
+
+        }
+        $this->tokenStack = $infixExpression;
+        return;
+    }
+
+    /**
+     * This method converts the identifiers to actual numbers
+     */
+    private function preprocessIdentifiers()
+    {
+        $infixExpression = []; //the infix expression to insert tokens into after the datablocks have been converted
+        $index = 0; // the starting index to cycle through the tokens with
+        $length = sizeOf($this->tokenStack); // the size of the token stack
+        while($index < $length)
+        {
+            $token = $this->tokenStack[$index];
+            /**
+             * Proccess the identifier. Gets the value recursively
+             */
+            if($token->getTokenType() == Token::TOKEN_TYPE_IDENTIFIER &&  $token->getTokenSubType() == Token::TOKEN_SUBTYPE_START) // process identifier
+            {
+                $identifier = array(); // store current tokens into an array for processing by the processIdentifer method
+                $index++; //skips the original (
+                while ($this->tokenStack[$index]->getTokenType() == Token::TOKEN_TYPE_IDENTIFIER && $this->tokenStack[$index]->getTokenSubType() !== Token::TOKEN_SUBTYPE_STOP && $index < $length) {
+                    $identifier[] = $this->tokenStack[$index];
+                    $index++;
+                }
+                $index++; // skips the ending token
+                $processed = $this->processIdentifer($identifier);
+                if ($processed !== null) {
+                    $subParser = new Parser();
+                    $parsed = $subParser->parse($processed->getValue(), $this->evaluatedDatablock->getTags()->getRowsAsArray()[0]->get_parent_id(), $this->evaluatedDatablock->get_id());
+                    if ($subParser->error)
+                    {
+                        $this->error = $subParser->error;
+                        $this->error_type = $subParser->error_type;
+                        $this->error_message = $subParser->error_message;
+                        return;
+                    }
+                    $infixExpression[] = new Token($parsed, Token::TOKEN_TYPE_OPERAND); // recursing into
+                    continue;
+                }
+                else if($this->error_type == self::ERROR_TYPE_WARNING)
+                {
+                    if( end($infixExpression) !== false && end($infixExpression)->getTokenType() == Token::TOKEN_TYPE_OPERATORINFIX) {
+                        array_pop($infixExpression);
+                        continue;
+                    } else if(isset($this->tokenStack[$index]) && $this->tokenStack[$index]->getTokenType() == Token::TOKEN_TYPE_OPERATORINFIX) {
+                        $index++;
+                        continue;
+                    }
+                    else
+                        continue;
+                }
+                else
+                    return;
+
+            }
+
+            $infixExpression[] = $token;
+            $index++;
+
+        }
+        $this->tokenStack = $infixExpression;
+        return;
     }
 
     /**
@@ -202,52 +325,10 @@ class Parser
         {
             $token = $this->tokenStack[$index];
 
-            /**
-             * Proccess the identifier. Gets the value recursively
-             */
-            if($token->getTokenType() == Token::TOKEN_TYPE_IDENTIFIER &&  $token->getTokenSubType() == Token::TOKEN_SUBTYPE_START) // process identifier
-            {
-                if($token->getTokenSubType() == Token::TOKEN_SUBTYPE_START) $startOfIdentifier = $index;
-                $identifier = array();
-                $index++; //skips the original (
-                while($this->tokenStack[$index]->getTokenType() == Token::TOKEN_TYPE_IDENTIFIER && $this->tokenStack[$index]->getTokenSubType() !==  Token::TOKEN_SUBTYPE_STOP && $index < $length)
-                {
-                    $identifier[] = $this->tokenStack[$index];
-                    $index++;
-                }
-
-                $index++; // skips the ending token
-
-
-                $processed = $this->processIdentifer($identifier);
-                if($processed !== null)
-                {
-                    $subParser = new Parser();
-                    $parsed = $subParser->parse($processed->getValue(),$this->evaluatedDatablock->getTags()->getRowsAsArray()[0]->get_parent_id(), $this->evaluatedDatablock->get_id() );
-                    if($subParser->error)
-                        return $subParser->error_message;
-                    $postfixExpression[] = new Token($parsed, Token::TOKEN_TYPE_OPERAND); // recursing into
-                    continue;
-                }
-                else
-                {
-//                    if( isset($this->tokenStack[$startOfIdentifier - 1]) &&  $this->tokenStack[$startOfIdentifier - 1]->getTokenType() == Token::TOKEN_TYPE_OPERATORINFIX)
-//                    {
-//
-//                    }
-                    return $this->error_message;
-                }
-
-
-
-            }
-
 
             if($token->getTokenType() == Token::TOKEN_TYPE_OPERATORINFIX)
             {
                 $currentPrecedence = $this->getPrecendence($token);
-
-
                 if($token->getTokenSubType() == Token::TOKEN_SUBTYPE_STOP) // if closing parenthesis, pop differently
                 {
                     $parenFound = false;
@@ -316,26 +397,9 @@ class Parser
         return $this->calculatePostFix($postfixExpression);
     }
 
-    /**
-     * @param \splStack $splStack
-     * @return array
-     */
-    private function getStackAsArray($splStack)
-    {
-        $arr = [];
-        while(!$splStack->isEmpty())
-            $arr[] = $splStack->pop();
-        $index = sizeOf($arr) - 1;
-        while($index >= 0)
-        {
-            $splStack->push($arr[$index]);
-            $index--;
-        }
-        return $arr;
-    }
-
 
     /**
+     * Runs mathematical calculation on the postfix expression
      * @param Token[] $postFixExpression
      * @return string
      */
@@ -389,6 +453,7 @@ class Parser
     }
 
     /**
+     * Adds a token to the tokenStack
      * @param Token $token
      */
     private function addToken(Token $token)
@@ -403,14 +468,6 @@ class Parser
     private function peek()
     {
         return end($this->tokenStack);
-    }
-
-    /**
-     * @return Token
-     */
-    private function pop()
-    {
-        return array_pop($this->tokenStack);
     }
 
     /**
@@ -452,12 +509,14 @@ class Parser
         if($datablock !== null && $recursived && $datablock->get_id() == $this->recursiveCheckID)
         {
             $this->error = true;
+            $this->error_type = self::ERROR_TYPE_FATAL;
             $this->error_message = "recursive call detected, trying to find " . $this->getTokenArrayAsString($identifiers) . " and got a recursive call";
             return null;
         }
         if($datablock === null)
         {
             $this->error = true;
+            $this->error_type = self::ERROR_TYPE_WARNING;
             $this->error_message = "could not find " . $this->getTokenArrayAsString($identifiers) . "";
             return null;
         }
@@ -467,11 +526,12 @@ class Parser
     }
 
     /**
+     * Gets the tags from the identifiers
      * @param Token[] $identifiers
      * @param bool $recursived
      * @return null
      */
-    private function getDataTags($identifiers, $recursived)
+    private function getDataTags($identifiers, $recursived = false)
     {
         /**
          * @var Token[][]
@@ -548,6 +608,7 @@ class Parser
                     if($datatag === null)
                     {
                         $this->error_message = "cannot find " . $currentTag . " within the context " . $tagID . " or from path. trying to parse the datablockr reference " . $this->getTokenArrayAsString($identifiers);
+                        $this->error_type = self::ERROR_TYPE_FATAL;
                         $this->error = true;
                         return null;
                     }
@@ -576,6 +637,7 @@ class Parser
                 if($datatag === null)
                 {
                     $this->error = true;
+                    $this->error_type = self::ERROR_TYPE_FATAL;
                     $this->error_message = "could not find tag " . $currentTag . " with tagID " . $tagID . " reference " . $this->getTokenArrayAsString($identifiers) . "";
                     return null;
                 }
@@ -621,6 +683,13 @@ class Parser
             $response .= $token->getValue();
         return $response;
     }
+
+    /**
+     * Gets the current tag name in respect to the sheet of the tagID instead of in respect to the tagID itself
+     * @param int $tagID
+     * @param string $name
+     * @return DataTag|null
+     */
     private function findTagInRespectToSheet($tagID, $name)
     {
         $datatag = DataTags::get_by_id($tagID);
@@ -629,5 +698,25 @@ class Parser
         if(!isset($datatag)) return null;
         return $datatag->findChild($name);
 
+    }
+
+    /**
+     * Gets a substring of the whole input safetly. out of bounds allowed
+     * @param int $index The index to start the substring
+     * @param int $n The length of the substring
+     * @return string The substring
+     */
+    private function getNCharacters($index, $n)
+    {
+        $stringToReturn = "";
+        for($i = $index; $i < ($n + $index); $i++)
+        {
+            $char = isset($this->input[$i]) ? $this->input[$i] : null;
+            if($char == " ")
+                continue;
+            if(isset($char))
+                $stringToReturn .= $char;
+        }
+        return $stringToReturn;
     }
 }

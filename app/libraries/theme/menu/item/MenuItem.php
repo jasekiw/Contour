@@ -45,14 +45,15 @@ class MenuItem extends DatabaseObject
     private $iconTag;
 
     /**
-     * Creates a new MenuItem with the following arguments. The use of arugments is null but use all if used.
+     * Cconstructs a MenuItem with the following arguments. The use of arugments is null but use all if used.
      * @param DataTag $menuItemTag
      */
     public function __construct($menuItemTag)
     {
             $this->tag = $menuItemTag;
             $this->id = $menuItemTag->get_id();
-            $this->name = $menuItemTag->get_name();
+            $this->name = $menuItemTag->getNiceName();
+
             $this->linkTag = $menuItemTag->findChild("link");
             $this->iconTag = $menuItemTag->findChild("icon");
             $this->link = $this->linkTag->get_data_block();
@@ -74,16 +75,10 @@ class MenuItem extends DatabaseObject
 
         $menutype = Types::get_type_by_name("menu_item",TypeCategory::getTagCategory() );
         if(!isset($menutype))
-        {
             $menutype = Types::create_type_tag("menu_item");
-        }
-
         $property_type = Types::get_type_by_name("property",TypeCategory::getTagCategory() );
         if(!isset($property_type))
-        {
             $property_type = Types::create_type_tag("property");
-        }
-
         if(!isset($sort_number))
             $sort_number = 0;
         if(!isset($icon))
@@ -91,6 +86,7 @@ class MenuItem extends DatabaseObject
 
         $menuItemTag = new DataTag($name,$menu->get_id(), $menutype, $sort_number);
         $menuItemTag->create();
+        $menuItemTag->setNiceName($name);
 
 
         $linkTag = new DataTag("link", $menuItemTag->get_id(), $property_type);
@@ -98,8 +94,6 @@ class MenuItem extends DatabaseObject
         $linkBlock = $linkTag->create_data_block();
         $linkBlock->set_value($link);
         $linkBlock->save();
-
-
 
         $iconTag = new DataTag("icon", $menuItemTag->get_id(), $property_type);
         $iconTag->create();
@@ -120,6 +114,10 @@ class MenuItem extends DatabaseObject
     public function getName()
     {
         return $this->name;
+    }
+    public function getTagName()
+    {
+        return $this->tag->get_name();
     }
 
     /**
@@ -163,6 +161,7 @@ class MenuItem extends DatabaseObject
     {
         $this->name = $value;
         $this->tag->set_name($value );
+        $this->tag->setNiceName($value);
         $this->tag->save();
     }
     /**
@@ -200,6 +199,15 @@ class MenuItem extends DatabaseObject
             $this->link->save();
             $this->icon->save();
         }
+    }
+
+    /**
+     * Gets the menu ID
+     * @return int
+     */
+    public function getMenuID()
+    {
+        return $this->tag->get_parent()->get_parent_id();
     }
 
     /**

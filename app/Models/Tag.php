@@ -10,7 +10,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property String $name
  * @property int $type_id
  * @property int $parent_tag_id
- * @property int $sort_number
  * @property String $created_at
  * @property String $updated_at
  * @method Tag static first() first() returns

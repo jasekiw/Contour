@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\excel\templates\TableCompiler;
 use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
@@ -65,6 +66,27 @@ class FacilityController extends Controller {
 	public function store()
 	{
 
+	}
+
+	/**
+	 * Display the specified resource.
+	 * GET /facility/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function experimentalShow($id)
+	{
+		$view = \View::make("facilities.experimentalEditor"); // gets the editor view
+		$compiler = new TableCompiler($id);
+		$view->title = $compiler->name;
+		$view->summary = $compiler->summary;
+		$view->summaryBlocks = $compiler->summaryBlocks;
+		$view->columns = $compiler->columns;
+		$view->compositTags = $compiler->compositTags;
+		$view->summaryTable = $compiler->summaryTable;
+		$view->compositTables = $compiler->compositTables;
+		return $view;
 	}
 
 	/**
@@ -143,7 +165,16 @@ class FacilityController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+		$view = \View::make("excel.editor"); // gets the editor view
+		$compiler = new TableCompiler($id);
+		$view->title = $compiler->name;
+		$view->summary = $compiler->summary;
+		$view->summaryBlocks = $compiler->summaryBlocks;
+		$view->columns = $compiler->columns;
+		$view->compositTags = $compiler->compositTags;
+		$view->summaryTable = $compiler->summaryTable;
+		$view->compositTables = $compiler->compositTables;
+		return $view;
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Http\Controllers\ErrorController;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -44,6 +45,13 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
+        }
+        if($this->isHttpException($e) && $e->getStatusCode() == '404') {
+
+            \Log::error($e);
+            $controller = new ErrorController();
+
+            return \Response::make($controller->show());
         }
 
         return parent::render($request, $e);

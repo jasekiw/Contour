@@ -33,12 +33,12 @@ abstract class Controller extends BaseController
         // disables query logging. The logging filled up the memory and caused the program to crash.
        // \DB::connection()->disableQueryLog();
 
-        $GLOBALS['queries'] = array();
-        \Event::listen('illuminate.query', function($query)
-        {
-            array_push($GLOBALS['queries'], $query);
-            //\kint::dump($query);
-        });
+//        $GLOBALS['queries'] = array();
+//        \Event::listen('illuminate.query', function($query)
+//        {
+//            array_push($GLOBALS['queries'], $query);
+//            //\kint::dump($query);
+//        });
 
     }
 }

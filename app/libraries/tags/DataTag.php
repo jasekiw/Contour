@@ -14,6 +14,7 @@ use app\libraries\types\Types;
 use App\Models\Tag;
 use app\libraries\database\DatabaseObject;
 use app\libraries\types\Type;
+use App\Models\Tag_meta;
 use TijsVerkoyen\CssToInlineStyles\Exception;
 
 /**
@@ -56,6 +57,7 @@ class DataTag extends DatabaseObject
      * @access private
      */
     private $children = null;
+    private $cached_metas = [];
 
     /**
      * Creates a new tag to insert into the database
@@ -354,14 +356,11 @@ class DataTag extends DatabaseObject
             return null;
     }
 
-
-
     private function check_parent_id()
     {
         if($this->parent_id == -1 || !isset($this->parent_id))
             $this->parent_id  = 0;
     }
-
 
     /**
      * Warning be sure to check if the tag has children or they will be lost
@@ -371,7 +370,6 @@ class DataTag extends DatabaseObject
     {
         Tag::where("id", "=", $this->id)->delete();
         $this->id = null;
-
     }
 
     /**
@@ -392,12 +390,10 @@ class DataTag extends DatabaseObject
     {
         if(isset($this->cached_parent))
             return $this->cached_parent;
-        if($this->parent_id !== null)
-        {
-            $this->cached_parent = DataTags::get_by_id($this->parent_id);
-            return  $this->cached_parent;
-        }
-        return null;
+        if($this->parent_id === null)
+            return null;
+        $this->cached_parent = DataTags::get_by_id($this->parent_id);
+        return  $this->cached_parent;
     }
 
     /**
@@ -408,16 +404,13 @@ class DataTag extends DatabaseObject
     public function get_a_parent_of_type($type)
     {
         $parent = $this->get_parent();
-        if(isset($parent))
-        {
-            if($parent->get_type()->get_id() == $type->get_id())
-                return $parent;
-            else
-                return $parent->get_a_parent_of_type($type);
-        }
-        return null;
+        if(!isset($parent))
+            return null;
+        if($parent->get_type()->get_id() == $type->get_id())
+            return $parent;
+        else
+            return $parent->get_a_parent_of_type($type);
     }
-
 
     /**
      * Gets the ID of the parent tag
@@ -462,7 +455,6 @@ class DataTag extends DatabaseObject
             return $this->children;
         $tagmodels = DataTags::getDataTagsQueryBuilder();
         $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
-
         if(sizeOf($tagmodels) != 0)
         {
             $collection = new TagCollection();
@@ -481,6 +473,44 @@ class DataTag extends DatabaseObject
         }
     }
 
+    /**
+     * Gets children That have Children
+     * @return TagCollection|null
+     */
+    public function getCompositChildren()
+    {
+        if(!isset($this->id))
+            return null;
+        $tagmodels = DataTags::getDataTagsQueryBuilder();
+        $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
+        $collection = new TagCollection();
+        if(sizeOf($tagmodels) === 0)
+            return $collection;
+        foreach($tagmodels as $tagmodel)
+            if(Tag::where('parent_tag_id', '=', $tagmodel->id)->exists())
+                $collection->add(DataTags::get_by_row($tagmodel));
+        $this->children = $collection;
+        return $collection;
+    }
+    /**
+     * Gets children that do not have Children
+     * @return TagCollection|null
+     */
+    public function getSimpleChildren()
+    {
+        if(!isset($this->id))
+            return null;
+        $tagmodels = DataTags::getDataTagsQueryBuilder();
+        $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
+        $collection = new TagCollection();
+        if(sizeOf($tagmodels) === 0)
+            return $collection;
+        foreach($tagmodels as $tagmodel)
+            if( !Tag::where('parent_tag_id', '=', $tagmodel->id)->exists())
+                $collection->add(DataTags::get_by_row($tagmodel));
+        $this->children = $collection;
+        return $collection;
+    }
 
     /**
      * Gets all of the children of this tag recursively
@@ -489,12 +519,9 @@ class DataTag extends DatabaseObject
     public function get_children_recursive()
     {
         if(!isset($this->id))
-        {
             return null;
-        }
         $tagmodels = DataTags::getDataTagsQueryBuilder();
         $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
-
         if(sizeOf($tagmodels) != 0)
         {
             $collection = new TagCollection();
@@ -514,8 +541,6 @@ class DataTag extends DatabaseObject
         }
     }
 
-
-
     /**
      * Checks to see if this tag has children
      * @return bool Returns true if this tag has children
@@ -524,12 +549,12 @@ class DataTag extends DatabaseObject
     {
         if(!isset($this->id))
             return false;
-
         if(Tag::where('parent_tag_id', '=', $this->id)->exists())
            return true;
         else
            return false;
     }
+
     /**
      * Gets the number of layers deep the tag is. This function caches the value after it runs
      * @return int The amount of parents this tag has
@@ -539,7 +564,6 @@ class DataTag extends DatabaseObject
     {
         if(isset($this->cached_layers_deep))
             return $this->cached_layers_deep;
-
         if($this->parent_id !== null)
         {
             $parent = DataTags::get_by_id($this->parent_id);
@@ -557,13 +581,14 @@ class DataTag extends DatabaseObject
 
     }
 
-
-
+    /**
+     * Gets the layers between the tag and the nearest sheet
+     * @return int|null
+     */
     public function get_layers_deep_to_sheet()
     {
         if(isset($this->cached_layers_deep_to_sheet))
             return $this->cached_layers_deep_to_sheet;
-
         $count = 0;
         $type_name = "";
         $parent = $this->get_parent();
@@ -602,18 +627,13 @@ class DataTag extends DatabaseObject
     {
         if(isset($this->updated_at)) // cached
             return $this->updated_at;
-
-
-        if(isset($this->id))
-        {
-            /**@var Tag $tag */
-            $tag = Tag::where('id', '=', $this->id)->first();
-            $updated_at = $tag->updated_at;
-            $this->updated_at = $updated_at;
-            return $updated_at;
-        }
-        else
+        if(!isset($this->id))
             return null;
+        /**@var Tag $tag */
+        $tag = Tag::where('id', '=', $this->id)->first();
+        $updated_at = $tag->updated_at;
+        $this->updated_at = $updated_at;
+        return $updated_at;
     }
 
     /**
@@ -670,5 +690,61 @@ class DataTag extends DatabaseObject
         if(isset($this->name) && isset($this->parent_id))
             return  DataTags::get_by_string($this->name,$this->parent_id ) ? true : false;
         return false;
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+//    public function getMetaValue($name)
+//    {
+//        if(isset($this->cached_metas[$name]))
+//            return $this->cached_metas[$name];
+//        $meta = Tag_meta::where('tag_id', '=', $this->get_id())->where('name', '=', $name)->first();
+//    }
+
+    /**
+     * Gets the NiceName of the tag. if none found, the name of the tag is given
+     * @return mixed|null
+     */
+    public function getNiceName()
+    {
+        if(isset($this->cached_metas['nice_name']))
+            return $this->cached_metas['nice_name'];
+        /** @var \App\Models\Tag_meta $nice_name_row */
+        $nice_name_row = Tag_meta::where('tag_id', '=', $this->get_id())->where('name', '=', 'nice_name')->first();
+        if(!isset($nice_name_row))
+        {
+            $nice_name_row = new Tag_meta();
+            $nice_name_row->tag_id = $this->get_id();
+            $nice_name_row->name = 'nice_name';
+            $nice_name_row->value = $this->get_name();
+            $nice_name_row->save();
+            return $nice_name_row->value;
+        }
+        return $nice_name_row->value;
+    }
+
+    /**
+     * Sets the nice name of the tag
+     * @param $name
+     */
+    public function setNiceName($name)
+    {
+        /** @var \App\Models\Tag_meta $nice_name_row */
+        $nice_name_row = Tag_meta::where('tag_id', '=', $this->get_id())->where('name', '=', 'nice_name')->first();
+        if(!isset($nice_name_row))
+        {
+            $nice_name_row = new Tag_meta();
+            $nice_name_row->tag_id = $this->get_id();
+            $nice_name_row->name = 'nice_name';
+            $nice_name_row->value = $name;
+            $nice_name_row->save();
+        }
+        else
+        {
+            $nice_name_row->value = $name;
+            $nice_name_row->save();
+        }
     }
 }

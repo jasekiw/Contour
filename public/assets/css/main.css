@@ -18139,10 +18139,13 @@ ul.main-menu > li > a,
   *vertical-align: auto;
   *zoom: 1;
   *display: inline;
-  border-right: 1px solid #ccc;
   margin: 0;
   padding-right: 10px;
   margin-right: 10px;
+}
+.main-header.hasSubtitle h2
+{
+  border-right: 1px solid #ccc;
 }
 @media screen and (max-width: 768px) {
   /* line 205, ../../sass/partials/_main-content.scss */

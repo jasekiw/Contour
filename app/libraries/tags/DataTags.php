@@ -220,7 +220,7 @@ class DataTags
      */
     public static function validate_name($name)
     {
-        $name = str_replace(" ", "_",$name);
+        $name = preg_replace('!\s+!', '_', $name);
         $name = str_replace("'", "", $name);
         $name = str_replace("\\", "", $name);
         $name = str_replace("/", "", $name);

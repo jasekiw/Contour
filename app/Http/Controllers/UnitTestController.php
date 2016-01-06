@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\datablocks\staticform\DataBlocks;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -30,10 +31,21 @@ class UnitTestController extends Controller {
 	 */
 	public function index()
 	{
-		Theme::getMenue()->get_menu("main_menu")->add_new("Home", "/", "",1);
-		Theme::getMenue()->save();
-		$menu = Theme::getMenue();
-		\Kint::dump($menu);
+//		Theme::getMenue()->get_menu("main_menu")->add_new("Home", "/", "",1);
+//		Theme::getMenue()->save();
+//		$menu = Theme::getMenue();
+//		\Kint::dump($menu);
+		$test = new DataBlock();
+//		$testTag = new DataTag('test', 0, Types::get_type_folder(), 0);
+//		$testTag->create();
+		$testTag = DataTags::get_by_string('test', 0);
+		$test->set_tags(new TagCollection([$testTag]));
+		$test->set_value("test");
+		$test->set_type(Types::get_type_cell());
+		$test->create();
+		$testBlock = DataBlocks::getByID(37819);
+
+
 	}
 
 	public function findDatablockByTags($datablocks, $column, $row)

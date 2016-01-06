@@ -11,6 +11,7 @@
 */
 
 
+
 /**
  * Home Route
  */
@@ -107,6 +108,12 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
  */
 Route::get('testDataBlocktranslator', ['as' => 'api_datablocks_test','middleware' => 'auth', 'uses' => 'DataBlockTranslatorController@getValueTest']);
 
+
+/**
+ * Test
+ */
+Route::get('test', ['as' => 'test_index','middleware' => 'auth', 'uses' => 'TestController@index']);
+
 /**
  * Math Testing
  */
@@ -154,12 +161,16 @@ Route::get('unittest',array('as' => 'unit_test','middleware' => 'auth', 'uses' =
  */
 Route::get('facilities',array('as' => 'facilities','middleware' => 'auth', 'uses' => 'FacilityController@index'));
 Route::get('facilities/letter/{id}',array('as' => 'letter_facilities','middleware' => 'auth', 'uses' => 'FacilityController@index'));
-Route::get('facilities/{id}',array('as' => 'get_facility','middleware' => 'auth', 'uses' => 'FacilityController@show'));
+Route::get('facilities/{id}',array('as' => 'get_facility','middleware' => 'auth', 'uses' => 'FacilityController@edit'));
+Route::get('facilities/edit/{id}',array('as' => 'facility_edit','middleware' => 'auth', 'uses' => 'FacilityController@edit'));
+Route::get('exfacilities/{id}',array('as' => 'get_ex_facility','middleware' => 'auth', 'uses' => 'FacilityController@experimentalShow'));
 
 /**
  * Reports
  */
 Route::get('reports',array('as' => 'reports','middleware' => 'auth', 'uses' => 'ReportsController@index'));
+Route::get('report/edit/{id}',array('as' => 'report_edit','middleware' => 'auth', 'uses' => 'ReportsController@edit'));
+Route::get('report/show/{id}',array('as' => 'report_edit','middleware' => 'auth', 'uses' => 'ReportsController@edit'));
 
 
 /**
@@ -171,6 +182,8 @@ Route::get('menu/{id}',array('as' => 'get_menu','middleware' => 'auth', 'uses' =
 Route::post('menu/{id}',array('as' => 'edit_menu','middleware' => 'auth', 'uses' => 'MenuController@edit'));
 Route::delete('menu/{id}',array('as' => 'edit_menu','middleware' => 'auth', 'uses' => 'MenuController@destroy'));
 Route::post('menuitem',array('as' => 'create_menu_item','middleware' => 'auth', 'uses' => 'MenuItemController@store'));
+Route::get('menuitem/{id}',array('as' => 'menu_item_edit','middleware' => 'auth', 'uses' => 'MenuItemController@edit'));
+Route::put('menuitem/update/{id}',array('as' => 'menu_item_update','middleware' => 'auth', 'uses' => 'MenuItemController@update'));
 
 /**
  * Jobs
@@ -183,6 +196,6 @@ Route::post('jobs/{id}',array('as' => 'async_jobs', 'uses' => 'AsyncController@h
 /**
  * Dynamic Routes. Always be routes last or else other routes will be overided
  */
-Route::get('/{id}',array('as' => 'get_dynamic', 'uses' => 'DynamicRouteController@get'))->where('id', '(.*)');
-Route::post('/{id}',array('as' => 'post_dynamic','uses' => 'DynamicRouteController@post'))->where('id', '(.*)');
+//Route::get('/{id}',array('as' => 'get_dynamic', 'uses' => 'DynamicRouteController@get'))->where('id', '(.*)');
+//Route::post('/{id}',array('as' => 'post_dynamic','uses' => 'DynamicRouteController@post'))->where('id', '(.*)');
 

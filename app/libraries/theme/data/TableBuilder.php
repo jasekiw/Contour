@@ -23,6 +23,7 @@ class TableBuilder
     private $datablocks;
     private $id;
     private $readOnly = false;
+    private $name;
 
     /**
      * Creates a new instance of the table builder
@@ -30,13 +31,15 @@ class TableBuilder
      * @param DataTag[] $columns
      * @param DataBlock[] $datablocks
      * @param String $id The id to assign to the table
+     * @param null $name
      */
-    public function __construct($rows, $columns, $datablocks, $id)
+    public function __construct($rows, $columns, $datablocks, $id, $name = null)
     {
         $this->rows = $rows;
         $this->columns = $columns;
         $this->datablocks = $datablocks;
         $this->id = $id;
+        $this->name = $name;
     }
 
     /**
@@ -53,6 +56,7 @@ class TableBuilder
         $response.= '<tr>' . $nl;
         $datablockIndex = 0;
         $y = 0;
+        array_unshift($this->rows, null);
         foreach($this->rows as $row)
         {
             $x = 0;
@@ -180,6 +184,10 @@ class TableBuilder
     public function getReadOnly()
     {
         return $this->readOnly;
+    }
+    public function getName()
+    {
+        return $this->name;
     }
 
 }

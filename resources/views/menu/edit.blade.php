@@ -68,7 +68,7 @@ use app\libraries\theme\menu\item\MenuItem;
 
         ?>
             <tr>
-                <td><a href="{!! route("get_menu", array($menuItem->get_id())) !!}">{!! $menuItem->getName()!!} </a></td>
+                <td><a href="{!! route("menu_item_edit", array($menuItem->get_id())) !!}">{!! $menuItem->getName()!!} </a></td>
                 <td>{!!$menuItem->get_href()!!}</td>
                 <td>{!!$menuItem->get_icon()!!}</td>
             </tr>

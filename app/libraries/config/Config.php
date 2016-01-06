@@ -176,4 +176,23 @@ class Config
         $this->cachedPATH = $path;
         return $path;
     }
+
+    /**
+     * Turns on all error reporting
+     */
+    public function turnOnErrorReporting()
+    {
+        ini_set('display_errors',1);
+        error_reporting(E_ALL);
+    }
+
+    /**
+     * Sets the execution time limit
+     * @param $seconds
+     */
+    public function setTimeLimit($seconds)
+    {
+        ini_set('max_execution_time', $seconds);
+        set_time_limit($seconds);
+    }
 }

@@ -551,7 +551,7 @@
                         </div>
                         <!-- main -->
                         <div class="content">
-                            <div class="main-header">
+                            <div class="main-header @if(isset($subtitle)) hasSubtitle @endif">
                                 <h2>{{$title }}</h2>
                                 @if(isset($subtitle))
                                     <em>{{$subtitle}}</em>
