@@ -18,6 +18,7 @@ class CreatePermissionsReference extends Migration {
 			$table->unsignedInteger('permission_group_id');
 			$table->unsignedInteger('permission_id');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

@@ -7,29 +7,27 @@
  */
 
 namespace app\libraries\tags\collection;
-
 use app\libraries\tags\DataTag;
 use app\libraries\tags\DataTags;
 use app\libraries\types\Type;
 use app\libraries\types\Types;
 use \Exception;
 
-class TagCollection
+/**
+ * Class TagCollection
+ * @package app\libraries\tags\collection
+ */
+class TagCollection extends TagCollectionAbstract
 {
 
-//    public $ClassTag = null;
-//    public $CategoryTag = null;
-//    public $InstanceTag = null;
-//    public $DescripterTag = null;
     /**
      * @var DataTag[]
      */
     public $tags = array();
-    private $sorted = false;
-
-    const SORT_TYPE_BY_LAYERS = "BY_LAYERS";
+    const SORT_TYPE_BY_LAYERS = "sortByLayers";
     const SORT_TYPE_NONE = "NONE";
-    const SORT_TYPE_BY_SORT_NUMBER = "BY_SORT_NUMBER";
+    const SORT_TYPE_BY_SORT_NUMBER = "sortBySortNumber";
+    const SORT_TYPE_ALPHABETICAL = "sortByAlphabetical";
 
     /**
      * Creates a new Collection Of tags. This does not change anything in the database but allows easy reference to multiple tags
@@ -39,76 +37,24 @@ class TagCollection
     function __construct($inputTags = null)
     {
         if(!isset($inputTags))
-        {
             return;
-        }
         if(is_array($inputTags))
-        {
-            if(get_class(array_values($inputTags)[0]) == 'app\libraries\tags\DataTag')
-            {
-                $this->tags = $inputTags;
-            }
-            else{
-                throw new Exception('Contructor tags have to be of type DataTag or an array of that type');
-            }
-
-        }
-        else if(get_class($inputTags) == 'app\libraries\tags\DataTag')
-        {
+            $this->tags = $inputTags;
+        else if(strpos(get_class($inputTags), "DataTag") !== false)
             array_push($this->tags,$inputTags);
-        }
-//        $this->ClassTag = $this->isOfType($class) ? new TagSubClass("Class", $class) : new TagSubClass("Class");
-//        $this->CategoryTag = $this->isOfType($category) ? new TagSubClass("Category", $category) : new TagSubClass("Category");
-//        $this->InstanceTag = $this->isOfType($instance) ? new TagSubClass("Instance", $instance) : new TagSubClass("Instance");
-//        $this->descripterTag = $this->isOfType($descriptor) ? new TagSubClass("Descriptor", $descriptor) : new TagSubClass("Descriptor");
-
     }
 
-    /**
-     * @return array
-     */
-//   public function getAsArrayAssoc()
-//   {
-//       $theArray = array();
-//       if($this->ClassTag->is_set())
-//       {
-//           $theArray["class"] = $this->ClassTag->get();
-//       }
-//       if($this->CategoryTag->is_set())
-//       {
-//           $theArray["category"] = $this->CategoryTag->get();
-//       }
-//       if($this->InstanceTag->is_set())
-//       {
-//           $theArray["isntance"] = $this->InstanceTag->get();
-//       }
-//       if($this->descripterTag->is_set())
-//       {
-//           $theArray["descriptor"] = $this->descripterTag->get();
-//       }
-//       return $theArray;
-//
-//   }
 
     /**
      * Gets the tags as an array. Sort options are available use TagCollection::SORT_TYPE*
      * @param string $sort The sort method to use, defaults to sort by layers
      * @return \app\libraries\tags\DataTag[]
      */
-    public function getAsArray($sort = self::SORT_TYPE_BY_LAYERS)
+    public function getAsArray($sort = TagCollection::SORT_TYPE_BY_LAYERS)
     {
-
         if($sort == self::SORT_TYPE_NONE)
             return $this->tags;
-        switch($sort)
-        {
-            case self::SORT_TYPE_BY_LAYERS:
-                $this->sortByLayers();
-                break;
-            case self::SORT_TYPE_BY_SORT_NUMBER:
-                $this->sortBySortNumber();
-                break;
-        }
+        $this->$sort(); // sorts by the method name
         return $this->tags;
     }
 
@@ -123,12 +69,9 @@ class TagCollection
         $matches = array();
         foreach($this->tags as $tag)
         {
-            $found = strpos($tag->get_name(),$starting );
-
+            $found = strpos(strtoupper($tag->get_name()), strtoupper($starting) );
             if($found !== false && $found == 0)
-            {
                 array_push($matches, $tag);
-            }
         }
         return $matches;
     }
@@ -140,12 +83,8 @@ class TagCollection
     {
         $array = array();
         foreach($this->tags as $tag)
-        {
             if($tag->get_type()->getName() == Types::get_type_column()->getName())
-            {
                 array_push($array, $tag);
-            }
-        }
         return $array;
     }
 
@@ -156,12 +95,8 @@ class TagCollection
     {
         $array = array();
         foreach($this->tags as $tag)
-        {
             if($tag->get_type()->getName() == Types::get_type_row()->getName())
-            {
                 array_push($array, $tag);
-            }
-        }
         return $array;
     }
 
@@ -174,12 +109,8 @@ class TagCollection
     {
         $array = array();
         foreach($this->tags as $tag)
-        {
             if($tag->get_type()->getName() == $type->getName())
-            {
                 array_push($array, $tag);
-            }
-        }
         return $array;
     }
 
@@ -189,17 +120,16 @@ class TagCollection
      * @param DataTag $tag
      * @return bool
      */
-    public function add(DataTag $tag)
+    public function add($tag)
     {
         if(!isset($tag))
-        {
             return false;
-        }
         array_push($this->tags, $tag);
         return true;
     }
 
-    /**Removes the specified tag from the array. An integer ID can be given or a String name can be given
+    /**
+     * Removes the specified tag from the array. An integer ID can be given or a String name can be given
      * @param String|Int|Type $input
      * @return bool true if successful, false if not found
      */
@@ -229,11 +159,9 @@ class TagCollection
             }
             return false; // not found
         }
-        else if(strpos(strtoupper(get_class($input)),"TYPE") >= 0 )
+        else if(strpos(strtoupper(get_class($input)),"TYPE") !== false )
         {
-            /**
-             * @var Type $input
-             */
+            /** @var Type $input */
             $found = false;
             foreach($this->tags as $index => $tag)
             {
@@ -251,6 +179,10 @@ class TagCollection
         return false; // integer or string was not given
     }
 
+    /**
+     * Gets the size of the array
+     * @return int The size of the array
+     */
     public function getSize()
     {
         return sizeOf($this->tags);
@@ -266,25 +198,15 @@ class TagCollection
         if(is_string($input))
         {
             foreach($this->tags as $tag)
-            {
                 if(strtoupper($tag->get_name()) === strtoupper($input) )
-                {
                     return $tag;
-
-                }
-            }
             return null; // not found
         }
         else if (is_int($input))
         {
             foreach($this->tags as $tag)
-            {
                 if($tag->get_id() === $input)
-                {
                     return $tag;
-
-                }
-            }
             return null; // not found
         }
         return null; // integer or string was not given
@@ -298,36 +220,11 @@ class TagCollection
     public function addAll( $tags)
     {
         if(!isset($tags))
-        {
             return false;
-        }
-
         if(is_array($tags))
-        {
-            if(sizeOf($tags) > 0)
-            {
-                foreach($tags as $tag)
-                {
-                    array_push($this->tags, $tag);
-                }
-
-            }
-
-        }
+            $this->tags = array_merge($this->tags, $tags);
         else
-        {
-            $array = $tags->getAsArray();
-            if(sizeOf($array) > 0)
-            {
-                foreach($array as $tag)
-                {
-                    array_push($this->tags, $tag);
-                }
-
-            }
-
-        }
-
+            $this->tags = array_merge($this->tags,  $tags->getAsArray());
         return true;
     }
 
@@ -336,47 +233,28 @@ class TagCollection
      */
     private function sortBySortNumber()
     {
-
-        if(sizeOf($this->tags) == 0)
+        if(empty($this->tags))
             return;
+        $this->sorted = usort($this->tags, function($a, $b) {
+            /**
+             * @var DataTag $a
+             * @var DataTag $b
+             */
+            return $a->get_sort_number() - $b->get_sort_number();
+        });
+    }
 
-        $oldArray = $this->tags;
-        $satisfied = false;
-        $newArray = array();
-        while(!$satisfied)
-        {
-            $count = 0;
-            $lowest = null;
-            $lowestIndex = -1;
-
-            foreach($oldArray as $index => $tag)
-            {
-                /** @var DataTag $tag */
-                if($count == 0)
-                {
-                    $lowest = $tag->get_sort_number();
-                    $lowestIndex = $index;
-                }
-                else
-                {
-                    $current = $tag->get_sort_number();
-                    if( $current < $lowest)
-                    {
-                        $lowest = $current;
-                        $lowestIndex = $index;
-                    }
-                }
-                $count++;
-            }
-            array_push($newArray, $oldArray[$lowestIndex]);
-            unset($oldArray[$lowestIndex]);
-            if(sizeOf($oldArray) == 0)
-            {
-                $satisfied = true;
-            }
-        }
-        $this->tags = $newArray;
-        $this->sorted = true;
+    private function sortByAlphabetical()
+    {
+        if(empty($this->tags))
+            return;
+        $this->sorted = usort($this->tags, function($a, $b) {
+            /**
+             * @var DataTag $a
+             * @var DataTag $b
+             */
+            return strcmp($a->get_name(), $b->get_name());
+        });
     }
 
     /**
@@ -384,51 +262,15 @@ class TagCollection
      */
     private function sortByLayers()
     {
-
-        if(sizeOf($this->tags) == 0)
-        {
+        if(empty($this->tags))
             return;
-        }
-        $oldArray = $this->tags;
-        $satisfied = false;
-        $newArray = array();
-        while(!$satisfied)
-        {
-            $count = 0;
-            $lowest = null;
-            $lowestIndex = -1;
-
-            foreach($oldArray as $index => $tag)
-            {
-                /** @var DataTag $tag */
-                if($count == 0)
-                {
-
-                    $lowest = $tag->get_layers_deep();
-
-                    $lowestIndex = $index;
-                }
-                else
-                {
-                    $current = $tag->get_layers_deep();
-                    if( $current < $lowest)
-                    {
-                        $lowest = $current;
-                        $lowestIndex = $index;
-                    }
-                }
-                $count++;
-            }
-
-            array_push($newArray, $oldArray[$lowestIndex]);
-            unset($oldArray[$lowestIndex]);
-            if(sizeOf($oldArray) == 0)
-            {
-                $satisfied = true;
-            }
-        }
-        $this->tags = $newArray;
-        $this->sorted = true;
+        $this->sorted = usort($this->tags, function($a, $b) {
+            /**
+             * @var DataTag $a
+             * @var DataTag $b
+             */
+            return $a->get_layers_deep() - $b->get_layers_deep();
+        });
     }
 
     /**

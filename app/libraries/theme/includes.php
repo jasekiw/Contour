@@ -6,6 +6,11 @@
  * Time: 1:11 PM
  */
 
+/**
+ * All
+ */
+Theme::enqueue_style('main_style', 'assets/sass/style.css');
+
 /*
  * Profile Page
  */

@@ -21,7 +21,8 @@ abstract class Controller extends BaseController
      */
     function __construct()
     {
-        \Contour::construct();
+        \Session::set('uploads_folder', public_path() . DIRECTORY_SEPARATOR . "uploads");
+        \Session::set('uploads_url',url('uploads'));
         \Theme::construct_theme();
 
         require_once(base_path() . "/app/libraries/kint/Kint.class.php");

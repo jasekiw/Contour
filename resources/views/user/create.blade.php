@@ -13,56 +13,32 @@
     @include('user.style')
 @endsection
 @section('content')
-    <style type="text/css">
-        .users {
-            margin:20px;
-        }
-        .user{
 
-            padding:10px;
-        }
-        .user  div{
-
-            padding:10px 0;
-        }
-        .user_statistics {
-            padding:20px;
-        }
-    </style>
-    @if( session('message'))
-        <div class="alert alert-success">
-            <strong>{{ session('message') }}</strong>
+    <div class="upper-controls">
+        <div class="right">
+            <a href="{!! route('users_index') !!}">Cancel</a>
         </div>
-    @endif
-    <div class="user_statistics">
-
-        <a href="{!! route('users_index') !!}">Back to users</a>
     </div>
-    <div class="user">
-        {!! Form::open([ 'method' => 'POST', 'url' => route('users_create')]) !!}
-        <div class="changeUsername">
-            <label>Username</label>
-            {!! Form::input('text', 'username') !!}
+    {!! Form::open(['method' => 'POST', 'url' => route('users.store'), 'class' => 'resource_form'] )!!}
+    <div class="row">
+        <div class="col-md-3">
+            {!! Form::label('User Name') !!}
+            {!! Form::input('text', 'username', "") !!}
+            {!! Form::label('Password') !!}
+            {!! Form::input('text', 'password', "") !!}
+            {!! Form::label('Email') !!}
+            {!! Form::input('text', 'email', "") !!}
         </div>
-        <div class="changePassword">
-            <label>Password</label>
-            {!! Form::input('text', 'password') !!}
+        <div class="col-md-9">
+            {!! Form::label('User Level') !!}
+            {!! Form::select('group', \app\libraries\ModelHelpers\UserAccessGroups::getAssociativeArray(), '1') !!}
         </div>
-        <div class="email">
-            <label>Email</label>
-            {!! Form::input('text', 'email') !!}
-        </div>
-        <div clas="changeUserLevel">
-            <label>User Access Level</label>
-            <select name="group">
-                @foreach($groups as $group)
-                    <option value="{!! $group->id !!}">{{ $group->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        {!!  Form::submit('Save', ['class' => 'btn btn-primary submit']) !!}
-        {!! Form::close() !!}
+
     </div>
+    <div class="row">
+        {!! Form::submit('create') !!}
+    </div>
+    {!! Form::close() !!}
 @endsection
 @section('scripts')
     {{--@include('user.scripts')--}}

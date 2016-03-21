@@ -45,7 +45,6 @@ abstract class DatabaseObject
     public function get_id()
     {
         return $this->id;
-
     }
 
     /**
@@ -68,4 +67,19 @@ abstract class DatabaseObject
      * @return string
      */
     public abstract function created_at();
+
+    /**
+     * Deletes The Object
+     * @return mixed
+     */
+    public abstract function delete();
+
+    /**
+     * Returns the ID as a string for a unique Identifier
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->id;
+    }
 }

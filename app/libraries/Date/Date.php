@@ -89,22 +89,13 @@ class Date
     private static function replaceWith($haystack, $replacement, $numfromEnd)
     {
         $output = explode(' ',$haystack);
-
         for($i = sizeOf($output) - 1; $i >= 0; $i--)
-        {
-            if(sizeOf($output) > 4) {
-
-
-                if ($i == (sizeOf($output) - $numfromEnd)) {
+            if(sizeOf($output) > 4)
+                if ($i == (sizeOf($output) - $numfromEnd))
                     $output[$i] = $replacement . " " . $output[$i];
-                }
-            }
-        }
         $realoutput = "";
         foreach($output as $word)
-        {
             $realoutput.= $word . " ";
-        }
         $realoutput = rtrim($realoutput);
         return $realoutput;
     }

@@ -29,8 +29,6 @@
 
    <div class="row">
       <div class="col-lg-6 col-sm-6 col-xs-12 updated_items">
-
-
          @foreach($recentReports as $report)
             <div class="row updated_item same-height">
                <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 item_title">

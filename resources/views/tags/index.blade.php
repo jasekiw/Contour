@@ -97,13 +97,13 @@ use app\libraries\tags\DataTag;
                 echo '...';
                 echo '</a></li>';
             } else {
-                echo '<li><a class="tag excluded tag_-1" href="' . route('index_tags') . '">';
+                echo '<li><a class="tag excluded tag_-1" href="' . route('tag_index') . '">';
                 echo '...';
                 echo '</a></li>';
             }
         }
 
-        foreach ($tags->getAsArray() as $tag) {
+        foreach ($tags->getAsArray(\app\libraries\tags\collection\TagCollection::SORT_TYPE_ALPHABETICAL) as $tag) {
             /**
              * @var app\libraries\tags\DataTag $tag
              */

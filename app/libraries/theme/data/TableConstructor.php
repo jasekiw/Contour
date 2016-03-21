@@ -32,10 +32,6 @@ class TableConstructor
     public static function printChildColumns($parent, $columns, $calculated = false)
     {
 
-
-
-
-
         if($parent->has_children())
         {
             foreach($parent->get_children()->getAsArray() as $child)

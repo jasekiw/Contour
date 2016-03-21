@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Data_block_meta
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Data_block_meta extends \Eloquent
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected  $table = 'datablock_meta';
     //
 }

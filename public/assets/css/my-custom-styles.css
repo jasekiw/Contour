@@ -97,47 +97,7 @@ h1.heading {
 .tag.selected {
     background-color: rgba(0,0,0,0.1);
 }
-.facility {
-    display:block;
-    padding: 10px 40px;
 
-}
-.facility a {
-    color: #333333;
-    font-size: 26px;
-    display:inline-block;
-    font-weight:300;
-}
-
-.facility a:hover {
-    color: black;
-    text-decoration: none;
-  
-}
-.facility_row {
-    padding: 20px 0;
-    border-bottom: 1px solid #999999;
-}
-.facility_navigation {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    text-align:center;
-}
-.facility_navigation:before, .facility_navigation:after {
-    content: '';
-    display:table;
-
-}
-.facility_navigation a:first-child {
-    border-right: 1px solid black;
-}
-.facility_navigation a {
-    margin:20px 0;
-    color:black;
-    padding: 0 10px;
-    display:inline-block;
-    font-size:16px;
-}
 .current {
     font-weight: bold;
 }

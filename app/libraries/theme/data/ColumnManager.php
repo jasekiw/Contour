@@ -23,6 +23,7 @@ class ColumnManager
     private $index = 0;
     private $before = "";
     private $after = "";
+    private $hasContent = false;
 
     /**
      * Creates the column Manager. specifiy the amount of columns to use for large medium and small
@@ -58,12 +59,22 @@ class ColumnManager
 
     public function add($html)
     {
+        $this->hasContent = true;
         $this->columns[$this->index]["content"] .= $html .  "\r\n";
         $this->index++;
         if($this->index > ($this->numberOfColumns - 1))
         {
             $this->index = 0;
         }
+    }
+
+    /**
+     * Checks if anything has been added to the column manager
+     * @return bool
+     */
+    public function hasContent()
+    {
+        return $this->hasContent;
     }
 
     public function getHtml()

@@ -2,13 +2,16 @@
 namespace App\Http\Controllers;
 
 use app\libraries\user\UserMeta;
+use App\Models\Revision;
 use Auth;
 use Date;
+use Hash;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Input;
+use Redirect;
 use Response;
 
 /**
@@ -39,6 +42,28 @@ class ProfileController extends Controller {
 		$view->last_name = UserMeta::get('last_name');
 		$view->company = UserMeta::get('company');
 		$view->about = UserMeta::get('about');
+		$view->user = Auth::user();
+		$revisions = Revision::where('user_id', '=', Auth::user()->id)->get();
+		$history = [];
+		foreach($revisions as $revision)
+		{
+			$subject = $revision->revisionable_type;
+			if(str_contains($subject, "\\"))
+				$subject = substr($subject, strrpos($subject, "\\") + 1, strlen($subject) - strrpos($subject, "\\") - 1);
+			$action = "changed";
+			if($revision->key == 'name')
+				$action = "renamed";
+			else if($revision->value == 'name')
+				$action = "edited";
+			$historyItem = new \stdClass();
+			$historyItem->subject = $subject;
+			$historyItem->action = $action;
+			$historyItem->oldValue = $revision->old_value;
+			$historyItem->newValue = $revision->new_value;
+			$historyItem->time = $revision->updated_at;
+			array_push($history, $historyItem);
+		}
+		$view->history = $history;
 		return $view;
 	}
 
@@ -51,10 +76,7 @@ class ProfileController extends Controller {
 	 */
 	public function save()
 	{
-
-
 		$name = Input::get('name');
-
 		$value = Input::get('value');
 		if($name == "email")
 		{
@@ -62,15 +84,33 @@ class ProfileController extends Controller {
 			Auth::user()->save;
 		}
 		elseif($name == "profile_pic")
-		{
 			return UserMeta::save_file('profile_pic');
-
-		}
 		else
-		{
 			UserMeta::save($name, $value);
-		}
+
 		return '';
+	}
+
+	/**
+	 * @return \Illuminate\Http\RedirectResponse
+     */
+	public function savePassword()
+	{
+		$user = Auth::user();
+		$passwordOnFile = $user->password;
+		$oldPassword = \Input::get('old-password');
+		$newPassword = \Input::get('password');
+		$passwordCheck = \Input::get('password2');
+		if($newPassword !== $passwordCheck)
+			return Redirect::route('view_profile')->with('message_title' , 'Failed!')->with("message_type", "failure")
+				->with('message', 'The new password did not match the repeated password');
+		if(!Hash::check($oldPassword, $passwordOnFile))
+			return Redirect::route('view_profile')->with('message_title' , 'Failed!')->with("message_type", "failure")
+				->with('message', 'The old password typed did not match the actual old password');
+		$user->password = Hash::make($newPassword);
+		$user->save();
+		return Redirect::route('view_profile')->with('message_title' , 'Successfully Saved!')->with("message_type", "success");
+
 	}
 
 

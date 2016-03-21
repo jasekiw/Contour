@@ -12,21 +12,18 @@ class CreateTagsReference extends Migration {
 	 */
 	public function up()
 	{
-//		Schema::create('tags_reference', function(Blueprint $table)
-//		{
-//			$table->increments('id');
-//			$table->timestamps();
-//		});
-		DB::statement('CREATE TABLE tags_reference (
-							tag_id INT UNSIGNED,
-							data_block_id INT UNSIGNED,
-							created_at TIMESTAMP NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-							updated_at TIMESTAMP NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-							UNIQUE KEY (tag_id, data_block_id)
+		Schema::create('tags_reference', function(Blueprint $table)
+		{
+			//$table->increments('id');
+			$table->unsignedInteger('data_block_id');
+			$table->unsignedInteger('tag_id');
+			$table->unique(['tag_id', 'data_block_id']);
+			$table->timestamps();
+			$table->softDeletes();
+			$table->index('data_block_id');
+			$table->index('tag_id');
+		});
 
-						);');
-//		FOREIGN KEY (data_block_id) REFERENCES data_blocks (id),
-//							FOREIGN KEY (tag_id) REFERENCES tags (id)
 	}
 
 

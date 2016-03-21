@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use app\libraries\theme\data\LinkGenerator;
 use App\Models\User;
 use App\Models\User_Access_Group;
+use Hash;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Redirect;
 use Response;
+use Auth;
 
 /**
  * Class UserController
@@ -22,12 +26,16 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($letter = null)
 	{
-		$view = \View::make('user.index');
+		$letter = strtoupper($letter);
+		$view = \View::make('general.list');
 		$view->title = "Users";
-		$users = User::all();
-		$view->users = $users;
+		$view->newLink = route('users_create');
+		$view->newTitle = "create new user";
+		LinkGenerator::generateAlphabetLinks($view, 'users_index_letter');
+		LinkGenerator::setupLinksAtoZ($view, 'users_show', 'username', 'id', $letter, User::all());
+		$view->indexURL = route('users_index');
 		return $view;
 	}
 
@@ -77,7 +85,7 @@ class UserController extends Controller {
 	public function show($id)
 	{
 		$user = User::where('id', '=',$id )->first();
-		$view = \View::make('user.show');
+		$view = \View::make('user.edit');
 		$view->title = "User - " . $user->username;
 		$groups = User_Access_Group::all();
 		$view->groups = $groups;
@@ -113,8 +121,8 @@ class UserController extends Controller {
 		$user->user_access_group_id = \Input::get('group');
 		$user->save();
 		return redirect()->route('users_show', [$userID])->with("message", "Successfully Saved");
-
 	}
+
 
 	/**
 	 * Remove the specified resource from storage.

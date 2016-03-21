@@ -12,31 +12,20 @@ namespace app\libraries\types;
 use app\libraries\database\DatabaseObject;
 use App\Models\TypeModel;
 
-class Type extends DatabaseObject
+class Type extends TypeAbstract
 {
 
-    /**
-     * @var string $name
-     */
-    private $name = null;
 
-    /**
-     * @var TypeCategory $category
-     */
-    private $category = null;
+
+    private $category_id = null;
 
     /**
      * @param String $name
      */
     function __construct($name = null)
     {
-        if(isset($name))
-        {
-            $this->name = $name;
-        }
+        $this->name = $name;
     }
-
-
 
     /**
      * Sets the ID of the Type Object
@@ -44,7 +33,7 @@ class Type extends DatabaseObject
      */
     public function set_id($id)
     {
-            $this->id = $id;
+        $this->id = $id;
     }
 
     /**
@@ -54,13 +43,11 @@ class Type extends DatabaseObject
     public function setByID($id)
     {
         $typemodel = TypeModel::where('id', '=', $id)->first();
-        if(isset($typemodel))
-        {
-            $this->id = $typemodel->id;
-            $this->name = $typemodel->name;
-            $this->setCategory( TypeCategory::GetByID($typemodel->type_category_id));
-
-        }
+        if(!isset($typemodel))
+            return;
+        $this->id = $typemodel->id;
+        $this->name = $typemodel->name;
+        $this->setCategory( TypeCategory::GetByID($typemodel->type_category_id));
     }
 
     /**
@@ -71,18 +58,29 @@ class Type extends DatabaseObject
         $this->name = $name;
     }
 
-
-
-
     /**
      * Sets the category and id by id
      * @param TypeCategory $category
      */
     public function setCategory($category)
     {
-            $this->category = $category;
+        $this->category = $category;
     }
 
+    public function setCategoryId($id)
+    {
+        $this->category_id = $id;
+    }
+    public function getCategoryId()
+    {
+        if(!isset($this->id))
+            return null;
+        if(isset($this->category_id))
+            return $this->category_id;
+        $this->category_id =  \App\Models\TypeModel::where('id', '=', $this->id)->first()->type_category_id;
+        return $this->category_id;
+
+    }
 
     public function save()
     {
@@ -96,14 +94,10 @@ class Type extends DatabaseObject
                 $type->save();
             }
             else
-            {
                 $this->createNew();
-            }
         }
         else
-        {
             $this->createNew();
-        }
     }
 
     /**
@@ -117,17 +111,6 @@ class Type extends DatabaseObject
         $type->save();
         $this->id = $type->id;
     }
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * @return String
@@ -145,12 +128,14 @@ class Type extends DatabaseObject
         return $this->id;
     }
 
-
     /**
      * @return TypeCategory
      */
     public function getCategory()
     {
+        if(isset($this->category))
+            return $this->category;
+        $this->category = TypeCategory::GetByID($this->getCategoryId());
         return $this->category;
     }
 
@@ -161,24 +146,13 @@ class Type extends DatabaseObject
     public function updated_at()
     {
         if(isset($this->updated_at)) // cached
-        {
             return $this->updated_at;
-        }
-
-        if(isset($this->id))
-        {
-            $type = TypeModel::where('id', '=', $this->id)->first();
-            /**
-             * \Tag $tag
-             */
-            $updated_at = $type->updated_at;
-            $this->updated_at = $updated_at;
-            return $updated_at;
-        }
-        else
-        {
+        if(!isset($this->id))
             return null;
-        }
+        $type = TypeModel::where('id', '=', $this->id)->first();
+        $updated_at = $type->updated_at;
+        $this->updated_at = $updated_at;
+        return $updated_at;
     }
 
     /**
@@ -188,23 +162,18 @@ class Type extends DatabaseObject
     public function created_at()
     {
         if(isset($this->created_at)) // cached
-        {
             return $this->created_at;
-        }
-
-        if(isset($this->id))
-        {
-            $type = TypeModel::where('id', '=', $this->id)->first();
-            /**
-             * \Tag $tag
-             */
-            $created_at = $type->created_at;
-            $this->created_at = $created_at;
-            return $created_at;
-        }
-        else
-        {
+        if(!isset($this->id))
             return null;
-        }
+        $type = TypeModel::where('id', '=', $this->id)->first();
+        $created_at = $type->created_at;
+        $this->created_at = $created_at;
+        return $created_at;
+    }
+
+    public function delete()
+    {
+        TypeModel::where('id', '=', $this->id)->delete();
+        $this->id = null;
     }
 }

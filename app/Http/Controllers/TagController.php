@@ -25,7 +25,6 @@ class TagController extends Controller {
 	public function index()
 	{
 		$topTags = DataTags::get_by_parent_id(-1);
-
 		$view = \View::make('tags.index');
 		$view->title = "Tag Browser";
 		$view->tags = $topTags;

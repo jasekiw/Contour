@@ -11,7 +11,7 @@
 */
 
 
-
+\Contour::construct();
 /**
  * Home Route
  */
@@ -29,7 +29,7 @@ Route::post('install', 'InstallController@store');
  */
 Route::get('login', 'Auth\AuthController@getLogin');
 Route::post('login', 'Auth\AuthController@postLogin');
-Route::get('logout', array('as' => 'logout', 'uses' => 'Auth\AuthController@getLogout'));
+Route::get('logout', ['as' => 'logout', 'uses' => 'Auth\AuthController@getLogout']);
 // Registration routes...
 Route::get('users/register', 'Auth\AuthController@getRegister');
 Route::post('users/register', 'Auth\AuthController@postRegister');
@@ -47,8 +47,8 @@ Route::post('users/register', 'Auth\AuthController@postRegister');
 //Route::resource('excel', 'ExcelController');
 
 Route::get('sandbox',array('as' => 'sandbox','middleware' => 'auth', 'uses' => 'SandboxController@index'));
-Route::get( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'get_ajax','middleware' => 'auth', 'uses' => 'AjaxController@get'))->where('id', '(.*)');
-Route::post( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'post_ajax','middleware' => 'auth', 'uses' => 'AjaxController@post'))->where('id', '(.*)');
+//Route::get( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'get_ajax','middleware' => 'auth', 'uses' => 'AjaxController@get'))->where('id', '(.*)');
+//Route::post( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'post_ajax','middleware' => 'auth', 'uses' => 'AjaxController@post'))->where('id', '(.*)');
 
 
 /**
@@ -70,12 +70,12 @@ Route::get('ajax_excel/{id}',array('as' => 'get_ajax_excel','middleware' => 'aut
  * Tags
  */
 
-Route::get('tags',['as' => 'index_tags','middleware' => 'auth', 'uses' => 'TagController@index']);
-Route::post('tags/move',['as' => 'move_tags','middleware' => 'auth', 'uses' => 'TagController@move']);
-Route::post('tags/create',array('as' => 'create_tags','middleware' => 'auth', 'uses' => 'TagController@create'));
-Route::post('tags/delete',array('as' => 'delete_tags','middleware' => 'auth', 'uses' => 'TagController@destroy'));
-Route::get('tags/types',array('as' => 'type_tags','middleware' => 'auth', 'uses' => 'TagController@getTypes'));
-Route::get('tags/{id}',array('as' => 'index_tag','middleware' => 'auth', 'uses' => 'TagController@show'));
+Route::get('tags',['as' => 'tag_index','middleware' => 'auth', 'uses' => 'TagController@index']);
+Route::post('tags/move',['as' => 'tag_move','middleware' => 'auth', 'uses' => 'TagController@move']);
+Route::post('tags/create',array('as' => 'tag_create','middleware' => 'auth', 'uses' => 'TagController@create'));
+Route::post('tags/delete',array('as' => 'tag_delete','middleware' => 'auth', 'uses' => 'TagController@destroy'));
+Route::get('tags/types',array('as' => 'tag_type','middleware' => 'auth', 'uses' => 'TagController@getTypes'));
+Route::get('tags/{id}',array('as' => 'tag_show','middleware' => 'auth', 'uses' => 'TagController@show'));
 
 /**
  * Ajax Datablock routes, will be removed in the future and replace with api routes
@@ -122,9 +122,10 @@ Route::resource('math', 'MathController');
 /**
  * User Management
  */
+Route::get('users/index/{letter}', ['as' => 'users_index_letter','middleware' => 'auth', 'uses' => 'UserController@index']);
 Route::get('users',['as' => 'users_index', 'middleware' => 'auth', 'uses' => 'UserController@index']);
 Route::get('users/create',['as' => 'users_create', 'middleware' => 'auth', 'uses' => 'UserController@create']);
-Route::post('users/create',['as' => 'users_create', 'middleware' => 'auth', 'uses' => 'UserController@store']);
+Route::post('users/create',['as' => 'users.store', 'middleware' => 'auth', 'uses' => 'UserController@store']);
 Route::get('users/{id}',['as' => 'users_show', 'middleware' => 'auth', 'uses' => 'UserController@show']);
 Route::put('users/{id}',['as' => 'users_save', 'middleware' => 'auth', 'uses' => 'UserController@update']);
 
@@ -135,15 +136,17 @@ Route::put('users/{id}',['as' => 'users_save', 'middleware' => 'auth', 'uses' =>
  */
 Route::get('profile',array('as' => 'view_profile', 'middleware' => 'auth', 'uses' => 'ProfileController@show'));
 Route::post('profile/save',array('as' => 'save_profile','middleware' => 'auth', 'uses' => 'ProfileController@save'));
+Route::post('profile/savepassword',array('as' => 'savepassword_profile','middleware' => 'auth', 'uses' => 'ProfileController@savePassword'));
 
 /**
  * User Access Groups
  */
-Route::get('usersaccessgroups',array('as' => 'user_access_groups_index', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@index'));
-Route::get('usersaccessgroups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@create'));
-Route::post('usersaccessgroups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@store'));
-Route::get('usersaccessgroups/{id}',array('as' => 'user_access_groups_show', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@show'));
-Route::put('usersaccessgroups/{id}',array('as' => 'user_access_groups_save', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@update'));
+Route::get('groups/index/{letter}',array('as' => 'user_access_groups_index_letter', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@index'));
+Route::get('groups',array('as' => 'user_access_groups_index', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@index'));
+Route::get('groups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@create'));
+Route::post('groups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@store'));
+Route::get('groups/{id}',array('as' => 'user_access_groups_show', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@show'));
+Route::put('groups/{id}',array('as' => 'user_access_groups_save', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@update'));
 
 /**
  * Config Routes
@@ -170,17 +173,32 @@ Route::get('exfacilities/{id}',array('as' => 'get_ex_facility','middleware' => '
  */
 Route::get('reports',array('as' => 'reports','middleware' => 'auth', 'uses' => 'ReportsController@index'));
 Route::get('report/edit/{id}',array('as' => 'report_edit','middleware' => 'auth', 'uses' => 'ReportsController@edit'));
-Route::get('report/show/{id}',array('as' => 'report_edit','middleware' => 'auth', 'uses' => 'ReportsController@edit'));
+Route::get('report/show/{id}',array('as' => 'report_edit','middleware' => 'auth', 'uses' => 'ReportsController@show'));
 
+/**
+ * Sheet Categories
+ */
+Route::get('sheetcategories',array('as' => 'sheetcategories_index','middleware' => 'auth', 'uses' => 'SheetCategoryController@index'));
+Route::get('sheetcategories/index/{letter}',array('as' => 'sheetcategories_index_letter','middleware' => 'auth', 'uses' => 'SheetCategoryController@index'));
+Route::get('sheetcategories/{id}',array('as' => 'sheetcategories_show','middleware' => 'auth', 'uses' => 'SheetCategoryController@show'));
+Route::get('sheetcategories/{id}/{letter}',array('as' => 'sheetcategories_show_letter','middleware' => 'auth', 'uses' => 'SheetCategoryController@show'));
+
+/**
+ * Sheets
+ */
+Route::get('generatetemplates',array('as' => 'sheetcategories_generate','middleware' => 'auth', 'uses' => 'SheetsController@generateFacilityTemplate'));
+Route::get('deletetemplates',array('as' => 'sheetcategories_delete_template','middleware' => 'auth', 'uses' => 'SheetsController@deleteGeneratedFacilityTemplate'));
+Route::get('sheets/create/{id}',array('as' => 'sheet_create','middleware' => 'auth', 'uses' => 'SheetsController@create'));
+Route::get('sheets/delete/{id}',array('as' => 'sheet_delete','middleware' => 'auth', 'uses' => 'SheetsController@destroy'));
+Route::post('sheets/create',array('as' => 'sheet.store','middleware' => 'auth', 'uses' => 'SheetsController@store'));
+Route::get('sheets/{id}',array('as' => 'sheet_edit','middleware' => 'auth', 'uses' => 'SheetsController@edit'));
 
 /**
  * Menus
  */
-Route::get('menu', array('as' => 'get_menus','middleware' => 'auth', 'uses' => 'MenuController@index'));
-Route::post('menu', array('as' => 'create_menu','middleware' => 'auth', 'uses' => 'MenuController@store'));
-Route::get('menu/{id}',array('as' => 'get_menu','middleware' => 'auth', 'uses' => 'MenuController@show'));
-Route::post('menu/{id}',array('as' => 'edit_menu','middleware' => 'auth', 'uses' => 'MenuController@edit'));
-Route::delete('menu/{id}',array('as' => 'edit_menu','middleware' => 'auth', 'uses' => 'MenuController@destroy'));
+Route::get('menu/index/{letter}',array('as' => 'menu_index_letter', 'middleware' => 'auth', 'uses' => 'MenuController@index'));
+route::resource('menu', 'MenuController');
+
 Route::post('menuitem',array('as' => 'create_menu_item','middleware' => 'auth', 'uses' => 'MenuItemController@store'));
 Route::get('menuitem/{id}',array('as' => 'menu_item_edit','middleware' => 'auth', 'uses' => 'MenuItemController@edit'));
 Route::put('menuitem/update/{id}',array('as' => 'menu_item_update','middleware' => 'auth', 'uses' => 'MenuItemController@update'));
@@ -198,4 +216,4 @@ Route::post('jobs/{id}',array('as' => 'async_jobs', 'uses' => 'AsyncController@h
  */
 //Route::get('/{id}',array('as' => 'get_dynamic', 'uses' => 'DynamicRouteController@get'))->where('id', '(.*)');
 //Route::post('/{id}',array('as' => 'post_dynamic','uses' => 'DynamicRouteController@post'))->where('id', '(.*)');
-
+\Contour::getRoutesManager()->printRoutes();

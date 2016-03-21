@@ -70,13 +70,14 @@ class ConfigHelper
      */
     public static function save_file($name)
     {
+        if(!Input::hasFile($name))
+            return;
+        $filename = Input::file($name)->getClientOriginalName();
+        $uploadsFolder = Config::get('constants.uploads_folder');
+        $uplodsUrl = Config::get('constants.uploads_url');
+        Input::file($name)->move( \Session::get('uploads_folder'), $filename);
+        ConfigHelper::save($name, \Session::get('uploads_url') . DIRECTORY_SEPARATOR . $filename);
 
-        if(Input::hasFile($name))
-        {
-            $filename = Input::file($name)->getClientOriginalName();
-            Input::file($name)->move( Config::get('constants.uploads_folder'), $filename);
-            ConfigHelper::save($name, Config::get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
-        }
     }
 
 

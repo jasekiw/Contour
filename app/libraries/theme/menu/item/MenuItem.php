@@ -16,9 +16,13 @@ use app\libraries\tags\DataTag;
 use app\libraries\types\TypeCategory;
 use app\libraries\types\Types;
 
+/**
+ * Class MenuItem
+ * @package app\libraries\theme\menu\item
+ */
 class MenuItem extends DatabaseObject
 {
-    private $datablocks = array();
+
     /**
      * @var DataTag $tag
      */
@@ -28,21 +32,14 @@ class MenuItem extends DatabaseObject
      */
     private $name = null;
     /**
-     * @var DataBlock
+     * @var string
      */
     private $link = null;
     /**
-     * @var DataBlock
+     * @var string
      */
     private $icon = null;
-    /**
-     * @var DataTag
-     */
-    private $linkTag;
-    /**
-     * @var DataTag
-     */
-    private $iconTag;
+
 
     /**
      * Cconstructs a MenuItem with the following arguments. The use of arugments is null but use all if used.
@@ -53,12 +50,8 @@ class MenuItem extends DatabaseObject
             $this->tag = $menuItemTag;
             $this->id = $menuItemTag->get_id();
             $this->name = $menuItemTag->getNiceName();
-
-            $this->linkTag = $menuItemTag->findChild("link");
-            $this->iconTag = $menuItemTag->findChild("icon");
-            $this->link = $this->linkTag->get_data_block();
-            $this->icon = $this->iconTag->get_data_block();
-
+            $this->link = $menuItemTag->getMetaValue("link");
+            $this->icon = $menuItemTag->getMetaValue("icon");
     }
 
     /**
@@ -87,21 +80,8 @@ class MenuItem extends DatabaseObject
         $menuItemTag = new DataTag($name,$menu->get_id(), $menutype, $sort_number);
         $menuItemTag->create();
         $menuItemTag->setNiceName($name);
-
-
-        $linkTag = new DataTag("link", $menuItemTag->get_id(), $property_type);
-        $linkTag->create();
-        $linkBlock = $linkTag->create_data_block();
-        $linkBlock->set_value($link);
-        $linkBlock->save();
-
-        $iconTag = new DataTag("icon", $menuItemTag->get_id(), $property_type);
-        $iconTag->create();
-        $iconblock = $iconTag->create_data_block();
-        $iconblock->set_value($icon);
-        $iconblock->save();
-
-
+        $menuItemTag->setMetaValue("link", $link);
+        $menuItemTag->setMetaValue("icon", $icon);
         $menuItem = new MenuItem($menuItemTag);
         return $menuItem;
     }
@@ -115,6 +95,11 @@ class MenuItem extends DatabaseObject
     {
         return $this->name;
     }
+
+    /**
+     * Gets the Tag Name of the menu
+     * @return string
+     */
     public function getTagName()
     {
         return $this->tag->get_name();
@@ -126,15 +111,9 @@ class MenuItem extends DatabaseObject
      */
     public function get_href()
     {
-        if(\Route::has($this->link->getValue()))
-        {
-            return route($this->link->getValue());
-        }
-        else
-        {
-            return $this->link->getValue();
-        }
-
+        if(\Route::has($this->link))
+            return route($this->link);
+        return $this->link;
     }
 
     /**
@@ -143,7 +122,7 @@ class MenuItem extends DatabaseObject
      */
     public function get_icon()
     {
-        return $this->icon->getValue();
+        return $this->icon;
     }
 
     public function set_sort_number($number)
@@ -170,8 +149,8 @@ class MenuItem extends DatabaseObject
      */
     public function set_href($value)
     {
-         $this->link->set_value($value);
-        $this->link->save();
+        $this->link = $value;
+        $this->tag->setMetaValue("link", $value);
     }
     /**
      * sets the icon html to be used
@@ -179,8 +158,8 @@ class MenuItem extends DatabaseObject
      */
     public function set_icon($value)
     {
-        $this->icon->set_value($value);
-        $this->icon->save();
+        $this->icon = $value;
+        $this->tag->setMetaValue("icon", $value);
     }
 
     /**
@@ -194,11 +173,7 @@ class MenuItem extends DatabaseObject
     public function save()
     {
         if(isset($this->id))
-        {
            $this->tag->save();
-            $this->link->save();
-            $this->icon->save();
-        }
     }
 
     /**
@@ -216,7 +191,7 @@ class MenuItem extends DatabaseObject
      */
     public function updated_at()
     {
-        // TODO: Implement updated_at() method.
+        return $this->tag->updated_at();
     }
 
     /**
@@ -225,6 +200,11 @@ class MenuItem extends DatabaseObject
      */
     public function created_at()
     {
-        // TODO: Implement created_at() method.
+        return $this->tag->created_at();
+    }
+
+    public function delete()
+    {
+        $this->tag->delete();
     }
 }

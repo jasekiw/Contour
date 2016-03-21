@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\helpers\TimeTracker;
 use app\libraries\types\Types;
 use App\Models\Revision;
 use Illuminate\Http\Request;
@@ -42,44 +43,31 @@ class HomeController extends Controller {
      */
 	public function index()
 	{
-
-
 		$view = \View::make('dashboard.view');
 		$view->title = "Dashboard";
 		$first_name = UserMeta::get("first_name");
 		if(strlen($first_name) > 0)
-		{
 			$view->first_name = $first_name;
-		}
-
-
-
-			$rows = Revision::limit(30)->groupBy("revisionable_id")->get();
-			$this->gatherDatafromRows($rows);
-
+		/** @noinspection PhpMethodParametersCountMismatchInspection */
+		$rows = Revision::limit(30)->groupBy("revisionable_id")->orderBy('id', 'desc')->get();
+		$this->gatherDatafromRows($rows);
 		/** @var Revision $row */
-
-
-
 		$view->recentReports = $this->reports;
 		$view->recentFacilities = $this->facilities;
-
-
 		return $view;
 	}
 
 
 	public function gatherDatafromRows($rows)
 	{
+
 		$type = Types::get_type_sheet();
+		$count = 0;
 		foreach($rows as $row)
 		{
-
-
 			if($this->reportsDisplayed >= 4 && $this->facilitiesDisplayed >= 4) // no more than 4 on each side
-			{
 				break;
-			}
+
 			if(str_contains($row->revisionable_type, "Tag"))
 			{
 
@@ -87,7 +75,7 @@ class HomeController extends Controller {
 				if($tag->get_type()->get_id() == $type->get_id())
 					$sheet = $tag;
 				else
-					$sheet = $tag->get_a_parent_of_type($type);
+					$sheet = $tag->get_parent_of_type($type);
 
 				$date = new \DateTime($tag->updated_at());
 				$this->addSheet($sheet, $date );
@@ -97,17 +85,19 @@ class HomeController extends Controller {
 				$block = DataBlocks::getByID($row->revisionable_id);
 				$tags = $block->getTags();
 				$tagsArray = $tags->getAsArray();
-				if(sizeof($tagsArray) > 0)
+				if(!empty($tagsArray))
 					$tag = $tagsArray[0];
 				else
 					continue;
-				$sheet = $tag->get_a_parent_of_type($type);
+
+				$sheet = $tag->get_parent_of_type($type);
 				$date = new \DateTime($block->updated_at());
 				$this->addSheet($sheet, $date );
-
 			}
+			$count++;
 
 		}
+
 
 	}
 
@@ -124,21 +114,21 @@ class HomeController extends Controller {
 			$sheet_array["name"] =  $sheet->get_name();
 			$sheet_array["updated"] =  $date->format("m-d-Y @ h:i A");
 			$sheet_array["link"] =  \URL::action('ExcelController@edit', [$sheet->get_id()]);
-			if($parent !== null && strtoupper($parent->get_name()) === "FACILITIES")
+			if($parent !== null  && strtoupper($parent->get_name()) === "FACILITIES" && !isset($this->facilities[$sheet->get_id()]))
 			{
 				if($this->facilitiesDisplayed >= 4)
 					return;
 				$this->facilitiesDisplayed++;
-				$sheet_array["link"] =  \URL::action('FacilityController@show', [$sheet->get_id()]);
-				array_push($this->facilities, $sheet_array);
+				$sheet_array["link"] =  \URL::action('SheetsController@edit', [$sheet->get_id()]);
+				$this->facilities[$sheet->get_id()] = $sheet_array;
 			}
-			else
+			else if( !isset($this->reports[$sheet->get_id()]) && strtoupper($parent->get_name()) == "REPORTS")
 			{
 				if($this->reportsDisplayed >= 4)
 					return;
 				$this->reportsDisplayed++;
-				$sheet_array["link"] =  \URL::action('ExcelController@edit', [$sheet->get_id()]);
-				array_push($this->reports, $sheet_array);
+				$sheet_array["link"] =  \URL::action('SheetsController@edit', [$sheet->get_id()]);
+				$this->reports[$sheet->get_id()] = $sheet_array;
 			}
 		}
 	}

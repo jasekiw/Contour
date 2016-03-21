@@ -8,17 +8,14 @@
 
 namespace app\libraries\types;
 
-
 use App\Models\Type_category;
 use App\Models\TypeModel;
-
 
 /**
  * @property  $category_name
  */
 class Types
 {
-
 
     private static $cachedCategoryExists = null;
     private static $cached = array();
@@ -32,14 +29,9 @@ class Types
     public static function exists($nameorID)
     {
         if(strtoupper(gettype($nameorID)) == "INTEGER")
-        {
             return TypeModel::where("id", "=", $nameorID)->exists();
-
-        }
         else
-        {
             return TypeModel::where("name", "=", $nameorID)->exists();
-        }
     }
 
 
@@ -59,37 +51,14 @@ class Types
     private static function getTypeWithName($name, $whatType)
     {
         if(isset(self::$cached[$name]))
-        {
             return self::$cached[$name];
-        }
-
         self::createTypeCategoryTag();
-        /**
-         * @var \Illuminate\Database\Query\Builder $type
-         */
+        /** @var \Illuminate\Database\Query\Builder $type */
         $type = self::getQueryObject();
-
-
         $row = $type->where("types.name", "=", $name)->where('category.name', '=', $whatType)->first();
-
-        if(isset($row))
+        if(!isset($row))
         {
-
-            $tagType = new Type();
-            $tagType->set_id($row->id);
-            $tagType->setName($row->type_name);
-            $category = new TypeCategory();
-            $category->set_id($row->type_category_id);
-            $category->setName($row->type_category_name);
-            $tagType->setCategory($category);
-            self::$cached[$name] = $tagType;
-            return $tagType;
-        }
-        else
-        {
-            /*
-             * @var TypeModel $newtype
-             */
+            /** @var TypeModel $newtype */
             $category_row = Type_category::where("name", "=", $whatType)->first();
             $newtype = new TypeModel();
             $newtype->name = $name;
@@ -105,6 +74,15 @@ class Types
             self::$cached[$name] = $tagType;
             return $tagType;
         }
+        $tagType = new Type();
+        $tagType->set_id($row->id);
+        $tagType->setName($row->type_name);
+        $category = new TypeCategory();
+        $category->set_id($row->type_category_id);
+        $category->setName($row->type_category_name);
+        $tagType->setCategory($category);
+        self::$cached[$name] = $tagType;
+        return $tagType;
     }
 
     /**
@@ -112,6 +90,7 @@ class Types
      */
     public static function get_all_tag_types()
     {
+        /** @var TypeModel[] $types */
         $types = self::getQueryObject()->where("category.name", "=", "tag")->get();
         $dataTypes = array();
         foreach($types as $row)
@@ -124,11 +103,8 @@ class Types
             $category->setName($row->type_category_name);
             $tagType->setCategory($category);
             array_push($dataTypes, $tagType);
-
         }
         return $dataTypes;
-
-
     }
 
     /**
@@ -138,7 +114,6 @@ class Types
     {
         return self::getTypeWithName("row", "tag");
     }
-
 
     public static function getQueryObject()
     {
@@ -159,7 +134,6 @@ class Types
         return $query;
     }
 
-
     /**
      * @return Type
      */
@@ -168,43 +142,45 @@ class Types
         return self::getTypeWithName("column", "tag");
     }
 
+    /**
+     * @return Type
+     */
     public static function get_type_cell()
     {
         return self::getTypeWithName("cell", "datablock");
     }
+
+    /**
+     * @return Type
+     */
     public static function get_type_folder()
     {
         return self::getTypeWithName("folder", "tag");
     }
 
-
     private static function createTypeCategoryTag()
     {
         if(isset(self::$cachedCategoryExists))
-        {
             return;
-        }
+
         if(!Type_category::where("name", "=", "tag")->exists())
         {
             $category = new Type_category();
             $category->name = 'tag';
             $category->save();
-
         }
         if(!Type_category::where("name", "=", "datablock")->exists())
         {
             $category = new Type_category();
             $category->name = 'datablock';
             $category->save();
-
         }
         self::$cachedCategoryExists = true;
 
     }
 
-
-
     /**
+     * Gets all the dynamic types
      * @return array
      */
     public static function get_all_dynamic_types()
@@ -214,41 +190,37 @@ class Types
         $data_types = TypeModel::where("type_category_id", "=", $id)->all();
         $types = array();
         foreach($data_types as $data_type)
-        {
             array_push($types ,$data_type->name);
-        }
         return $types;
     }
 
-
     /**
+     * Gets a type by ID
      * @param int $id
      * @return Type
      */
     public static function get_by_id($id)
     {
         if(isset(self::$cachedTypes[$id]))
-        {
             return self::$cachedTypes[$id];
-        }
-        else
+        $typemodel = self::getQueryObject();
+        $typemodel = self::addWhereID($typemodel, $id);
+        $row = $typemodel->first();
+        $category = new TypeCategory();
+        if(!isset($id))
         {
-            $typemodel = self::getQueryObject();
-            $typemodel = self::addWhereID($typemodel, $id);
-            $row = $typemodel->first();
-
-            $category = new TypeCategory();
-            $category->set_id($row->type_category_id);
-            $category->setName($row->type_category_name);
-            $type = new Type();
-            $type->setCategory($category);
-            $type->setName($row->type_name);
-            $type->set_id($row->id);
-            self::$cachedTypes[$row->id] = $type;
-            return $type;
+            $test = xdebug_get_function_stack();
+            $t = "";
         }
+        $category->set_id($row->type_category_id);
+        $category->setName($row->type_category_name);
+        $type = new Type();
+        $type->setCategory($category);
+        $type->setName($row->type_name);
+        $type->set_id($row->id);
+        self::$cachedTypes[$row->id] = $type;
+        return $type;
     }
-
 
     /**
      * @param String $name
@@ -262,8 +234,8 @@ class Types
         return $type;
     }
 
-
     /**
+     * Created a new Datablock Type
      * @param String $name
      * @return Type
      */
@@ -275,7 +247,6 @@ class Types
         return $type;
     }
 
-
     /**
      * Returns null if none found
      * @param String $name
@@ -285,22 +256,16 @@ class Types
     public static function get_type_by_name($name, $category)
     {
         $datatype = TypeModel::where("name", "=", $name)->where('type_category_id', "=", $category->get_id())->first();
-        if(isset($datatype))
-        {
-            $type = new Type($name);
-            $type->set_id($datatype->id);
-            $type->setCategory($category);
-           return $type;
-        }
-        else
-        {
+        if(!isset($datatype))
             return null;
-        }
-
+        $type = new Type($name);
+        $type->set_id($datatype->id);
+        $type->setCategory($category);
+        return $type;
     }
 
-
     /**
+     * Gets a Datablock type
      * @param String $name
      * @return Type
      */
@@ -308,22 +273,5 @@ class Types
     {
         return self::getTypeWithName($name, "datablock");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -30,11 +30,8 @@ class Menu extends DatabaseObject
      * @var DataTag
      */
     private $menuTag;
+
     /**
-     * @var DataTag
-     */
-    private $itemsTag;
-    /*
      * @var MenuItem[]
      */
     private $items;
@@ -50,9 +47,8 @@ class Menu extends DatabaseObject
 
         $menuTag = new DataTag($name, $menusTag->get_id(), Types::get_type_by_name("folder", TypeCategory::getTagCategory()) );
         $menuTag->create();
-        $items = new DataTag("items", $menuTag->get_id(), Types::get_type_by_name("folder", TypeCategory::getTagCategory()) );
-        $items->create();
-        return $menu = new Menu($menuTag);
+        $menu = new Menu($menuTag);
+        return $menu;
     }
 
 
@@ -61,21 +57,13 @@ class Menu extends DatabaseObject
      * Menu constructor.
      * @param DataTag $menuTag
      */
-    function __construct($menuTag, $itemsTag = null)
+    function __construct($menuTag)
     {
         $this->name = $menuTag->get_name();
         $this->menuTag = $menuTag;
-        if(isset($itemsTag))
-            $this->itemsTag = $itemsTag;
-        else
-        $this->itemsTag = DataTags::get_by_string("items",$menuTag->get_id() );
-
-        $this->items = $this->itemsTag->get_children()->getAsArray();
-
+        $this->items = $this->menuTag->get_children()->getAsArray();
         foreach($this->items as $key => $value) // converting tags to menu items
-        {
             $this->items[$key] = new Menuitem($value);
-        }
     }
 
 
@@ -85,13 +73,21 @@ class Menu extends DatabaseObject
      */
     public function getMenuItems()
     {
+         usort($this->items, function($a, $b) {
+           /**
+            * @var MenuItem $a
+            * @var MenuItem $b
+            */
+           return $a->get_sort_number() - $b->get_sort_number();
+        });
         return $this->items;
     }
 
+
+
     public function addItem($name, $url, $sort, $icon = null)
     {
-
-        $menuItem = MenuItem::make($this->itemsTag, $name, $url, $sort,  $icon);
+        $menuItem = MenuItem::make($this->menuTag, $name, $url, $sort,  $icon);
         array_push($this->items,$menuItem );
         return $menuItem;
     }
@@ -123,5 +119,12 @@ class Menu extends DatabaseObject
     public function created_at()
     {
         return $this->menuTag->created_at();
+    }
+
+    public function delete()
+    {
+       foreach($this->getMenuItems() as $menutItem)
+           $menutItem->delete();
+       $this->menuTag->delete();
     }
 }

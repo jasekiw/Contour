@@ -48,16 +48,16 @@
         <script src="{{ asset('assets/js/king-components.js') }}"></script>
         {!!  Theme::footer() !!}
         {!!  Theme::footer($title) !!}
+        {!! Contour::getThemeManager()->footer() !!}
                 @yield('scripts')
-
-
-
-        @if(Session::has('message'))
+        @if( Session::has('message') || Session::has('message_title'))
 
             <script type="text/javascript">
                 $.gritter.add({
                     title: "{{ Session::get('message_title')}}",
-                    text: "{{Session::get('message_body')}}"
+                    text: "{{Session::get('message')}}",
+                    class_name: "{{ Session::get('message_type')}}"
+
                 });
             </script>
         @endif

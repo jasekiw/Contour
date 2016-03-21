@@ -32,7 +32,7 @@
                 <div class="col-md-3">
                     <div class="user-info-left profile_pic_container">
 
-                        <img src="{!! $user_pic !!}" alt="Profile Picture" id="profile_picture"/>
+                        <img src="{!! isset($user_pic) ?  $user_pic : $user_default_pic  !!}" alt="Profile Picture" id="profile_picture"/>
                         {!! UserInterface::mini_drop_zone('profile') !!}
                         <h2>
                             {!! \UserInterface::editable('first_name',route('save_profile'), $first_name,'text', 'Enter Your First Name') !!}
@@ -44,12 +44,7 @@
                                 Message</a>
                             <a href="#" class="btn btn-block btn-custom-secondary"><i class="fa fa-book"></i> Add To
                                 Contact</a>
-                            <ul class="list-inline social">
-                                {!! \UserInterface::editable('facebook_url', route('save_profile'),'<i class="fa fa-facebook-square"></i>' ,'text', 'Enter the url of your ') !!}
-                                {{--<li><a href="#" title="Facebook"><i class="fa fa-facebook-square"></i></a></li>--}}
-                                <li><a href="#" title="Twitter"><i class="fa fa-twitter-square"></i></a></li>
-                                <li><a href="#" title="Google Plus"><i class="fa fa-google-plus-square"></i></a></li>
-                            </ul>
+
                         </div>
                     </div>
                 </div>
@@ -107,192 +102,48 @@
         <!-- ACTIVITY TAB CONTENT -->
         <div class="tab-pane activity" id="activity-tab">
             <ul class="list-unstyled activity-list">
-                <li>
-                    <i class="fa fa-shopping-cart activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> commented on <a href="#">Special Deal 2013</a> <span class="timestamp">12 minutes ago</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-pencil activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> posted <a href="#">a new blog post</a> <span class="timestamp">4 hours ago</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-user activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> edited his profile <span class="timestamp">11 hours ago</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-pencil activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> has added review on <a href="#">jQuery Complete Guide</a> book <span
-                            class="timestamp">Yesterday</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-thumbs-up activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> liked <a href="#">a post</a> <span class="timestamp">December 12</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-tasks activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> has completed one task <span class="timestamp">December 11</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-picture-o activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> uploaded <a href="#">new photos</a> <span
-                            class="timestamp">December 5</span>
-                    </p>
-                </li>
-                <li>
-                    <i class="fa fa-credit-card activity-icon pull-left"></i>
-                    <p>
-                        <a href="#">Jonathan</a> has updated his credit card info <span
-                            class="timestamp">September 28</span>
-                    </p>
-                </li>
+                @foreach($history as $historyItem)
+                    <li>
+                        <i class="fa fa-pencil activity-icon pull-left"></i>
+                        <p>
+                            <a href="#">{{ $user->username  }}</a> {{$historyItem->action}} {{$historyItem->subject}} from "{{$historyItem->oldValue}}" to "{{$historyItem->newValue}}"<span class="timestamp">{{$historyItem->time  }}</span>
+                        </p>
+                    </li>
+                @endforeach
             </ul>
-            <p class="text-center more"><a href="#" class="btn btn-custom-primary">View more <i
-                        class="fa fa-long-arrow-right"></i></a></p>
+
         </div>
         <!-- END ACTIVITY TAB CONTENT -->
 
         <!-- SETTINGS TAB CONTENT -->
         <div class="tab-pane settings" id="settings-tab">
-            <form class="form-horizontal" role="form">
+
+                {!! Form::open(['class' => 'form-horizontal', 'role' => 'form', 'method' => 'POST', 'url' => route('savepassword_profile'), 'id' => 'save_password' ]) !!}
                 <fieldset>
                     <h3><i class="fa fa-square"></i> Change Password</h3>
                     <div class="form-group">
                         <label for="old-password" class="col-sm-3 control-label">Old Password</label>
                         <div class="col-sm-4">
-                            <input type="password" id="old-password" name="old-password" class="form-control">
+                            <input type="password" id="old-password" name="old-password" class="form-control" value="" />
                         </div>
                     </div>
                     <hr/>
                     <div class="form-group">
                         <label for="password" class="col-sm-3 control-label">New Password</label>
                         <div class="col-sm-4">
-                            <input type="password" id="password" name="password" class="form-control">
+                            <input type="password" id="password" name="password" class="form-control" value="" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="password2" class="col-sm-3 control-label">Repeat Password</label>
                         <div class="col-sm-4">
-                            <input type="password" id="password2" name="password2" class="form-control">
+                            <input type="password" id="password2" name="password2" class="form-control" value="" />
                         </div>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <h3><i class="fa fa-square"></i> Privacy</h3>
-                    <label class="fancy-checkbox">
-                        <input type="checkbox">
-                        <span>Show my display name</span>
-                    </label>
-                    <label class="fancy-checkbox">
-                        <input type="checkbox">
-                        <span>Show my birth date</span>
-                    </label>
-                    <label class="fancy-checkbox">
-                        <input type="checkbox">
-                        <span>Show my email</span>
-                    </label>
-                    <label class="fancy-checkbox">
-                        <input type="checkbox">
-                        <span>Show my online status on chat</span>
-                    </label>
-                </fieldset>
-                <h3><i class="fa fa-square"> </i>Notifications</h3>
-                <fieldset>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">Receive message from administrator</label>
-                        <ul class="col-sm-7 list-inline">
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-globe'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-globe'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-phone'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-phone'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-envelope'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-envelope'></i>">
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">New product has been added</label>
-                        <ul class="col-sm-7 list-inline">
-                            <li>
-                                <input type="checkbox" class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-globe'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-globe'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-phone'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-phone'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-envelope'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-envelope'></i>">
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">Product review has been approved</label>
-                        <ul class="col-sm-7 list-inline">
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-globe'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-globe'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-phone'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-phone'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" checked class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-envelope'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-envelope'></i>">
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">Others liked your post</label>
-                        <ul class="col-sm-7 list-inline">
-                            <li>
-                                <input type="checkbox" class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-globe'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-globe'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-phone'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-phone'></i>">
-                            </li>
-                            <li>
-                                <input type="checkbox" class="bs-switch switch-small" data-off="default"
-                                       data-on-label="<i class='glyphicon glyphicon-envelope'></i>"
-                                       data-off-label="<i class='glyphicon glyphicon-envelope'></i>">
-                            </li>
-                        </ul>
-                    </div>
-                </fieldset>
+
             </form>
-            <p class="text-center"><a href="#" class="btn btn-custom-primary"><i class="fa fa-floppy-o"></i> Save
+            <p class="text-center"><a href="#" onclick="javascript:savePssword()" class="btn btn-custom-primary"><i class="fa fa-floppy-o"></i> Save
                     Changes</a></p>
         </div>
         <!-- END SETTINGS TAB CONTENT -->

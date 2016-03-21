@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "out": "menu_editor.js"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+    "MenuEditor.ts",
+    "../jqueryui/jqueryui.d.ts",
+    "../Ajax.ts"
+
+  ]
+}

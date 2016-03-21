@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use app\libraries\theme\data\LinkGenerator;
 use App\Models\User_Access_Group;
 use Illuminate\Http\Request;
 
@@ -19,12 +20,16 @@ class UserAccessGroupsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($letter = null)
     {
-        $groups = User_Access_Group::all();
-        $view = \View::make('user_access_groups.index');
+
+        $view = \View::make('general.list');
+        LinkGenerator::generateAlphabetLinks($view, 'user_access_groups_index_letter');
+        LinkGenerator::setupLinksAtoZ($view, 'user_access_groups_show', 'name', 'id', $letter, User_Access_Group::all());
+        $view->indexURL = route('user_access_groups_index');
         $view->title = "User Access Groups";
-        $view->groups = $groups;
+        $view->newTitle = "Create New User Access Group";
+        $view->newLink = route('user_access_groups_create');
         return $view;
     }
 
@@ -35,8 +40,14 @@ class UserAccessGroupsController extends Controller
      */
     public function create()
     {
+        $menues = \Contour::getThemeManager()->getMenuManager()->getMenus();
+        $menuIds = [];
+        foreach($menues as $menu)
+            $menuIds[$menu->get_id()] = $menu->getName();
+
         $view = \View::make("user_access_groups.create");
         $view->title = "Create new user access Group";
+        $view->menus = $menuIds;
         return $view;
     }
 
@@ -48,7 +59,7 @@ class UserAccessGroupsController extends Controller
      */
     public function store(Request $request)
     {
-        $groupName = \Input::get("group");
+        $groupName = \Input::get("name");
         $group = new User_Access_Group();
         $group->name = $groupName;
         $group->save();
@@ -63,10 +74,15 @@ class UserAccessGroupsController extends Controller
      */
     public function show($id)
     {
+        $menues = \Contour::getThemeManager()->getMenuManager()->getMenus();
+        $menuIds = [];
+        foreach($menues as $menu)
+            $menuIds[$menu->get_id()] = $menu->getName();
         $group = User_Access_Group::where('id', '=', $id)->first();
         $view = \View::make('user_access_groups.show');
         $view->title = "User Access Group " . $group->name;
         $view->group = $group;
+        $view->menus = $menuIds;
         return $view;
     }
 
@@ -95,8 +111,9 @@ class UserAccessGroupsController extends Controller
         $name = \Input::get("name");
         if($name != null && strlen($name) != 0)
             $group->name = $name;
+        $group->menu_id = \Input::get("menu");
         $group->save();
-        return redirect()->route('user_access_groups_show', [$groupId])->with('message', "Successfully Saved!");
+        return redirect()->route('user_access_groups_index')->with('message', "Successfully Saved!");
     }
 
     /**

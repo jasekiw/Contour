@@ -6,6 +6,7 @@
  * Time: 2:04 PM
  */
 namespace app\libraries\excel\Formula;
+use app\libraries\Data_Blocks\DataBlockAbstract;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\excel\formula\conversion\FormulaConversion;
 
@@ -16,7 +17,7 @@ use app\libraries\excel\formula\conversion\FormulaConversion;
 class TagConverter {
 
     /**
-     * @param DataBlock $datablock
+     * @param DataBlockAbstract $datablock
      * @return String
      */
     public function get_tag_value($datablock)

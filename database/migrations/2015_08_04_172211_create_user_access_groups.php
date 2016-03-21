@@ -17,7 +17,9 @@ class CreateUserAccessGroups extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->string('permission_ids');
+            $table->unsignedInteger('menu_id');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

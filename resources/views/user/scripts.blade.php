@@ -93,5 +93,11 @@
 
         }
 
+        function savePssword()
+        {
+                var form = $("#save_password");
+                form.trigger('submit');
+        }
+
 
 </script>

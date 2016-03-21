@@ -5,16 +5,13 @@
 class Main
 {
     public dataBlockEditor : DataBlockEditor;
+    public sheetEditor : SheetEdtior;
+
     constructor()
     {
         this.dataBlockEditor = new DataBlockEditor();
+        this.sheetEditor = new SheetEdtior(this.dataBlockEditor);
 
-        $(".cell input").dblclick((e) => {
-            e.preventDefault();
-            var thisElement = $(e.currentTarget);
-            var excelSheet : number = parseInt($(".excel_editor").attr("sheet"));
-            this.dataBlockEditor.open(thisElement, excelSheet, thisElement.val());
-        });
     }
 
 

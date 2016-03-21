@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use app\libraries\excel\formula\conversion\FormulaConversion;
 use app\libraries\tags\DataTags;
+use Route;
 use Theme;
 
 class SandboxController extends Controller {
@@ -59,13 +60,19 @@ class SandboxController extends Controller {
 //
 //		}
 
-		Theme::enqueue_script('datatagInterfacer', "assets/js/datablock_editor/DatatagInterfacer.js");
-		Theme::enqueue_script('dataBlock_interfacer', "assets/js/datablock_editor/DatablockInterfacer.js");
-		//Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
-		$view = \View::make("sandbox.index");
-		$view->title = "sandbox";
+//		Theme::enqueue_script('datatagInterfacer', "assets/js/datablock_editor/DatatagInterfacer.js");
+//		Theme::enqueue_script('dataBlock_interfacer', "assets/js/datablock_editor/DatablockInterfacer.js");
+//		//Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
+//		$view = \View::make("sandbox.index");
+//		$view->title = "sandbox";
 
-		return $view;
+
+//		return $view;
+
+
+       return \View::make('partials.listroutes');
+
+
 	}
 
 	/**

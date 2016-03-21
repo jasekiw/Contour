@@ -1,0 +1,55 @@
+.menuEditor {
+
+    .links {
+        display:flex;
+        flex-direction: column;
+    }
+    .headerRow {
+
+        [class*='col-'] {
+            text-align:center;
+        }
+        label {
+            text-align:center;
+            font-size:18px;
+            font-weight:bold;
+        }
+    }
+    [class*='col-'] {
+        input {
+            display:block;
+            margin-bottom:0;
+            width:100%;
+        }
+    }
+    .delete {
+        color:red;
+        font-size:4em;
+        i {
+            cursor:pointer;
+            display: block;
+            float: left;
+        }
+
+    }
+    .grabber {
+        color: #666;
+        font-size:4em;
+        i {
+            cursor:move;
+            display: block;
+            float: right;
+        }
+    }
+    .new {
+        color:$evergreen;
+        font-size: 4em;
+        text-align:center;
+        i {
+            cursor: pointer;
+        }
+    }
+    .resource_form div.row:first-of-type [class*='col-']:first-child {
+        border-right:none;
+    }
+}

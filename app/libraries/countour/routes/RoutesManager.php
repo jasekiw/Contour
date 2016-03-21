@@ -15,12 +15,14 @@ namespace app\libraries\contour\routes;
 class RoutesManager
 {
     private $routesCollection = null;
+    private $routes;
 
     /**
      * Instantiates the class
      */
     function __construct()
     {
+        $this->routes = [];
         $this->routesCollection = new RoutesCollection();
     }
 
@@ -66,6 +68,27 @@ class RoutesManager
 
     public function callRouteGet($id)
     {
+
+    }
+    public function printRoutes()
+    {
+        $pluginfiles = scandir (app_path('plugins'));
+        if(isset($pluginfiles[0]) && $pluginfiles[0] = '.')
+            unset($pluginfiles[0]);
+        if(isset($pluginfiles[1]) && $pluginfiles[1] = '...')
+            unset($pluginfiles[1]);
+        $pluginsDirectories = [];
+        foreach($pluginfiles as $pluginFile)
+        {
+            if(is_dir(app_path('plugins') . DIRECTORY_SEPARATOR . $pluginFile))
+                array_push($pluginsDirectories, app_path('plugins') . DIRECTORY_SEPARATOR . $pluginFile);
+        }
+        foreach($pluginsDirectories as $pluginsDirectory)
+        {
+            if(file_exists($pluginsDirectory . DIRECTORY_SEPARATOR . 'routes.php'))
+                require $pluginsDirectory . DIRECTORY_SEPARATOR . 'routes.php';
+        }
+
 
     }
 

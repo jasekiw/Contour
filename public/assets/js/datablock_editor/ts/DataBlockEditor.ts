@@ -162,6 +162,7 @@ class DataBlockEditor
         this.cell.val(this.dataBlockFormula.val());
     }
 
+
     /**
      *
      * @param data
@@ -171,6 +172,7 @@ class DataBlockEditor
 
         //var thisfunction = this;
         console.log(data);
+        console.debug(JSON.stringify(data));
 
         if(data.success)
         {

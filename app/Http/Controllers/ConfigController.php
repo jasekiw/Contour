@@ -47,7 +47,7 @@ class ConfigController extends Controller {
 		ConfigHelper::save_file('favicon');
 		ConfigHelper::save_file('logo');
 
-		return Redirect::route('view_config')->with('message_title' , 'Successful!')->with('message_body' , 'Successfully updated the config!');
+		return Redirect::route('view_config')->with('message_title' , 'Successful!')->with('message' , 'Successfully updated the config!');
 	}
 
 

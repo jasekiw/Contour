@@ -1,0 +1,8 @@
+.gritter-item-wrapper {
+    &.failure {
+        background-color: red;
+    }
+    &.success {
+        background-color: green;
+    }
+}

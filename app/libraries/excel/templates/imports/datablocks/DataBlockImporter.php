@@ -10,6 +10,8 @@ use app\libraries\async\AsyncJob;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\datablocks\staticform\DataBlocks;
 use \app\libraries\excel\Formula\TagConverter;
+use app\libraries\memory\MemoryDataManager;
+use app\libraries\tags\DataTagManager;
 use app\libraries\theme\system\System;
 use app\libraries\types\Types;
 use App\Models\Data_block;
@@ -61,62 +63,65 @@ class DataBlockImporter
             $jobs[] = $task;
             //sleep(5);
             $offset+= $limit;
-            if(sizeOf($jobs) >= $numCpus)
-            {
-                while(sizeOf($jobs) >= $numCpus)
-                {
-                    /* @var AsyncJob[] $jobs */
-                    foreach($jobs as $index => $job)
-                    {
-                       if($job->isComplete())
-                       {
-                           unset($jobs[$index]);
-                       }
-                    }
-                    sleep(2);
-                }
-            }
 
+            while(sizeOf($jobs) >= $numCpus)
+            {
+                /* @var AsyncJob[] $jobs */
+                foreach($jobs as $index => $job)
+                   if($job->isComplete())
+                       unset($jobs[$index]);
+                sleep(2);
+            }
         }
-//        error_reporting(E_ALL);
-//        ini_set('display_errors', 1);
-//
-//        $type = Types::get_type_cell();
-//        $total = Data_block::where("type_id", "=", $type->get_id())->selectRaw("count(*)")->get()->first()["count(*)"];
-//
-//        $limit = 1000;
-//        $offset = 6214; // starting location
-//        $count = $offset;
-//        $blocks = Data_block::where("type_id", "=", $type->get_id())->limit($limit)->offset($offset)->get();
-//        while(!$blocks->isEmpty())
-//        {
-//            foreach($blocks as $row)
-//            {
-//
-//                $dataBlock = DataBlocks::getByID($row->id);
-//                $converter = new TagConverter();
-//                $oldValue = $dataBlock->getValue();
-//                $converter->get_tag_value($dataBlock);
-//                //$dataBlock->save(); // not ready yet
-//
-//
-//
-//                echo "<br />finished datablock: " . $count . " out of " . $total . " ID: " . $dataBlock->get_id() ."<br />";
-//                echo "Old value: " . $oldValue . " &nbsp;&nbsp;&nbsp;&nbsp; New Value: " . $dataBlock->getValue() . "<br />";
-//                $count++;
-//
-//
-//                flush();
-//                if($count % 50 == 0)
-//                {
-//                    \UserMeta::save('progress', $count . '/' . $total);
-//                }
-//
-//            }
-//
-//            $offset += $limit;
-//            $blocks = Data_block::where("type_id", "=", $type->get_id())->limit($limit)->offset($offset)->get();
-//        }
+
+        /**
+         * @param DataTagManager | \app\libraries\memory\tags\DataTagManager $dataTagManager
+         */
+        function runImportSingleThreaded($dataTagManager)
+        {
+
+            $manager = MemoryDataManager::getInstance();
+            $blockmanager = $manager->dataBlockManager;
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+
+            $type = Types::get_type_cell();
+            $total = Data_block::where("type_id", "=", $type->get_id())->selectRaw("count(*)")->get()->first()["count(*)"];
+
+            $limit = 1000;
+            $offset = 0; // starting location
+            $count = $offset;
+            $blocks = Data_block::where("type_id", "=", $type->get_id())->limit($limit)->offset($offset)->get();
+            while(!$blocks->isEmpty())
+            {
+                foreach($blocks as $row)
+                {
+
+                    $dataBlock = $blockmanager->getByID($row->id);
+                    $converter = new TagConverter();
+                    $oldValue = $dataBlock->getValue();
+                    $converter->get_tag_value($dataBlock);
+                    //$dataBlock->save(); // not ready yet
+
+
+
+                    echo "<br />finished datablock: " . $count . " out of " . $total . " ID: " . $dataBlock->get_id() ."<br />";
+                    echo "Old value: " . $oldValue . " &nbsp;&nbsp;&nbsp;&nbsp; New Value: " . $dataBlock->getValue() . "<br />";
+                    $count++;
+
+
+                    flush();
+                    if($count % 50 == 0)
+                    {
+                        \UserMeta::save('progress', $count . '/' . $total);
+                    }
+
+                }
+
+                $offset += $limit;
+                $blocks = Data_block::where("type_id", "=", $type->get_id())->limit($limit)->offset($offset)->get();
+            }
+        }
 
     }
 }

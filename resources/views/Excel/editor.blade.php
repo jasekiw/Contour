@@ -13,6 +13,7 @@
  */
 use \app\libraries\tags\DataTag;
 use app\libraries\theme\data\TableBuilder;
+use app\libraries\theme\UserInterface\DataBlockEditor;
 
 
 
@@ -28,10 +29,15 @@ use app\libraries\theme\data\TableBuilder;
             float: right;
         }
     </style>
+<div class="upper-controls">
+    <a href="{!! route('sheetcategories_show', [$parent->get_id()]) !!}">Back to {{ $parent->get_name() }}</a>
+    <div class="right">
+        <a href="{!! route('sheet_delete', [ $tag->get_id() ]) !!}">Delete Sheet</a>
+    </div>
+</div>
 
 
-
-    <div id="facilityTabbed" class="container">
+    <div id="sheet_tabbed" class="container">
         <ul  class="nav nav-pills">
             @foreach($compositTags as $compositTag)
                 <li>
@@ -51,13 +57,18 @@ use app\libraries\theme\data\TableBuilder;
                 </div>
             @endforeach
             <div class="tab-pane active" id="summary">
-                <?php echo $summaryTable->printTable(); ?>
+                <?php echo $summaryTable->printTable(false); ?>
             </div>
         </div>
+
     </div>
 
 @endsection
 
 @section('scripts')
-    @include('facilities.scripts')
+    <?php
+        echo DataBlockEditor::get();
+    ?>
+    @include('excel.scripts')
 @endsection
+

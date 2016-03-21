@@ -16,9 +16,10 @@ class CreateDataBlocksTable extends Migration {
 		{
 			$table->increments('id');
 			$table->text('value');
-			//$table->text('tags'); // deprecated
 			$table->unsignedInteger('type_id');
 			$table->timestamps();
+			$table->softDeletes();
+			$table->index('type_id');
 		});
 		//DB::statement('ALTER TABLE posts ADD FULLTEXT full(name, content)');
 

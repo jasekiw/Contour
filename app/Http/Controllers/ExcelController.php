@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\excel\templates\TableCompiler;
 use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
@@ -113,12 +114,14 @@ class ExcelController extends Controller {
 		}
 		else
 		{
-			$url = route('index_tags');
+			$url = route('tag_index');
 		}
 		$view->backtoLink = '<a href="' . $url . '"><i class="fa fa-arrow-left back_arrow"></i>Back to Tag Browser</a>';
 		$view->sheet = $datatag;
 		return $view;
 	}
+
+
 
 	/**
 	 * @param $id

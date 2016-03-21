@@ -35,7 +35,7 @@ class ThemeManager
     public function enqueueScript( $name,  $src, $group = null  )
     {
         $src = asset($src);
-        $script = '<script type="text/javascript" class="' . $name . '_script" src="' . $src . "\" ></script>";
+        $script = '<script type="text/javascript" class="' . $name . '_script" src="' . $src . '" ></script>';
 
         if(isset($group))
         {

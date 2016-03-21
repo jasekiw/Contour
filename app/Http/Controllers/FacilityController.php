@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\excel\templates\TableCompiler;
+use app\libraries\tags\collection\TagCollection;
 use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
@@ -37,7 +38,7 @@ class FacilityController extends Controller {
 		else
 		{
 			$view->current = "all";
-			$facilities = $facilities->getAsArray();
+			$facilities = $facilities->getAsArray(TagCollection::SORT_TYPE_ALPHABETICAL);
 		}
 
 		$view->title = 'Facilities';

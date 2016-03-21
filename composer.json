@@ -24,7 +24,9 @@
         "classmap": [
             "database",
             "app/Models",
-            "app/libraries"
+            "app/libraries",
+            "app/plugins",
+            "app/themes"
         ],
         "psr-4": {
             "App\\": "app/"

@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * Class Tags_reference
  *
@@ -16,4 +18,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tags_reference extends \Eloquent {
 	protected $fillable = [];
 	protected $table = "tags_reference";
+	protected $dates = ['deleted_at'];
+	use SoftDeletes;
 }

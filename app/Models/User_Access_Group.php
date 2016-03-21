@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -22,7 +23,8 @@ class User_Access_Group extends \Eloquent {
 	use RevisionableTrait;
 	protected $fillable = [];
 	protected $table = 'user_access_groups';
-
+	use SoftDeletes;
+	protected $dates = ['deleted_at'];
 	public static function boot()
 	{
 		parent::boot();

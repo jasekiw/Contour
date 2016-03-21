@@ -1,0 +1,49 @@
+$evergreen: #47A491;
+$evergreenLighter: #9DD0C6;
+$evergray : #EBECE8;
+$evergreen_border: 2px solid $evergreen;
+@mixin evergreen_button()
+{
+    padding: 10px 20px;
+    color: $evergreen;
+    text-transform: uppercase;
+    font-size:24px;
+    &:hover {
+        text-decoration: none;
+        background-color:$evergreen;
+        border-radius: 5px;
+        color:white;
+    }
+}
+
+@mixin evergreen_button_LightToDark()
+{
+    border:none;
+    padding: 10px 20px;
+    background-color: $evergreenLighter;
+    color: white;
+    text-transform: uppercase;
+    font-size:24px;
+    border-radius: 5px;
+    &:hover {
+        text-decoration: none;
+        background-color: $evergreen;
+        color:white;
+    }
+}
+
+@mixin evergreen_button_DarkToLight()
+{
+    border:none;
+    padding: 10px 20px;
+    background-color: $evergreen;
+    color: white;
+    text-transform: uppercase;
+    font-size:24px;
+    border-radius: 5px;
+    &:hover {
+        text-decoration: none;
+        background-color: $evergreenLighter;
+        color:white;
+    }
+}

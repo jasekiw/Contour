@@ -11,14 +11,15 @@ namespace app\libraries\types;
 use app\libraries\database\DatabaseObject;
 use App\Models\Type_category;
 
-class TypeCategory extends DatabaseObject
+/**
+ * Class TypeCategory
+ * @package app\libraries\types
+ */
+class TypeCategory extends TypeCategoryAbstract
 {
 
-    private $name = null;
 
-    public function __construct() {
-
-    }
+    private static $cachedCategories = [];
 
     /**
      * @param int $id
@@ -26,16 +27,16 @@ class TypeCategory extends DatabaseObject
      */
     public static function GetByID($id)
     {
+        if(isset(self::$cachedCategories[$id]))
+            return self::$cachedCategories[$id];
         $category = Type_category::where('id', '=', $id)->first();
-        if(isset($category))
-        {
-
-            $typecategory = new TypeCategory();
-            $typecategory->name = $category->name;
-            $typecategory->id = $category->id;
-            return $typecategory;
-        }
-        return null;
+        if(!isset($category))
+            return null;
+        $typecategory = new TypeCategory();
+        $typecategory->name = $category->name;
+        $typecategory->id = $category->id;
+        self::$cachedCategories[$id] = $typecategory;
+        return $typecategory;
     }
 
     /**
@@ -55,27 +56,29 @@ class TypeCategory extends DatabaseObject
         return null;
     }
 
+    /**
+     * Gets the TypeCategory with the name of tag
+     * @return TypeCategory
+     */
     public static function getTagCategory()
     {
-
         $category = Type_category::where('name', '=', "tag")->first();
         if(!isset($category))
         {
             $category = new Type_category();
             $category->name = "tag";
             $category->save();
-
         }
-        if(isset($category))
-        {
-            $typecategory = new TypeCategory();
-            $typecategory->name = $category->name;
-            $typecategory->id = $category->id;
-            return $typecategory;
-        }
-        return null;
+        $typecategory = new TypeCategory();
+        $typecategory->name = $category->name;
+        $typecategory->id = $category->id;
+        return $typecategory;
     }
 
+    /**
+     * Gets the TypeCategory with the name of DataBlock
+     * @return TypeCategory
+     */
     public static function getDataBlockCategory()
     {
 
@@ -85,16 +88,11 @@ class TypeCategory extends DatabaseObject
             $category = new Type_category();
             $category->name = "datablock";
             $category->save();
-
         }
-        if(isset($category))
-        {
-            $typecategory = new TypeCategory();
-            $typecategory->name = $category->name;
-            $typecategory->id = $category->id;
-            return $typecategory;
-        }
-        return null;
+        $typecategory = new TypeCategory();
+        $typecategory->name = $category->name;
+        $typecategory->id = $category->id;
+        return $typecategory;
     }
 
     /**
@@ -105,8 +103,8 @@ class TypeCategory extends DatabaseObject
         $this->id = $id;
     }
 
-
     /**
+     * Gets the ID
      * @return int
      */
     public function get_id()
@@ -115,6 +113,7 @@ class TypeCategory extends DatabaseObject
     }
 
     /**
+     * Sets the name
      * @param $name
      */
     public function setName($name)
@@ -123,6 +122,7 @@ class TypeCategory extends DatabaseObject
     }
 
     /**
+     * Gets the name
      * @return String
      */
     public function getName()
@@ -130,56 +130,46 @@ class TypeCategory extends DatabaseObject
         return $this->name;
     }
 
-
-
     /**
      *  Saves the TypeCategory to the Database
      * @return bool sucessfull
      */
     public function save()
     {
+        if($this->name == null)
+            return false;
         if(isset($this->id))
         {
-            if(isset($this->name))
+            $typemodel = Type_category::where('id', '=', $this->id)->first();
+            if(isset($typemodel))
             {
-                $typemodel = Type_category::where('id', '=', $this->name)->first();
-                if(isset($typemodel))
-                {
-                    $typemodel->id = $this->id;
-                    $typemodel->name = $this->name;
-                    $typemodel->save();
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            if(isset($this->name))
-            {
-                $typemodel = new Type_category();
                 $typemodel->id = $this->id;
                 $typemodel->name = $this->name;
                 $typemodel->save();
                 return true;
             }
+            return false;
         }
-        return false;
+
+        $typemodel = new Type_category();
+        $typemodel->id = $this->id;
+        $typemodel->name = $this->name;
+        $typemodel->save();
+        return true;
     }
 
-
     /**
+     * Gets the typecategory by a Type_category row
      * @param $row
      * @return TypeCategory
      */
     public static function getByQueryRow($row)
-  {
-      $category = new TypeCategory();
-      $category->set_id($row->type_category_id);
-      $category->setName($row->type_category_name);
-      return $category;
-
-  }
-
+    {
+        $category = new TypeCategory();
+        $category->set_id($row->type_category_id);
+        $category->setName($row->type_category_name);
+        return $category;
+    }
 
     /**
      * Gets the date at when the object was updated.
@@ -188,10 +178,7 @@ class TypeCategory extends DatabaseObject
     public function updated_at()
     {
         if(isset($this->updated_at)) // cached
-        {
             return $this->updated_at;
-        }
-
         if(isset($this->id))
         {
             $typeCategory = Type_category::where('id', '=', $this->id)->first();
@@ -202,10 +189,7 @@ class TypeCategory extends DatabaseObject
             $this->updated_at = $updated_at;
             return $updated_at;
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     /**
@@ -215,23 +199,24 @@ class TypeCategory extends DatabaseObject
     public function created_at()
     {
         if(isset($this->created_at)) // cached
-        {
             return $this->created_at;
-        }
-
         if(isset($this->id))
         {
             $typeCategory = Type_category::where('id', '=', $this->id)->first();
-            /**
-             * \Tag $tag
-             */
             $created_at = $typeCategory->created_at;
             $this->created_at = $created_at;
             return $created_at;
         }
-        else
-        {
-            return null;
-        }
+        return null;
+    }
+
+    /**
+     * Deletes the TypeCategory
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        Type_category::where('id', '=', $this->id)->delete();
+        $this->id = null;
     }
 }

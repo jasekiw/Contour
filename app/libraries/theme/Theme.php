@@ -96,13 +96,11 @@ class Theme
     {
         $src = asset($src);
         $style = '<link rel="stylesheet" type="text/css" class="' . $name . '_style"  href="' . $src . "\" ></link>";
-        if(!isset($group))
+        if(isset($group))
         {
             $group = strtoupper($group);
-            if(isset(self::$specific_enqueue_styles[$group] ))
-            {
-                self::$specific_enqueue_styles[$group] = array();
-            }
+            if(!isset(self::$specific_enqueue_styles[$group] ))
+                self::$specific_enqueue_styles[$group] = [];
             self::$specific_enqueue_styles[$group][$name] = $style;
         }
         else{

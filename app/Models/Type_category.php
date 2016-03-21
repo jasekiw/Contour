@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -18,8 +19,10 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Type_category extends \Eloquent {
 	use RevisionableTrait;
+	use SoftDeletes;
 	protected $fillable = [];
-	
+	protected $dates = ['deleted_at'];
+
 	public static function boot()
 	{
 		parent::boot();

@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 
 use app\libraries\Data_Blocks\formula\Parser;
+use app\libraries\database\DataManager;
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\helpers\TimeTracker;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -46,12 +48,14 @@ class DataBlockTranslatorController extends Controller {
 				$context = $datablock->getTags()->getRowsAsArray()[0]->get_parent_id();
 		}
 
-		$parser = new Parser();
+		$parser = new Parser(DataManager::getInstance());
 		$response = new \stdClass();
 
+		$timer = new TimeTracker();
+		$timer->startTimer("parser");
 		$response->result = $parser->parse($value, $context);
-
-
+		$timer->stopTimer("parser");
+		$response->testData = $timer->getResultsAsString();
 		$response->success = true;
 		return  json_encode($response);
 
@@ -61,7 +65,7 @@ class DataBlockTranslatorController extends Controller {
 
 		$value =  "#(Combined_OP_Summary/Revenue/Total_Revenues, Jan)-#(Phoenix_OP_Summary/Revenue/Total_Revenues, Jan)";
 		$context = intval( ( \Input::get("context") !== null ? \Input::get("context") : 477) );
-		$parser = new Parser();
+		$parser = new Parser(DataManager::getInstance());
 		$response = new \stdClass();
 		$response->result = $parser->parse($value, $context);
 		$response->success = true;

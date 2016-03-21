@@ -12,6 +12,9 @@ use app\libraries\theme\menu\item\MenuItem;
 /**
  * @var Illuminate\Routing\Route $route
  */
+/**
+ * @var MenuItem[] $menuItems
+ */
 
 
 
@@ -23,75 +26,74 @@ use app\libraries\theme\menu\item\MenuItem;
 
 @section('content')
 
-    <style type="text/css">
-        .menuItemEditor
-        {
-            border:1px solid black;
-            margin-top: 100px;
-        }
-        .menuItemEditor td,  .menuItemEditor th{
-            padding: 10px 40px;
-            border-right:1px solid black;
-        }
-        .menuItemEditor thead {
-            border-bottom:1px solid black;
-        }
-    </style>
-    {!!
-    Form::open( ["url" => route("create_menu_item"), 'method' => "POST" ])!!}
-    {!!Form::hidden('menu', $menu->get_id())!!}
-    {!!Form::label('Name')!!}
-    {!!Form::input('text', 'name')!!}
-    {!!Form::label('Link')!!}
-    {!!Form::input('text', 'link')!!}
-    {!!Form::label('Icon')!!}
-    {!!Form::input('text', 'icon')!!}
-    {!!Form::submit("Create")!!}
-    {!!Form::close()!!}
 
+    <div class="upper-controls">
+        <div class="right">
+            <a href="{!! route('menu.index') !!}">Cancel</a>
+        </div>
+    </div>
+    <div class="menuEditor" menu="{!! $menu->get_id() !!}">
 
-    <table class="menuItemEditor">
-        <thead>
-            <th>Name</th>
-            <th>Url / route</th>
-            <th>Icon</th>
-        </thead>
-        <tbody>
+        {!! Form::open(['method' => 'PUT', 'url' => route('menu.update'), 'class' => 'resource_form'] )!!}
+            <div class="inside">
+                <div class="row headerRow">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::label('Title') !!}
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::label('Link') !!}
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+                <div class="links">
+                    <?php
+                    foreach($menuItems as $menuItem)
+                    {
+                        ?>
+                        <div class="row menuLink" order="<?php echo $menuItem->get_sort_number() ?>">
+                            <div class="col-md-2 grabber">
+                                <i class="fa fa-bars "></i>
+                            </div>
+                            <div class="col-md-4">
+                                {!! Form::input('text', 'name', $menuItem->getName()) !!}
+                            </div>
+                            <div class="col-md-4">
+                                {!! Form::input('text', 'href',$menuItem->get_href()) !!}
+                            </div>
+                            <div class="col-md-2 delete">
+                                <i class="fa fa-trash fa-3"></i>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <div class="row newRow">
+                    <div class="col-md-2 grabber">
 
+                    </div>
+                    <div class="col-md-8 new">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                    <div class="col-md-2 delete">
 
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {!! Form::submit('Save') !!}
+            </div>
+        {!! Form::close() !!}
+    </div>
 
-        <?php
-
-        foreach($menuItems as $menuItem)
-        {
-
-
-        ?>
-            <tr>
-                <td><a href="{!! route("menu_item_edit", array($menuItem->get_id())) !!}">{!! $menuItem->getName()!!} </a></td>
-                <td>{!!$menuItem->get_href()!!}</td>
-                <td>{!!$menuItem->get_icon()!!}</td>
-            </tr>
-        <?php
-        }
-        ?>
-        </tbody>
-    </table>
-    <table class="menuItemEditor">
-        <thead>
-            <th>Routes Available</th>
-        </thead>
-        @foreach(Route::getRoutes()->getRoutes() as $route)
-            @if(strlen($route->getName()) > 0)
-                <tr>
-                    <td>
-                        {!!$route->getName()!!}
-                    </td>
-                </tr>
-            @endif
-
-        @endforeach
-    </table>
 
 @endsection
 
+@section('scripts')
+  <script type="text/javascript">
+      var editor = new MenuEditor($(".menuEditor"));
+  </script>
+@endsection

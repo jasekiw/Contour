@@ -7,6 +7,8 @@
  * DataTags are the static form of a DataTag use for instansiation
  */
 namespace app\libraries\tags;
+use app\libraries\database\Query;
+use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\types\TypeCategory;
 use app\libraries\types\Types;
@@ -14,13 +16,21 @@ use App\Models\Tag;
 use \app\libraries\types\Type;
 use App\Models\TypeModel;
 use App\Models\Type_category;
+use DB;
+use PDO;
+
 /**
+ * DEPRECATED use the DataTagManager Instead
  * Class DataTags: The static class used to manage a tags
  * @package app\libraries\tags
  */
 class DataTags
 {
 
+    /**
+     * @var PDO
+     */
+    private static $PDO = null;
     /**
      * Gets a type object by id
      * @param int $id
@@ -43,19 +53,45 @@ class DataTags
         return TypeModel::where("name", "=", $name )->exists() ? TypeModel::where("name", "=", $name )->first()->id : null;
     }
 
+
+//    public static function get_by_id($id)
+//    {
+//        $timeTracker = new TimeTracker();
+//        $timeTracker->startTimer('get_by_id');
+//        /** @var \Illuminate\Database\Query\Builder $data_tag */
+//        $data_tag = self::getDataTagsQueryBuilder();
+//        $data_tag = $data_tag->where('tags.id', '=', $id)->first();
+//        $datatag = self::get_by_row($data_tag);
+//        $timeTracker->stopTimer('get_by_id');
+//        $timeTracker->getResults();
+//        exit;
+//        return $datatag;
+//    }
+
     /**
      * Gets a datatag object by the row id. return null if none found.
      * @param int $id
+     * @param bool $showTrashed
      * @return DataTag
      */
-    public static function get_by_id($id)
+    public static function get_by_id($id, $showTrashed = false)
     {
-        /** @var Tag $data_tag */
-        $data_tag = self::getDataTagsQueryBuilder();
-        $data_tag = $data_tag->where('tags.id', '=', $id)->first();
-        $datatag = self::get_by_row($data_tag);
-        return $datatag;
+        self::checkPDO();
+        $query = "SELECT * FROM tags WHERE id = '" . $id . "' ";
+        if(!$showTrashed)
+            $query .= "AND deleted_at is NULL";
+        $sqlTag = self::$PDO->query($query)->fetch(PDO::FETCH_ASSOC);
+        if($sqlTag === false)
+            return null;
+        return self::fetchByPDORow($sqlTag);
     }
+
+    private static function checkPDO()
+    {
+        if(self::$PDO == null)
+            self::$PDO = Query::getPDO();
+    }
+
 
     /**
      * Gets a TagCollection of all the tags with the given parent id
@@ -70,6 +106,7 @@ class DataTags
         $data_tags = Tag::where("parent_tag_id", "=", $id )->get();
         foreach($data_tags as $data_tag)
         {
+            $id = $data_tag->id;
             $tag = DataTags::get_by_id($data_tag->id);
             $collection->add($tag);
         }
@@ -109,35 +146,115 @@ class DataTags
     }
 
     /**
+     * @requires a row is already picked from the Query
+     * @param string[]
+     * @return \app\libraries\tags\DataTag
+     */
+    private static function fetchByPDORow($sqlTag)
+    {
+
+        $tag = DataTag::constructWithTimestamp($sqlTag["updated_at"], $sqlTag["created_at"]);
+        $tag->set_name($sqlTag['name']);
+        $tag->set_type_id((int)$sqlTag['type_id']);
+        $tag->set_parent_id($sqlTag['parent_tag_id']);
+        $tag->set_sort_number($sqlTag['sort_number']);
+        $tag->set_id($sqlTag['id']);
+        return $tag;
+    }
+
+//    /**
+// * Gets a Datatag by the name and parent id.
+// * @param String $text
+// * @param integer $parent_id Optional
+// * @return DataTag
+// */
+//    public static function get_by_string( $text, $parent_id = null)
+//    {
+//        $timer = new TimeTracker();
+//        $timer->startTimer("bystringQuery");
+//        $query = self::getDataTagsQueryBuilder();
+//        $text = str_replace(" ", "_", $text);
+//        $tag = $query->where("tags.name", "=", $text );
+//
+//        if(isset($parent_id) && $parent_id !== -1)
+//            $tag->where("parent_tag_id", "=", $parent_id);
+//        else if($parent_id === 0 || $parent_id === -1)
+//        {
+//            $tag->Where(function ($query) { // advanced where statement to fix the issue where the tag.name was included as an optional where
+//                foreach(\Contour::getConfigManager()->getPathTags() as $index => $id)
+//                {
+//                    if($index === 0)
+//                        $query->where("parent_tag_id", "=", $id);
+//                    else
+//                        $query->orwhere("parent_tag_id", "=", $id);
+//                }
+//            });
+//
+//        }
+//        $tag = $tag->first();
+//
+//        if( isset($tag) )
+//        {
+//            $tag = DataTags::get_by_row($tag);
+//            $timer->stopTimer("bystringQuery");
+//            $timer->getResults();
+//            exit;
+//            return $tag;
+//        }
+//
+//        $timer->stopTimer("bystringQuery");
+//        $timer->getResults();
+//        exit;
+//        return null;
+//    }
+
+
+    /**
      * Gets a Datatag by the name and parent id.
      * @param String $text
      * @param integer $parent_id Optional
+     * @param bool $showTrashed
      * @return DataTag
      */
-    public static function get_by_string( $text, $parent_id = null)
+    public static function get_by_string( $text, $parent_id = null, $showTrashed = false)
     {
-        $query = self::getDataTagsQueryBuilder();
-        $text = str_replace(" ", "_", $text);
-        $tag = $query->where("tags.name", "=", $text );
+        $query = "SELECT id as id, name as name, type_id as type_id, sort_number as sort_number FROM tags WHERE name = ? ";
+        $text = DataTags::validate_name($text);
 
-         if(isset($parent_id) && $parent_id !== -1)
-             $tag->where("parent_tag_id", "=", $parent_id);
+        if(!$showTrashed)
+            $query .= "AND deleted_at is NULL ";
+
+        if(isset($parent_id) && $parent_id !== -1)
+            $query .= "AND parent_tag_id = " . $parent_id . " ";
         else if($parent_id === 0 || $parent_id === -1)
         {
-            $tag->Where(function ($query) { // advanced where statement to fix the issue where the tag.name was included as an optional where
-                foreach(\Contour::getConfigManager()->getPathTags() as $index => $id)
+            $pathTags = \Contour::getConfigManager()->getPathTags();
+            if(!empty($pathTags))
+            {
+                $query .= "AND ( ";
+                $pathSize = sizeOf($pathTags);
+                foreach($pathTags as $index => $id)
                 {
-                    if($index === 0)
-                        $query->where("parent_tag_id", "=", $id);
+                    if($index == ($pathSize - 1) )
+                        $query .= "parent_tag_id = " . $id . " ";
                     else
-                        $query->orwhere("parent_tag_id", "=", $id);
+                        $query .= "parent_tag_id = " . $id . " OR ";
                 }
-            });
-
+                $query .= ") ";
+            }
         }
-        $tag = $tag->first();
-        if( isset($tag) )
-            return DataTags::get_by_row($tag);
+        $peparedStatement = Query::getPDO()->prepare($query);
+        //$peparedStatement->bindParam(':name', $text);
+        $peparedStatement->execute([$text]);
+        $tag = $peparedStatement->fetch();
+
+        if($tag !== false )
+        {
+            $dataTag = new DataTag($tag["name"],$parent_id, Types::get_by_id($tag["type_id"]), $tag["sort_number"]);
+            $dataTag->set_id($tag["id"]);
+            return $dataTag;
+        }
+
         return null;
     }
 
@@ -203,8 +320,17 @@ class DataTags
             $tag->where("parent_tag_id", "=", $parent_id);
         else if($parent_id === 0 || $parent_id === -1)
         {
-            foreach(\Contour::getConfigManager()->getPathTags() as $id)
-                $tag->orwhere("parent_tag_id", "=", $id);
+            $tag->Where(function ($query) { // advanced where statement to fix the issue where the tag.name was included as an optional where
+                /** @var \Illuminate\Database\Query\Builder $query */
+                foreach(\Contour::getConfigManager()->getPathTags() as $index => $id)
+                {
+                    if($index === 0)
+                        $query->where("parent_tag_id", "=", $id);
+                    else
+                        $query->orwhere("parent_tag_id", "=", $id);
+                }
+            });
+
         }
         $tag = $tag->first();
         if( isset($tag) )
@@ -221,6 +347,7 @@ class DataTags
     public static function validate_name($name)
     {
         $name = preg_replace('!\s+!', '_', $name);
+       // $name = str_replace(" ", "_", $name);
         $name = str_replace("'", "", $name);
         $name = str_replace("\\", "", $name);
         $name = str_replace("/", "", $name);
@@ -232,9 +359,10 @@ class DataTags
 
     /**
      * Gets the Query object for gathering datablock information
+     * @param bool $getTrashed set true if you want trashed tags
      * @return \Illuminate\Database\Query\Builder
      */
-    public static function getDataTagsQueryBuilder()
+    public static function getDataTagsQueryBuilder($getTrashed = false)
     {
         //TODO: create this query to be correct
         $datatag = \DB::table('tags')
@@ -248,6 +376,8 @@ class DataTags
                 'types.name as type_name',
                 'type_category.name as type_category_name',
                 'type_category.id as type_category_id' );
+            if(!$getTrashed)
+                $datatag->whereNull('tags.deleted_at');
         return $datatag;
     }
 

@@ -20,6 +20,13 @@ class Ajax
             functiontoCall(e);
         });
     }
+
+    /**
+     *
+     * @param url
+     * @param data
+     * @param functiontoCall
+     */
     public post(url :string , data : Object,  functiontoCall : (e) => void)
     {
         $.ajax( {
@@ -33,7 +40,25 @@ class Ajax
                 data: data,
                 dataType: 'json'
             }
-        ).fail((e) => {
+        ).fail((e ) => {
+            e.success = false;
+            functiontoCall(e);
+        });
+    }
+    public put(url :string , data : Object,  functiontoCall : (e) => void)
+    {
+        $.ajax( {
+                type: "PUT",
+                url: url,
+                success: (e) =>
+                {
+                    e.success = true;
+                    functiontoCall(e);
+                },
+                data: data,
+                dataType: 'json'
+            }
+        ).fail((e ) => {
             e.success = false;
             functiontoCall(e);
         });

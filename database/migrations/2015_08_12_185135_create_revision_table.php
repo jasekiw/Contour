@@ -22,8 +22,8 @@ class CreateRevisionTable extends Migration {
 			$table->text('old_value')->nullable();
 			$table->text('new_value')->nullable();
 			$table->timestamps();
-
-			$table->index(array('revisionable_id', 'revisionable_type'));
+			$table->softDeletes();
+			$table->index(['revisionable_id', 'revisionable_type']);
 		});
 	}
 

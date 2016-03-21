@@ -18,6 +18,9 @@ class CreateTypesTable extends Migration {
 			$table->string('name');
 			$table->unsignedInteger('type_category_id');
 			$table->timestamps();
+			$table->softDeletes();
+			$table->index('name');
+			$table->index('type_category_id');
 		});
 
 	}

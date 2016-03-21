@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * Class Configuration
  *
@@ -18,4 +20,6 @@ use Illuminate\Database\Eloquent\Model;
 class Configuration extends \Eloquent {
 	protected $table = 'config';
 	protected $fillable = [];
+	use SoftDeletes;
+	protected $dates = ['deleted_at'];
 }

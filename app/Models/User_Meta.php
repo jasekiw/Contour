@@ -2,6 +2,8 @@
 namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * Class User_Meta
  *
@@ -21,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
 class User_Meta extends \Eloquent {
 	protected  $table = 'user_meta';
 	protected $fillable = [];
+	use SoftDeletes;
+	protected $dates = ['deleted_at'];
 
 
 }

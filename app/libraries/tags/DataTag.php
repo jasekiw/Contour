@@ -7,14 +7,18 @@
 
 namespace app\libraries\tags;
 
+use app\libraries\database\Query;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\types\Types;
 use App\Models\Tag;
 use app\libraries\database\DatabaseObject;
 use app\libraries\types\Type;
 use App\Models\Tag_meta;
+use DB;
+use PDO;
 use TijsVerkoyen\CssToInlineStyles\Exception;
 
 /**
@@ -23,7 +27,6 @@ use TijsVerkoyen\CssToInlineStyles\Exception;
  */
 class DataTag extends DatabaseObject
 {
-
     /**
      * @var string
      * @access private
@@ -34,6 +37,10 @@ class DataTag extends DatabaseObject
      * @access private
      */
     private $type = null;
+    /**
+     * @var int
+     */
+    private $type_id = null;
     /**
      * @var int
      * @access private
@@ -83,6 +90,20 @@ class DataTag extends DatabaseObject
     }
 
     /**
+     * Constructs a new tag with timestamp arguments
+     * @param string $updated_at
+     * @param string $created_at
+     * @return DataTag
+     */
+    public static function constructWithTimestamp($updated_at, $created_at)
+    {
+        $tag = new DataTag();
+        $tag->updated_at = $updated_at;
+        $tag->created_at = $created_at;
+        return $tag;
+    }
+
+    /**
      * @return DataBlock
      */
     public function create_data_block()
@@ -104,12 +125,25 @@ class DataTag extends DatabaseObject
         return $datablock;
     }
 
+
     /**
-     * @return integer
+     * Clone a tag's children into the children of this tag. This is a deep copy
+     * @param DataTag $tag The tag to clone into this tag
+     * @param null $parent Do not use this attribute
+     * @throws Exception
      */
-    public function get_id()
+    public function clone_children($tag, $parent = null)
     {
-        return $this->id;
+        if($parent == null)
+            $parent = $this;
+        $children = $tag->get_children()->getAsArray(TagCollection::SORT_TYPE_BY_SORT_NUMBER);
+        foreach($children as $child)
+        {
+            $newDataTag = new DataTag($child->get_name(), $parent->get_id(), $child->get_type(), $child->get_sort_number());
+            $newDataTag->create();
+            if($child->has_children())
+                $this->clone_children($child, $newDataTag);
+        }
     }
 
     /**
@@ -117,7 +151,18 @@ class DataTag extends DatabaseObject
      */
     public function get_type()
     {
+        if(isset($this->type))
+            return $this->type;
+        $this->type = Types::get_by_id($this->getTypeId());
         return $this->type;
+    }
+    public function getTypeId()
+    {
+        if(isset($this->type_id))
+            return $this->type_id;
+        $this->type_id = Tag::where('id', '=', $this->id)->first()->type_id;
+        return $this->type_id;
+
     }
 
     /**
@@ -162,9 +207,21 @@ class DataTag extends DatabaseObject
     public function set_type($type)
     {
         if(isset($type))
+        {
             $this->type = $type;
+            $this->type_id = $type->get_id();
+        }
         else
             $this->type = null;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function set_type_id($id)
+    {
+        $this->type_id = $id;
+        $this->type = null;
     }
 
     /**
@@ -239,13 +296,13 @@ class DataTag extends DatabaseObject
      */
     public function findChild($tagname)
     {
-        $children = $this->get_children()->getAsArray();
-        foreach($children as $child)
-        {
-            if(strtoupper($child->name) == strtoupper($tagname))
-               return $child;
-        }
-        return null;
+        $query = DataTags::getDataTagsQueryBuilder();
+        $query->where('parent_tag_id', '=', $this->id)->whereRaw('UPPER(tags.name) = ? ', [strtoupper($tagname)] );
+        /** @var \App\Models\Tag[] $tagmodels */
+        $tagmodels = $query->get();
+        if(empty($tagmodels))
+            return null;
+        return DataTags::get_by_row($tagmodels[0]);
     }
 
     /**
@@ -369,6 +426,16 @@ class DataTag extends DatabaseObject
     public function delete()
     {
         Tag::where("id", "=", $this->id)->delete();
+        Tag_meta::where('tag_id', '=',$this->id )->delete();
+        $this->id = null;
+    }
+    /**
+     * Warning be sure to check if the tag has children or they will be lost
+     * @throws \Exception
+     */
+    public function forceDelete()
+    {
+        Tag::where("id", "=", $this->id)->forceDelete();
         $this->id = null;
     }
 
@@ -377,9 +444,18 @@ class DataTag extends DatabaseObject
      */
     public function delete_recursive()
     {
-        Tag::where("id", "=", $this->id)->delete();
         foreach($this->get_children_recursive()->getAsArray() as $child)
             $child->delete();
+        Tag::where("id", "=", $this->id)->delete();
+    }
+    /**
+     * Deletes this tag and all children
+     */
+    public function force_delete_recursive()
+    {
+        foreach($this->get_children_recursive()->getAsArray() as $child)
+            $child->forceDelete();
+        Tag::where("id", "=", $this->id)->forceDelete();
     }
 
     /**
@@ -401,15 +477,23 @@ class DataTag extends DatabaseObject
      * @param Type $type
      * @return DataTag
      */
-    public function get_a_parent_of_type($type)
+    public function get_parent_of_type($type)
     {
-        $parent = $this->get_parent();
-        if(!isset($parent))
-            return null;
-        if($parent->get_type()->get_id() == $type->get_id())
-            return $parent;
-        else
-            return $parent->get_a_parent_of_type($type);
+        $searchTypeId = $type->get_id();
+        $parentId = $this->get_parent_id();
+        while($parentId != 0)
+        {
+            $query = "SELECT id,parent_tag_id, type_id FROM tags where id = '" . $parentId . "'";
+            $row = Query::getPDO()->query($query)->fetch(PDO::FETCH_ASSOC);
+            if($row === false)
+                return null;
+            if($searchTypeId == $row["type_id"])
+                return DataTags::get_by_id($row["id"]);
+
+            $parentId = $row["parent_tag_id"];
+
+        }
+        return null;
     }
 
     /**
@@ -421,7 +505,13 @@ class DataTag extends DatabaseObject
         if($this->parent_id !== null)
             return $this->parent_id;
         else
-            return -1;
+        {
+            $sql = "SELECT parent_id FROM tags WHERE id = $this->id";
+            $parent_id = Query::getPDO()->query($sql)->fetchColumn(0);
+            $this->parent_id = $parent_id;
+            return $this->parent_id;
+        }
+
     }
 
     /**
@@ -455,22 +545,13 @@ class DataTag extends DatabaseObject
             return $this->children;
         $tagmodels = DataTags::getDataTagsQueryBuilder();
         $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
-        if(sizeOf($tagmodels) != 0)
-        {
-            $collection = new TagCollection();
-            foreach($tagmodels as $tagmodel)
-            {
-                $tag = DataTags::get_by_row($tagmodel);
-                $collection->add($tag);
-            }
-            $this->children = $collection;
-            return $collection;
-        }
-        else
-        {
-            $collection = new TagCollection();
-            return $collection;
-        }
+        if(empty($tagmodels))
+            return new TagCollection();
+        $collection = new TagCollection();
+        foreach($tagmodels as $tagmodel)
+            $collection->add( DataTags::get_by_row($tagmodel) );
+        $this->children = $collection;
+        return $collection;
     }
 
     /**
@@ -484,7 +565,7 @@ class DataTag extends DatabaseObject
         $tagmodels = DataTags::getDataTagsQueryBuilder();
         $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
         $collection = new TagCollection();
-        if(sizeOf($tagmodels) === 0)
+        if(empty($tagmodels))
             return $collection;
         foreach($tagmodels as $tagmodel)
             if(Tag::where('parent_tag_id', '=', $tagmodel->id)->exists())
@@ -522,23 +603,19 @@ class DataTag extends DatabaseObject
             return null;
         $tagmodels = DataTags::getDataTagsQueryBuilder();
         $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
-        if(sizeOf($tagmodels) != 0)
+        if(empty($tagmodels))
+            return new TagCollection();
+
+        $collection = new TagCollection();
+        foreach($tagmodels as $tagmodel)
         {
-            $collection = new TagCollection();
-            foreach($tagmodels as $tagmodel)
-            {
-                $tag = DataTags::get_by_row($tagmodel);
-                $childCollection = $tag->get_children_recursive();
-                $collection->add($tag);
-                $collection->addAll($childCollection);
-            }
-            return $collection;
+            $tag = DataTags::get_by_row($tagmodel);
+            $childCollection = $tag->get_children_recursive();
+            $collection->add($tag);
+            $collection->addAll($childCollection);
         }
-        else
-        {
-            $collection = new TagCollection();
-            return $collection;
-        }
+        return $collection;
+
     }
 
     /**
@@ -564,14 +641,20 @@ class DataTag extends DatabaseObject
     {
         if(isset($this->cached_layers_deep))
             return $this->cached_layers_deep;
+
+        if($this->get_parent_id() == 0)
+            return 0;
         if($this->parent_id !== null)
         {
-            $parent = DataTags::get_by_id($this->parent_id);
+
+            $query = "SELECT parent_tag_id FROM TAGS WHERE id = '" . $this->parent_id . "';";
+            $parent = Query::getPDO()->query($query)->fetchColumn(0);
             $count = 0;
-            while($parent !== null)
+            while($parent !== 0)
             {
                 $count++;
-                $parent = DataTags::get_by_id($parent->parent_id);
+                $query = "SELECT parent_tag_id FROM TAGS WHERE id = '" . $parent . "';";
+                $parent = Query::getPDO()->query($query)->fetchColumn(0);
             }
             $this->cached_layers_deep = $count;
             return $count;
@@ -674,8 +757,9 @@ class DataTag extends DatabaseObject
                 break;
         }
         $newstack = array(); //reversing the order
-        for($i = sizeOf($stack) - 1; $i >= 0; $i--)
-            $newstack[sizeOf($stack) - ($i + 1) ] = $stack[$i];
+        $stackSize = sizeOf($stack);
+        for($i = $stackSize - 1; $i >= 0; $i--)
+            $newstack[$stackSize - ($i + 1) ] = $stack[$i];
         return $newstack;
     }
 
@@ -696,12 +780,28 @@ class DataTag extends DatabaseObject
      * @param $name
      * @return mixed
      */
-//    public function getMetaValue($name)
-//    {
-//        if(isset($this->cached_metas[$name]))
-//            return $this->cached_metas[$name];
-//        $meta = Tag_meta::where('tag_id', '=', $this->get_id())->where('name', '=', $name)->first();
-//    }
+    public function getMetaValue($name)
+    {
+        $meta = Tag_meta::where('tag_id', '=', $this->get_id())->where('name', '=', $name)->first();
+        if(isset($meta))
+            return $meta->value;
+        return "";
+    }
+    public function setMetaValue($name, $value)
+    {
+        $meta = Tag_meta::where('tag_id', '=', $this->get_id())->where('name', '=', $name)->first();
+        if(isset($meta))
+        {
+            $meta->value = $value;
+            $meta->save();
+            return;
+        }
+        $meta = new Tag_meta();
+        $meta->name = $name;
+        $meta->value = $value;
+        $meta->tag_id = $this->id;
+        $meta->save();
+    }
 
     /**
      * Gets the NiceName of the tag. if none found, the name of the tag is given

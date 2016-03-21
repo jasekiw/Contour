@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * Created by PhpStorm.
  * User: Jason
@@ -33,5 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Revision extends \Eloquent {
     protected $fillable = [];
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
 }

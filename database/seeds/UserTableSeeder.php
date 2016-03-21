@@ -14,11 +14,12 @@ class UserTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->truncate();
-        User::create(array(
+        User::create([
             'username' => 'jasekiw',
             'email' => 'jasong@lougeek.com',
             'password' => Hash::make('k1w1k1w1'),
-        ));
+            'user_access_group_id' => 1
+            ]);
     }
 
 }

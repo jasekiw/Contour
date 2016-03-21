@@ -13,41 +13,36 @@
     @include('user.style')
 @endsection
 @section('content')
-    <style type="text/css">
-        .users {
-            margin:20px;
-        }
-        .user{
 
-            padding:10px;
-        }
-        .user  div{
-
-            padding:10px 0;
-        }
-        .user_statistics {
-            padding:20px;
-        }
-    </style>
     @if( session('message'))
         <div class="alert alert-success">
             <strong>{{ session('message') }}</strong>
         </div>
     @endif
-    <div class="user_statistics">
 
-        <a href="{!! route('user_access_groups_index') !!}">Back to User Access Groups</a>
+    <div class="upper-controls">
+        <div class="right">
+            <a href="{!! route('user_access_groups_index') !!}">Cancel</a>
+        </div>
     </div>
-    <div class="user">
-        {!! Form::open([ 'method' => 'POST', 'url' => route('user_access_groups_create')]) !!}
-        <div class="changePassword">
-            <label>Change Name</label>
-            {!! Form::input('text', 'group') !!}
+    {!! Form::open(['method' => 'POST', 'url' => route('user_access_groups_create'), 'class' => 'resource_form'] )!!}
+    <div class="row">
+        <div class="col-md-3">
+            {!! Form::label('Name') !!}
+            {!! Form::input('text', 'name','') !!}
+
+        </div>
+        <div class="col-md-9">
+            {!! Form::label('Menu') !!}
+            {!! Form::select('menu', $menus) !!}
+
         </div>
 
-        {!!  Form::submit('Save', ['class' => 'btn btn-primary submit']) !!}
-        {!! Form::close() !!}
     </div>
+    <div class="row">
+        {!! Form::submit('create') !!}
+    </div>
+    {!! Form::close() !!}
 @endsection
 @section('scripts')
     {{--@include('user.scripts')--}}

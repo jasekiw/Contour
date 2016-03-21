@@ -10,6 +10,8 @@ namespace app\libraries\excel\templates;
 
 
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\helpers\TimeTracker;
+use app\libraries\tags\collection\TagCollection;
 use app\libraries\tags\DataTags;
 use app\libraries\theme\data\TableBuilder;
 use app\libraries\types\Types;
@@ -27,6 +29,7 @@ class TableCompiler
     public $compositTags;
     public $summaryTable;
     public $compositTables;
+    public $sheet;
 
     /**
      * TableCompiler constructor.
@@ -34,25 +37,37 @@ class TableCompiler
      */
     function __construct($id)
     {
+//        $timer = new TimeTracker();
         $facility = DataTags::get_by_id($id); // gets the facility tag
+        $this->sheet = $facility;
         $this->name = $facility->get_name();
+//        $timer->startTimer("summary");
         $summary= $facility->getSimpleChildren();
+//        $timer->stopTimer("summary");
+//        $timer->startTimer("composits");
         $composits = $facility->getCompositChildren();
+//        $timer->stopTimer("composits");
 
 
-
+//        $timer->startTimer("summartDataBlocks");
         $columns = $summary->getTagWithTypeAsArray(Types::get_type_column());
         $summary->remove(Types::get_type_column());
         $summaryBlocks = array();
+        $count = 0;
         foreach($summary->getAsArray() as $tag)
         {
             foreach($columns as $column)
             {
+//                $timer->startTimer("grabbingDataBlock" . $count);
                 $datablock = DataBlocks::getByTagsArray(array($tag,$column ));
+//                $timer->stopTimer("grabbingDataBlock" . $count);
                 array_push($summaryBlocks, $datablock);
+                $count++;
             }
         }
-
+//        $timer->stopTimer("summartDataBlocks");
+//        $timer->getResults();
+//        exit;
 
         $compositsBlocks = [];
         $compositChildrenTags = [];
@@ -79,7 +94,7 @@ class TableCompiler
         $this->summaryBlocks = $summaryBlocks;
         $this->columns = $columns;
         $this->compositTags = $composits->getAsArray();
-        $this->summaryTable = new TableBuilder($summary->getAsArray(), $columns, $summaryBlocks, "summaryTable" );
+        $this->summaryTable = new TableBuilder($summary->getAsArray(), $columns, $summaryBlocks,$facility->get_id(), "summaryTable" );
         $this->compositTables = $compositTables;
     }
 

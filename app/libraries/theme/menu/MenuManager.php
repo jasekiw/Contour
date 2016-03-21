@@ -15,6 +15,7 @@ use app\libraries\tags\DataTags;
 use app\libraries\theme\menu\item\MenuItem;
 use app\libraries\theme\system\System;
 use app\libraries\types\Types;
+use App\Models\User_Access_Group;
 
 /**
  * Class MenuManager
@@ -91,11 +92,27 @@ class MenuManager
         }
         return null;
     }
+    public function getAssociatedMenu()
+    {
+        $groupID = \Auth::user()->user_access_group_id;
+        $group = User_Access_Group::where('id', '=', $groupID)->first();
+        $menuId = $group->menu_id;
+            if($menuId == null)
+                return null;
+        return $this->get_menu_by_id($menuId);
+    }
 
+
+    /**
+     * Adds a new Menu By Name
+     * @param $name
+     * @return int The Menu ID
+     */
     public function addMenu($name)
     {
         $menu = Menu::make($name, self::getMenusTag());
         array_push($this->menus, $menu);
+        return $menu->get_id();
     }
 
 

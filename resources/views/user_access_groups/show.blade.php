@@ -34,21 +34,33 @@
             <strong>{{ session('message') }}</strong>
         </div>
     @endif
-    <div class="user_statistics">
 
-        <a href="{!! route('user_access_groups_index') !!}">Back to User Access Groups</a>
-    </div>
-    <div class="user">
-        {!! Form::open([ 'method' => 'PUT', 'url' => route('user_access_groups_save', [$group->id])]) !!}
-        {!! Form::input('hidden', 'group', $group->id) !!}
-        <div class="changePassword">
-            <label>Change Name</label>
-            {!! Form::input('text', 'name', $group->name) !!}
+    <div class="upper-controls">
+        <div class="right">
+            <a href="{!! route('user_access_groups_index') !!}">Cancel</a>
         </div>
-
-        {!!  Form::submit('Save', ['class' => 'btn btn-primary submit']) !!}
-        {!! Form::close() !!}
     </div>
+    {!! Form::open(['method' => 'PUT', 'url' => route('user_access_groups_save'), 'class' => 'resource_form'] )!!}
+        <div class="inside">
+            <div class="row border">
+                <div class="col-md-3">
+                    {!! Form::hidden('group', $group->id) !!}
+                    {!! Form::label('Name') !!}
+                    {!! Form::input('text', 'name', $group->name) !!}
+
+                </div>
+                <div class="col-md-9">
+                    {!! Form::label('Menu') !!}
+                    {!! Form::select('menu', $menus) !!}
+
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            {!! Form::submit('Save') !!}
+        </div>
+    {!! Form::close() !!}
 @endsection
 @section('scripts')
     {{--@include('user.scripts')--}}

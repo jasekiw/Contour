@@ -1,5 +1,6 @@
 <?php
 namespace app\libraries\excel\formula\conversion;
+use app\libraries\Data_Blocks\DataBlockAbstract;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\excel\formula\TokenParsing;
 use app\libraries\excel\formula\TokenParsing\FormulaParser;
@@ -59,7 +60,7 @@ class FormulaConversion{
 
     /**
      * Converts a datablock value to tag format
-     * @param DataBlock $datablock
+     * @param DataBlockAbstract $datablock
      * @return string
      * @throws \Exception
      */
@@ -79,7 +80,7 @@ class FormulaConversion{
         $this->datablock = $datablock;
 
 
-        $this->current_sheet = $datablock->getTags()->getAsArray()[0]->get_a_parent_of_type(Types::get_type_sheet());
+        $this->current_sheet = $datablock->getTags()->getAsArray()[0]->get_parent_of_type(Types::get_type_sheet());
         $this->current_parent = $datablock->getTags()->getAsArray()[0]->get_parent();
         $this->parser = new FormulaParser($datablock->getValue());
 
@@ -119,26 +120,18 @@ class FormulaConversion{
      */
     private function GetTagFromOperand($operand)
     {
-        if(strContains($operand, ":") || strContains($operand, "!") ) //the value contains more than just
-        {
-            if (strContains($operand, ":"))
-            {
-                $this->evaluationType = self::EVALUATION_TYPE_RANGE;
-                return $this->evaluate_range($operand);
-            }
-            else
-            {
-                $this->evaluationType = self::EVALUATION_TYPE_SINGLE;
-                return $this->handleCellTags($operand);
-            }
-
+        if (strContains($operand, ":")) {
+            $this->evaluationType = self::EVALUATION_TYPE_RANGE;
+            return $this->evaluate_range($operand);
         }
-        else // the value is a single cell inside the same sheet
-        {
+        if (strContains($operand, "!")) {
             $this->evaluationType = self::EVALUATION_TYPE_SINGLE;
-            $tags =  $this->lookupTagsByCell($operand, $this->current_sheet);
-            return $tags;
+            return $this->handleCellTags($operand);
         }
+        // the value is a single cell inside the same sheet
+        $this->evaluationType = self::EVALUATION_TYPE_SINGLE;
+        $tags =  $this->lookupTagsByCell($operand, $this->current_sheet);
+        return $tags;
     }
 
     /**
@@ -154,7 +147,6 @@ class FormulaConversion{
             throw new Exception("Cannot give a range with more then one colon! range: " . print_r($ranges, true));
 
         $left = $this->handleCellTags($ranges[0], self::EVALUATION_RANGE_BEGINNING);
-
         $right = $this->handleCellTags($ranges[1], self::EVALUATION_RANGE_END);
 
         $answer = "(";
@@ -169,14 +161,11 @@ class FormulaConversion{
      */
     private function get_sheet($operand)
     {
-
         $sheet = regex_match("/(.+?)!/", $operand);
-        $sheet = str_replace(" ", "_",$sheet);
-        $sheet = str_replace("'", "", $sheet);
+        $sheet = DataTags::validate_name($sheet);
         $sheet = DataTags::get_by_string_and_type($sheet, Types::get_type_sheet());
         if(!isset($sheet))
             echo "STOP!";
-
         return $sheet;
     }
 
@@ -199,15 +188,13 @@ class FormulaConversion{
      */
     private function handleCellTags($location, $startOrFinish = null)
     {
-
         if(strContains($location, "!"))
         {
             $sheet = $this->get_sheet($location);
             $tag_collection = $this->lookupTagsByCell($this->remove_sheet_from_operand($location),$sheet, $startOrFinish); // location is a string
             return $tag_collection;
         }
-        else
-            return $this->lookupTagsByCell($location, $this->current_sheet, $startOrFinish);
+        return $this->lookupTagsByCell($location, $this->current_sheet, $startOrFinish);
     }
 
     /**
@@ -220,11 +207,9 @@ class FormulaConversion{
      */
     private function lookupTagsByCell($location, $sheet, $startOrFinish = null)
     {
-
         $row = null;
         $column = null;
         $answer = null;
-
         /**
          * Gets the row and column as integers
          */
@@ -236,7 +221,6 @@ class FormulaConversion{
         // gets the column and row values
         $row = (int)$row;
         $column = $converter->getNumberValue($column);
-
 
         $answer = $this->getTagCollectionFromLocation($row, $column, $sheet);
 
@@ -254,11 +238,10 @@ class FormulaConversion{
 
         if(!isset($answer))
         {
-            //\Kint::dump($this);
             $tags = $this->datablock->getTags()->getAsArray(TagCollection::SORT_TYPE_BY_SORT_NUMBER);
             foreach($tags as $index => $tag)
                 $tags[$index] = "name: " . $tag->get_name() . ", sort_number: " . $tag->get_sort_number();
-            $thesheet = $this->datablock->getTags()->getColumnsAsArray()[0]->get_a_parent_of_type(Types::get_type_sheet())->get_name();
+            $thesheet = $this->datablock->getTags()->getColumnsAsArray()[0]->get_parent_of_type(Types::get_type_sheet())->get_name();
             $thedatablock = print_r($tags, true);
             $thedatablock .= "\r\nSheet: " . $thesheet;
             Log::info("reference from: " . $thedatablock ."\r\nTags Not Found for the value '" . $location . "'" . " with sheet '" . $sheet->get_name() . "'");
@@ -305,7 +288,7 @@ class FormulaConversion{
             $sheetPrefix = $sheet->get_name() == $lastSheet ? "" : ("/" . $sheet->get_name() . "/");
             if($sheetPrefix === "" && $parent_prefix === "" &&
                 $tag->get_parent_id() == $sheet->get_id() &&
-                $originParentId != $this->current_sheet->get_id() && $tag->get_a_parent_of_type(Types::get_type_sheet())->get_id() ==  $this->current_sheet->get_id()) // fixes loop references & refers to this sheet
+                $originParentId != $this->current_sheet->get_id() && $tag->get_parent_of_type(Types::get_type_sheet())->get_id() ==  $this->current_sheet->get_id()) // fixes loop references & refers to this sheet
                 $sheetPrefix = '&/';
             if($count == $lastIndex)
                 $newvalue .= $sheetPrefix . $parent_prefix . $tag->get_name();
@@ -327,18 +310,15 @@ class FormulaConversion{
      */
     private function getTagCollectionFromLocation($row, $column, $sheet = null)
     {
-        $answer = null;
-        if(isset($sheet))
-        {
-            $rowBlock = $sheet->findChildBySortNumber($row, Types::get_type_row());
-            if(isset($rowBlock))
-            {
-                $columnBlock = $sheet->findChildBySortNumber($column, Types::get_type_column());
-                if(isset($columnBlock))
-                    $answer = new TagCollection(array($rowBlock, $columnBlock));
-            }
-        }
-        return $answer;
+        if(!isset($sheet))
+            return null;
+        $rowBlock = $sheet->findChildBySortNumber($row, Types::get_type_row());
+        if(!isset($rowBlock))
+            return null;
+        $columnBlock = $sheet->findChildBySortNumber($column, Types::get_type_column());
+        if(!isset($columnBlock))
+            return null;
+        return  new TagCollection( [$rowBlock, $columnBlock] );
     }
 
 

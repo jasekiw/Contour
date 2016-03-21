@@ -20,6 +20,10 @@ class CreateTagsTable extends Migration {
 			$table->unsignedInteger('parent_tag_id');
 			$table->integer('sort_number');
 			$table->timestamps();
+			$table->softDeletes();
+			$table->index('parent_tag_id');
+			$table->index('name');
+			$table->index('type_id');
 		});
 
 	}

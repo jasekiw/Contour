@@ -44,6 +44,7 @@
 
 
     {!! Theme::header() !!}
+    {!! Contour::getThemeManager()->head() !!}
 </head>
 
 <body>

@@ -2,7 +2,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\Data_block
  *
@@ -20,10 +20,15 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Data_block extends \Eloquent {
 	use RevisionableTrait;
+	use SoftDeletes;
+	protected $dates = ['deleted_at'];
 	protected $fillable = [];
 
 	public static function boot()
 	{
 		parent::boot();
 	}
+
+
+
 }

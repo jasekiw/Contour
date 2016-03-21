@@ -1,0 +1,16 @@
+// The evergreen color
+
+@import "components/variables";
+@import "components/resource_form";
+@import 'components/sidebar';
+@import 'components/font';
+@import 'components/list';
+@import 'components/sheet_editor';
+@import 'components/header';
+@import 'components/buttons';
+@import 'components/datablock_editor';
+@import 'components/general';
+@import 'components/menu_editor';
+.dashboard .bottom .container .content-wrapper {
+    background-color:white;
+}

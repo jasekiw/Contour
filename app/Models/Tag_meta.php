@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Tag_meta
@@ -16,5 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tag_meta extends \Eloquent
 {
+    use SoftDeletes;
     protected  $table = 'tags_meta';
+    protected $dates = ['deleted_at'];
 }
