@@ -58,6 +58,7 @@ Route::get('excel/edit/{id}',array('as' => 'edit_excel','middleware' => 'auth', 
 Route::get('excel/show/{id}',array('as' => 'edit_excel','middleware' => 'auth', 'uses' => 'ExcelController@show'));
 Route::get('excel/import',array('as' => 'import_excel','middleware' => 'auth', 'uses' => 'ExcelController@store'));
 Route::get('excel/convert',array('as' => 'convert_excel','middleware' => 'auth', 'uses' => 'ExcelController@convert'));
+Route::resource('import', 'ExcelImporterController', [ 'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('excelimport') ]);
 
 /**
  * Ajax Excel Handlers
@@ -147,7 +148,9 @@ Route::get('groups/create',array('as' => 'user_access_groups_create', 'middlewar
 Route::post('groups/create',array('as' => 'user_access_groups_create', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@store'));
 Route::get('groups/{id}',array('as' => 'user_access_groups_show', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@show'));
 Route::put('groups/{id}',array('as' => 'user_access_groups_save', 'middleware' => 'auth', 'uses' => 'UserAccessGroupsController@update'));
-Route::resource('groups', ['middleware' => 'auth', 'uses' => 'UserAccessGroupsController'] );
+Route::resource('testgroups','UserAccessGroupsController',  ['middleware' => 'auth',
+    'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('usergroups')
+] );
 /**
  * Config Routes
  */

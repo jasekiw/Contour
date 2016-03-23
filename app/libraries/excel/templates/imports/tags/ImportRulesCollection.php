@@ -28,6 +28,7 @@ class ImportRulesCollection
 
     /**
      * adds an ImportRule object
+     * All import rules start at 1 instead of 0
      * @param ImportRule $importRule
      */
     public function add($importRule)

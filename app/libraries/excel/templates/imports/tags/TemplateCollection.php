@@ -70,4 +70,13 @@ class TemplateCollection
         }
 
     }
+
+    /**
+     * Gets all the Import Templates
+     * @return ImportTemplate[]
+     */
+    public function getAll()
+    {
+        return $this->array;
+    }
 }

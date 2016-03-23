@@ -58,7 +58,7 @@ class RuleConstruction
         /**
          * Combined Revenue Summary
          */
-        $CombinedRevenueSummary =new ImportTemplate( "Combined Revenue Summary");
+        $CombinedRevenueSummary = new ImportTemplate( "Combined Revenue Summary");
         $CombinedRevenueSummary->getRules()->add(ImportRule::headerTag(new Point(1, 4), new Point(1, 99), Types::get_type_row()));
         $CombinedRevenueSummary->getRules()->add(ImportRule::headerTag(new Point(2, 3), new Point(14,3), Types::get_type_column()));
         $CombinedRevenueSummary->getRules()->add(ImportRule::createExclusion(new Point(1, 1), new Point(14,2)));
