@@ -28,7 +28,7 @@
         </div>
     @endif
     <div class="users_statistics">
-        There are {{sizeOf($users)}} user(s)
+        There are {{sizeof($users)}} user(s)
     </div>
     <div class="users">
         @foreach($users as $user)

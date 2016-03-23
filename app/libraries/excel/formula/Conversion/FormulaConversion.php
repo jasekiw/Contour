@@ -20,6 +20,10 @@ use Log;
  */
 class FormulaConversion{
 
+    const EVALUATION_TYPE_SINGLE = "SINGLE";
+    const EVALUATION_TYPE_RANGE = "RANGE";
+    const EVALUATION_RANGE_BEGINNING = "START";
+    const EVALUATION_RANGE_END = "STOP";
     /**
      * @var DataTag $current_sheet
      */
@@ -40,11 +44,6 @@ class FormulaConversion{
      * @var \app\libraries\excel\formula\TokenParsing\FormulaToken
      */
     private $current_token = null;
-
-    const EVALUATION_TYPE_SINGLE = "SINGLE";
-    const EVALUATION_TYPE_RANGE = "RANGE";
-    const EVALUATION_RANGE_BEGINNING = "START";
-    const EVALUATION_RANGE_END = "STOP";
     private $evaluationType = "";
     /**
      * @var Point
@@ -143,7 +142,7 @@ class FormulaConversion{
     private function evaluate_range($range)
     {
         $ranges = explode(":",$range);
-        if(sizeOf($ranges) != 2)
+        if(sizeof($ranges) != 2)
             throw new Exception("Cannot give a range with more then one colon! range: " . print_r($ranges, true));
 
         $left = $this->handleCellTags($ranges[0], self::EVALUATION_RANGE_BEGINNING);
@@ -155,29 +154,6 @@ class FormulaConversion{
         $answer.= ")";
         return $answer;
     }
-    /**
-     * @param $operand
-     * @return DataTag
-     */
-    private function get_sheet($operand)
-    {
-        $sheet = regex_match("/(.+?)!/", $operand);
-        $sheet = DataTags::validate_name($sheet);
-        $sheet = DataTags::get_by_string_and_type($sheet, Types::get_type_sheet());
-        if(!isset($sheet))
-            echo "STOP!";
-        return $sheet;
-    }
-
-    /**
-     * @param string $operand
-     * @return string
-     */
-    private function remove_sheet_from_operand($operand)
-    {
-        return substr($operand, strpos($operand, "!") + 1,strrpos($operand, "!") - 1);
-    }
-
 
     /**
      * this function assumes there are no ranges
@@ -195,6 +171,20 @@ class FormulaConversion{
             return $tag_collection;
         }
         return $this->lookupTagsByCell($location, $this->current_sheet, $startOrFinish);
+    }
+
+    /**
+     * @param $operand
+     * @return DataTag
+     */
+    private function get_sheet($operand)
+    {
+        $sheet = regex_match("/(.+?)!/", $operand);
+        $sheet = DataTags::validate_name($sheet);
+        $sheet = DataTags::get_by_string_and_type($sheet, Types::get_type_sheet());
+        if(!isset($sheet))
+            echo "STOP!";
+        return $sheet;
     }
 
     /**
@@ -252,7 +242,7 @@ class FormulaConversion{
 
         $newvalue = "#(" ;
         $count = 0;
-        $lastIndex = (sizeOf($answer->getAsArray()) - 1);
+        $lastIndex = (sizeof($answer->getAsArray()) - 1);
         $lastSheet = $this->current_sheet->get_name();
         $lastParent = $this->current_parent->get_id();
 
@@ -319,6 +309,15 @@ class FormulaConversion{
         if(!isset($columnBlock))
             return null;
         return  new TagCollection( [$rowBlock, $columnBlock] );
+    }
+
+    /**
+     * @param string $operand
+     * @return string
+     */
+    private function remove_sheet_from_operand($operand)
+    {
+        return substr($operand, strpos($operand, "!") + 1,strrpos($operand, "!") - 1);
     }
 
 

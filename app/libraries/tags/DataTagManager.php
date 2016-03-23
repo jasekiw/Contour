@@ -234,7 +234,7 @@ class DataTagManager extends DataTagManagerAbstract
             if(!empty($pathTags))
             {
                 $query .= "AND ( ";
-                $pathSize = sizeOf($pathTags);
+                $pathSize = sizeof($pathTags);
                 foreach($pathTags as $index => $id)
                 {
                     if($index == ($pathSize - 1) )
@@ -281,7 +281,7 @@ class DataTagManager extends DataTagManagerAbstract
                 $currentChild = $currentChild->findChild($child);
                 if($currentChild === null)
                     break;
-                if($index == (sizeOf($children) - 1)) // last child
+                if($index == (sizeof($children) - 1)) // last child
                     return $tag;
             }
         }

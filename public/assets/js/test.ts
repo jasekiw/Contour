@@ -55,4 +55,3 @@ class Test {
 }
 
 var mytest = new Test();
-mystest.

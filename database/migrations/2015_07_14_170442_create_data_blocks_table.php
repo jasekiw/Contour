@@ -17,6 +17,7 @@ class CreateDataBlocksTable extends Migration {
 			$table->increments('id');
 			$table->text('value');
 			$table->unsignedInteger('type_id');
+            $table->integer('sort_number');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->index('type_id');

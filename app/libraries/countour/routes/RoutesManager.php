@@ -92,4 +92,30 @@ class RoutesManager
 
     }
 
+    /**
+     * This is a helper method to generate a resource route names correctly
+     *
+     * USAGE:
+     *
+     * Route::resource('testgroups','UserAccessGroupsController',  ['middleware' => 'auth',
+     *
+     *      'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('usergroups')
+     *
+    *   ] );
+     * @param $name
+     * @return array
+     */
+    public function getResourceRoutesForNameHelper($name)
+    {
+        return [
+            'index' => $name . ".index",
+            'create' => $name . ".create",
+            'store' => $name . ".store",
+            'show' => $name . ".show",
+            'edit' => $name . ".edit",
+            'update' => $name . ".update",
+            'destroy' => $name . ".destroy",
+        ];
+    }
+
 }

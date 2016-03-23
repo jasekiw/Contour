@@ -1,7 +1,6 @@
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
-    ///<reference path="../js/jquery/jquery.d.ts" />
 class Ajax
 {
     public get(url :string , functiontoCall : (e) => void)

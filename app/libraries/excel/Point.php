@@ -7,6 +7,7 @@
  */
 
 namespace app\libraries\excel;
+use app\libraries\excel\Area;
 
 /**
  * Class Point. Holds x and y coordinates
@@ -49,5 +50,13 @@ class Point
      */
     public function getY(){
         return $this->y;
+    }
+
+    /**
+     * @return Area
+     */
+    public function toArea()
+    {
+        return Area::fromPoint($this);
     }
 }

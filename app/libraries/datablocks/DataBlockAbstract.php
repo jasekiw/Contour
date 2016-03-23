@@ -36,6 +36,8 @@ abstract class DataBlockAbstract extends DatabaseObject
      */
     protected $type = null;
 
+    protected $sort_number = 0;
+
     /**
      * @return Type | MemoryType
      */
@@ -66,6 +68,23 @@ abstract class DataBlockAbstract extends DatabaseObject
     public function set_value($value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSortNumber()
+    {
+        return $this->sort_number;
+    }
+
+    /**
+     * @param int $number
+     */
+    public function setSortNumber($number)
+    {
+        if(isset($number))
+            $this->sort_number = $number;
     }
 
     /**

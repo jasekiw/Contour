@@ -20,14 +20,14 @@ use \Exception;
 class TagCollection extends TagCollectionAbstract
 {
 
-    /**
-     * @var DataTag[]
-     */
-    public $tags = array();
     const SORT_TYPE_BY_LAYERS = "sortByLayers";
     const SORT_TYPE_NONE = "NONE";
     const SORT_TYPE_BY_SORT_NUMBER = "sortBySortNumber";
     const SORT_TYPE_ALPHABETICAL = "sortByAlphabetical";
+    /**
+     * @var DataTag[]
+     */
+    public $tags = array();
 
     /**
      * Creates a new Collection Of tags. This does not change anything in the database but allows easy reference to multiple tags
@@ -44,20 +44,35 @@ class TagCollection extends TagCollectionAbstract
             array_push($this->tags,$inputTags);
     }
 
-
     /**
-     * Gets the tags as an array. Sort options are available use TagCollection::SORT_TYPE*
-     * @param string $sort The sort method to use, defaults to sort by layers
-     * @return \app\libraries\tags\DataTag[]
+     * @param $input
+     * @return TagCollection
      */
-    public function getAsArray($sort = TagCollection::SORT_TYPE_BY_LAYERS)
+    public static function getTagsFromCommaDelimited($input)
     {
-        if($sort == self::SORT_TYPE_NONE)
-            return $this->tags;
-        $this->$sort(); // sorts by the method name
-        return $this->tags;
+        $tags = explode("][", $input);
+        $collection = new TagCollection();
+        foreach($tags as $tag)
+        {
+            $tag = str_replace("]", "",$tag);
+            $tag = str_replace("[", "",$tag);
+            $collection->add(DataTags::get_by_id($tag));
+        }
+
+        return $collection;
     }
 
+    /**
+     * @param DataTag $tag
+     * @return bool
+     */
+    public function add($tag)
+    {
+        if(!isset($tag))
+            return false;
+        array_push($this->tags, $tag);
+        return true;
+    }
 
     /**
      * Gets all tags that start with the specified string. good for seperating by starting letter
@@ -100,7 +115,6 @@ class TagCollection extends TagCollectionAbstract
         return $array;
     }
 
-
     /**
      * @param Type $type
      * @return \app\libraries\tags\DataTag[]
@@ -114,18 +128,20 @@ class TagCollection extends TagCollectionAbstract
         return $array;
     }
 
-
-
     /**
-     * @param DataTag $tag
-     * @return bool
+     * @param Type[] $types
+     * @return \app\libraries\tags\DataTag[]
      */
-    public function add($tag)
+    public function getTagWithTypesAsArray($types)
     {
-        if(!isset($tag))
-            return false;
-        array_push($this->tags, $tag);
-        return true;
+        $nameArray = [];
+        foreach($types as $type)
+            array_push($nameArray, $type->getName());
+        $tags = [];
+        foreach($this->tags as $tag)
+            if(in_array($tag->get_type()->getName(), $nameArray))
+                array_push($tags, $tag);
+        return $tags;
     }
 
     /**
@@ -159,24 +175,34 @@ class TagCollection extends TagCollectionAbstract
             }
             return false; // not found
         }
+        else if(is_array($input))
+            return $this->removeByTypes($input);
         else if(strpos(strtoupper(get_class($input)),"TYPE") !== false )
-        {
-            /** @var Type $input */
-            $found = false;
-            foreach($this->tags as $index => $tag)
-            {
-                $tagtypeName = $tag->get_type()->getName();
-                $inputName = $input->getName();
-                if($tagtypeName === $inputName)
-                {
-                    unset($this->tags[$index]);
-                    $found = true;
-                }
-            }
-            return $found; // not found
-
-        }
+            return $this->removeByTypes([$input]);
         return false; // integer or string was not given
+    }
+
+    /**
+     * @param Type[] $types
+     * @return bool
+     */
+    public function removeByTypes($types)
+    {
+        $nameArray = [];
+        foreach($types as $type)
+            array_push($nameArray, $type->getName());
+        $found = false;
+        foreach($this->tags as $index => $tag)
+        {
+            $tagtypeName = $tag->get_type()->getName();
+
+            if(in_array($tagtypeName, $nameArray))
+            {
+                unset($this->tags[$index]);
+                $found = true;
+            }
+        }
+        return $found; // not found
     }
 
     /**
@@ -185,7 +211,7 @@ class TagCollection extends TagCollectionAbstract
      */
     public function getSize()
     {
-        return sizeOf($this->tags);
+        return sizeof($this->tags);
     }
 
     /**
@@ -226,6 +252,19 @@ class TagCollection extends TagCollectionAbstract
         else
             $this->tags = array_merge($this->tags,  $tags->getAsArray());
         return true;
+    }
+
+    /**
+     * Gets the tags as an array. Sort options are available use TagCollection::SORT_TYPE*
+     * @param string $sort The sort method to use, defaults to sort by layers
+     * @return \app\libraries\tags\DataTag[]
+     */
+    public function getAsArray($sort = TagCollection::SORT_TYPE_BY_LAYERS)
+    {
+        if($sort == self::SORT_TYPE_NONE)
+            return $this->tags;
+        $this->$sort(); // sorts by the method name
+        return $this->tags;
     }
 
     /**
@@ -271,24 +310,6 @@ class TagCollection extends TagCollectionAbstract
              */
             return $a->get_layers_deep() - $b->get_layers_deep();
         });
-    }
-
-    /**
-     * @param $input
-     * @return TagCollection
-     */
-    public static function getTagsFromCommaDelimited($input)
-    {
-        $tags = explode("][", $input);
-        $collection = new TagCollection();
-        foreach($tags as $tag)
-        {
-            $tag = str_replace("]", "",$tag);
-            $tag = str_replace("[", "",$tag);
-            $collection->add(DataTags::get_by_id($tag));
-        }
-
-        return $collection;
     }
 
 

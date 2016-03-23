@@ -28,7 +28,7 @@ class SandboxController extends Controller {
 //		$children = $sheet->get_children();
 //		$columns = $children->getColumnsAsArray();
 //		$rows = $children->getRowsAsArray();
-//		$total = sizeOf($rows) * sizeOf($columns);
+//		$total = sizeof($rows) * sizeof($columns);
 //		$count = 0;
 //		ob_start();
 //		foreach($rows as $row)

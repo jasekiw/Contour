@@ -15,7 +15,11 @@ use \app\libraries\tags\DataTag;
 use app\libraries\theme\data\TableBuilder;
 use app\libraries\theme\UserInterface\DataBlockEditor;
 
+/**
+ * @var \app\libraries\excel\ExcelView $sheet
+ */
 
+$tabs =  $sheet->getNavTitles();
 
 ?>
 
@@ -25,8 +29,17 @@ use app\libraries\theme\UserInterface\DataBlockEditor;
 @section('content')
 
     <style type="text/css">
-        .nav-pills>li {
+        .nav-container {
+            width:100%;
+            display:inline-block;
+        }
+        .nav.nav-pills {
+            display: inline-block;
             float: right;
+        }
+
+        .nav-pills>li {
+            float: left;
         }
     </style>
 <div class="upper-controls">
@@ -38,27 +51,26 @@ use app\libraries\theme\UserInterface\DataBlockEditor;
 
 
     <div id="sheet_tabbed" class="container">
-        <ul  class="nav nav-pills">
-            @foreach($compositTags as $compositTag)
-                <li>
-                    <a href="#{{$compositTag->get_name()}}" data-toggle="tab">{{$compositTag->get_name()}}</a>
-                </li>
-            @endforeach
+        <div class="nav-container">
+            <ul  class="nav nav-pills">
 
-            <li class="active">
-                <a href="#summary" data-toggle="tab">Summary</a>
-            </li>
-        </ul>
+                @foreach($tabs as $key => $tab)
+                    <li @if($key == 0) class="active" @endif>
+                        <a href="#{{$tab->getCodeName()}}" data-toggle="tab" >{{$tab->name}}</a>
+                    </li>
+                @endforeach
 
+            </ul>
+        </div>
         <div class="tab-content clearfix">
-            @foreach($compositTables as $compositTable)
-                <div class="tab-pane" id="{{$compositTable->getName()}}">
-                    {!! $compositTable->printTable() !!}
+            @foreach($tabs as $tab)
+                <div class="tab-pane" id="{{$tab->getCodeName()}}">
+                    <?php $summarySheet = $tab->excelView->summarySheet; ?>
+                    {!! View::make('partials.excel.sheet', ['sheet' => $summarySheet]) !!}
+
                 </div>
             @endforeach
-            <div class="tab-pane active" id="summary">
-                <?php echo $summaryTable->printTable(false); ?>
-            </div>
+
         </div>
 
     </div>

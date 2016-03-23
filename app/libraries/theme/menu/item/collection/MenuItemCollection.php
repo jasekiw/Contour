@@ -78,10 +78,26 @@ class MenuItemCollection
         return $menucollection;
     }
 
+    /**
+     * @param DataTag $tag
+     */
+    public function set_tag($tag)
+    {
+        $this->menu_tag = $tag;
+    }
 
+    public function set_items_tag($tag)
+    {
+        $this->itemsTag = $tag;
+    }
 
-
-
+    /**
+     * @param DataTag $tag
+     */
+    public function set_options_tag($tag)
+    {
+        $this->options = $tag;
+    }
 
     /**
      * @param MenuItem $menuItem
@@ -106,19 +122,6 @@ class MenuItemCollection
 
     }
 
-    public function add_new($name, $link, $icon, $sort)
-    {
-        $tag = new DataTag();
-        $tag->set_name("item" . sizeOf($this->array));
-        $tag->set_sort_number($sort);
-        $tag->set_parent_id($this->itemsTag->get_id());
-        $tag->create();
-        $menuItem = new MenuItem($tag,$name, $link, $sort, $icon);
-        $menuItem->save();
-        return $menuItem;
-    }
-
-
     /**
      * Syncs the sort numbers with the keys in the array
      */
@@ -130,6 +133,17 @@ class MenuItemCollection
         }
     }
 
+    public function add_new($name, $link, $icon, $sort)
+    {
+        $tag = new DataTag();
+        $tag->set_name("item" . sizeof($this->array));
+        $tag->set_sort_number($sort);
+        $tag->set_parent_id($this->itemsTag->get_id());
+        $tag->create();
+        $menuItem = new MenuItem($tag,$name, $link, $sort, $icon);
+        $menuItem->save();
+        return $menuItem;
+    }
 
     /**
      * Removes the MenuItem at the specified Sort Number
@@ -154,27 +168,6 @@ class MenuItemCollection
         {
             $menuItem->save();
         }
-    }
-
-    /**
-     * @param DataTag $tag
-     */
-    public function set_tag($tag)
-    {
-        $this->menu_tag = $tag;
-    }
-
-    /**
-     * @param DataTag $tag
-     */
-    public function set_options_tag($tag)
-    {
-        $this->options = $tag;
-    }
-
-    public function set_items_tag($tag)
-    {
-        $this->itemsTag = $tag;
     }
 
 

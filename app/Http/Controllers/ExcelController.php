@@ -1,14 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\excel\import\suite\TemplateSuiteManager;
 use app\libraries\excel\templates\TableCompiler;
 use app\libraries\tags\DataTags;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use app\libraries\excel\templates\imports\Importer;
-use \app\libraries\excel\templates\imports\Datablocks\DataBlockImporter;
+use app\libraries\excel\import\Importer;
+use \app\libraries\excel\convert\datablocks\DataBlockImporter;
 use Response;
 use URL;
 
@@ -26,16 +27,9 @@ class ExcelController extends Controller {
 	public function index()
 	{
 
+
 		//return \View::make("Excel.index")->with("reader", $results);
 
-	}
-
-	function turn_on_error_reporting()
-	{
-		ini_set('max_execution_time', 0);
-		set_time_limit(0);
-		ini_set('display_errors',1);
-		error_reporting(E_ALL);
 	}
 
 	/**
@@ -50,6 +44,14 @@ class ExcelController extends Controller {
 		$datablock_importer = new DataBlockImporter();
 		$datablock_importer->runImport();
 
+	}
+
+	function turn_on_error_reporting()
+	{
+		ini_set('max_execution_time', 0);
+		set_time_limit(0);
+		ini_set('display_errors',1);
+		error_reporting(E_ALL);
 	}
 
 	/**
@@ -85,8 +87,11 @@ class ExcelController extends Controller {
 	public function store()
 	{
 		$this->turn_on_error_reporting();
+        $suiteManager = new TemplateSuiteManager();
+        $suite = $suiteManager->getSuiteCollection()->get("Main Budget Import");
 		$importer = new Importer();
-		$importer->run();
+        $ds = DIRECTORY_SEPARATOR;
+		$importer->run($suite, storage_path("excel{$ds}file.xls"), "/");
 
 	}
 

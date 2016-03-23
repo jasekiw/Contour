@@ -13,7 +13,7 @@ var DataBlockInterfacer = (function () {
         (new Ajax).post('/ajaxdatablocks/get_multiple_by_tags', object, functiontoCall);
     };
     return DataBlockInterfacer;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -28,7 +28,7 @@ var DataTagInterfacer = (function () {
         (new Ajax).get('/ajaxtags/get_children_recursive/' + id, functiontoCall);
     };
     return DataTagInterfacer;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -36,7 +36,7 @@ var DataTag = (function () {
     function DataTag() {
     }
     return DataTag;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -47,7 +47,7 @@ var Main = (function () {
         this.sheetEditor = new SheetEdtior(this.dataBlockEditor);
     }
     return Main;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -81,7 +81,7 @@ var Ajax = (function () {
         });
     };
     return Ajax;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -265,7 +265,7 @@ var DataBlockEditor = (function () {
         });
     };
     return DataBlockEditor;
-})();
+}());
 /**
  * Created by Jason on 1/12/2016.
  */
@@ -299,5 +299,5 @@ var SheetEdtior = (function () {
         });
     }
     return SheetEdtior;
-})();
+}());
 //# sourceMappingURL=main.js.map

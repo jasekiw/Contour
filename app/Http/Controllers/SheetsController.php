@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use app\libraries\datablocks\staticform\DataBlocks;
+use app\libraries\excel\ExcelView;
 use app\libraries\excel\templates\TableCompiler;
 use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
@@ -114,20 +115,27 @@ class SheetsController extends Controller
 //        $timeTracker = new TimeTracker();
 //        $timeTracker->startTimer("tableCompiler");
 
-        $compiler = new TableCompiler($id);
+        $excelView = new ExcelView(DataTags::get_by_id($id));
+
+
+
+
+
+//        $compiler = new TableCompiler($id);
 
 //        $timeTracker->stopTimer("tableCompiler");
 //        $timeTracker->getResults();
 //        exit;
-        $view->tag = $compiler->sheet;
-        $view->parent = $compiler->sheet->get_parent();
-        $view->title = $compiler->name;
-        $view->summary = $compiler->summary;
-        $view->summaryBlocks = $compiler->summaryBlocks;
-        $view->columns = $compiler->columns;
-        $view->compositTags = $compiler->compositTags;
-        $view->summaryTable = $compiler->summaryTable;
-        $view->compositTables = $compiler->compositTables;
+        $view->tag = $excelView->parentTag;
+        $view->parent =$excelView->parentTag->get_parent();
+        $view->title =$excelView->parentTag->get_name();
+//        $view->summary = $compiler->summary;
+//        $view->summaryBlocks = $compiler->summaryBlocks;
+//        $view->columns = $compiler->columns;
+//        $view->compositTags = $compiler->compositTags;
+//        $view->summaryTable = $compiler->summaryTable;
+//        $view->compositTables = $compiler->compositTables;
+        $view->sheet = $excelView;
         return $view;
     }
 

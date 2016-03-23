@@ -25,6 +25,8 @@ class MenuEditor {
     </div>
     `;
     constructor(editor : JQuery) {
+       
+
         this.editor = editor;
         this.menuID = parseInt(this.editor.attr("menu"));
         this.linksContainer = this.editor.find(".links");
@@ -39,7 +41,7 @@ class MenuEditor {
         this.editor.find("input[type='submit']").on("click", (e :JQueryEventObject) => this.save(e));
 
     }
-    private dragStop(e : Event, options: DraggableOptions ) : void {
+    public dragStop(e : Event, options: DraggableOptions ) : void {
         var helper = $(options.helper);
         var draggerTop : number = helper.offset().top + (helper.height() / 2);
         var links = this.linksContainer.find(".menuLink");

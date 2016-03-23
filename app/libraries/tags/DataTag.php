@@ -147,22 +147,24 @@ class DataTag extends DatabaseObject
     }
 
     /**
-     * @return Type
+     * Gets the first level children of this tag
+     * @return TagCollection
      */
-    public function get_type()
+    public function get_children()
     {
-        if(isset($this->type))
-            return $this->type;
-        $this->type = Types::get_by_id($this->getTypeId());
-        return $this->type;
-    }
-    public function getTypeId()
-    {
-        if(isset($this->type_id))
-            return $this->type_id;
-        $this->type_id = Tag::where('id', '=', $this->id)->first()->type_id;
-        return $this->type_id;
-
+        if(!isset($this->id))
+            return null;
+        if(isset($this->children))
+            return $this->children;
+        $tagmodels = DataTags::getDataTagsQueryBuilder();
+        $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
+        if(empty($tagmodels))
+            return new TagCollection();
+        $collection = new TagCollection();
+        foreach($tagmodels as $tagmodel)
+            $collection->add( DataTags::get_by_row($tagmodel) );
+        $this->children = $collection;
+        return $collection;
     }
 
     /**
@@ -174,24 +176,6 @@ class DataTag extends DatabaseObject
     }
 
     /**
-     * @return integer
-     */
-    public function get_sort_number()
-    {
-        return $this->sort_number;
-    }
-
-    /**
-     * Sets the sql table id
-     * @param $id
-     */
-    public function set_id($id)
-    {
-        $this->id = $id;
-
-    }
-
-    /**
      * Sets the name of the tag. $name cannot be null or be blank
      * @param string $name
      */
@@ -199,6 +183,17 @@ class DataTag extends DatabaseObject
     {
         if(isset($name) && strlen($name) > 0)
             $this->name = DataTags::validate_name($name);
+    }
+
+    /**
+     * @return Type
+     */
+    public function get_type()
+    {
+        if(isset($this->type))
+            return $this->type;
+        $this->type = Types::get_by_id($this->getTypeId());
+        return $this->type;
     }
 
     /**
@@ -215,6 +210,15 @@ class DataTag extends DatabaseObject
             $this->type = null;
     }
 
+    public function getTypeId()
+    {
+        if(isset($this->type_id))
+            return $this->type_id;
+        $this->type_id = Tag::where('id', '=', $this->id)->first()->type_id;
+        return $this->type_id;
+
+    }
+
     /**
      * @param int $id
      */
@@ -225,14 +229,11 @@ class DataTag extends DatabaseObject
     }
 
     /**
-     * @param integer $id
+     * @return integer
      */
-    public function set_parent_id($id)
+    public function get_sort_number()
     {
-        if(isset($id))
-            $this->parent_id = $id;
-        else
-            $this->parent_id = 0;
+        return $this->sort_number;
     }
 
     /**
@@ -244,6 +245,75 @@ class DataTag extends DatabaseObject
             $this->sort_number = $number;
         else
             $this->sort_number = -1;
+    }
+
+    /**
+     * Creates a new instance of the tag in the database. It will return false if it already exists.
+     * @throws Exception
+     * @returns bool
+     *
+     */
+    public function create()
+    {
+
+        if (!isset($this->name))
+            throw new Exception("The tag has to have a name before it can be created.");
+        if (!isset($this->parent_id))
+            throw new Exception("The tag has to have a parent_id before it can be created.");
+        if(!isset($this->type))
+        {
+            $this->type = new Type();
+            $this->type->set_id(-1);
+        }
+
+        if (isset($this->id))
+            return false;
+
+        $tag = new Tag();
+        $tag->name = $this->name;
+        $tag->type_id = $this->type->get_id();
+
+        $tag->parent_tag_id = $this->parent_id;
+        $this->save_sort_number($tag);
+        $tag->save();
+        $this->id = $tag->id;
+        return true;
+    }
+
+    /**
+     * Saves the sort number to the database
+     * @param Tag $tag
+     */
+    private function save_sort_number($tag)
+    {
+        if(isset($this->sort_number))
+            $tag->sort_number = $this->sort_number;
+        else
+            $tag->sort_number = -1;
+    }
+
+    /**
+     * Checks to see if this tag has children
+     * @return bool Returns true if this tag has children
+     */
+    public function has_children()
+    {
+        if(!isset($this->id))
+            return false;
+        if(Tag::where('parent_tag_id', '=', $this->id)->exists())
+           return true;
+        else
+           return false;
+    }
+
+    /**
+     * Sets the sql table id
+     * @param $id
+     */
+    public function set_id($id)
+    {
+        $this->id = $id;
+
     }
 
     /**
@@ -269,6 +339,38 @@ class DataTag extends DatabaseObject
                 throw new Exception("No database tag to save to. If you want to create a tag, use the create() method");
         }
         return true;
+    }
+
+    private function check_parent_id()
+    {
+        if($this->parent_id == -1 || !isset($this->parent_id))
+            $this->parent_id  = 0;
+    }
+
+    /**
+     * Saves the tag to the database
+     */
+    private function save_to_current_tag()
+    {
+        $tag = Tag::where("id", "=", $this->id)->first();
+        $tag->name = $this->name;
+        $tag->type_id = $this->type->get_id();
+        $tag->parent_tag_id = $this->parent_id;
+        $tag->sort_number = $this->sort_number;
+        $tag->save();
+    }
+
+    /**
+     * Checks the database for another tag of the same
+     * @return int|null
+     */
+    private function check_for_duplicate()
+    {
+        $tag = Tag::where("parent_tag_id", "=", $this->parent_id )->where("name", "=", $this->name )->first();
+        if(isset($tag))
+            return $tag->id;
+        else
+            return null;
     }
 
     /**
@@ -324,7 +426,7 @@ class DataTag extends DatabaseObject
         /** @var DataTag[] $children */
         foreach($children as $index => $child)
         {
-            if(($index +1) >= sizeOf($children)) //next child assignment
+            if(($index +1) >= sizeof($children)) //next child assignment
                 $nextChild = null;
             else
                 $nextChild = $children[$index +1];
@@ -343,80 +445,38 @@ class DataTag extends DatabaseObject
     }
 
     /**
-     * Saves the tag to the database
+     * Deletes this tag and all children
      */
-    private function save_to_current_tag()
+    public function delete_recursive()
     {
-        $tag = Tag::where("id", "=", $this->id)->first();
-        $tag->name = $this->name;
-        $tag->type_id = $this->type->get_id();
-        $tag->parent_tag_id = $this->parent_id;
-        $tag->sort_number = $this->sort_number;
-        $tag->save();
+        foreach($this->get_children_recursive()->getAsArray() as $child)
+            $child->delete();
+        Tag::where("id", "=", $this->id)->delete();
     }
 
     /**
-     * Saves the sort number to the database
-     * @param Tag $tag
+     * Gets all of the children of this tag recursively
+     * @return TagCollection
      */
-    private function save_sort_number($tag)
+    public function get_children_recursive()
     {
-        if(isset($this->sort_number))
-            $tag->sort_number = $this->sort_number;
-        else
-            $tag->sort_number = -1;
-    }
-
-    /**
-     * Creates a new instance of the tag in the database. It will return false if it already exists.
-     * @throws Exception
-     * @returns bool
-     *
-     */
-    public function create()
-    {
-
-        if (!isset($this->name))
-            throw new Exception("The tag has to have a name before it can be created.");
-        if (!isset($this->parent_id))
-            throw new Exception("The tag has to have a parent_id before it can be created.");
-        if(!isset($this->type))
-        {
-            $this->type = new Type();
-            $this->type->set_id(-1);
-        }
-
-        if (isset($this->id))
-            return false;
-
-        $tag = new Tag();
-        $tag->name = $this->name;
-        $tag->type_id = $this->type->get_id();
-
-        $tag->parent_tag_id = $this->parent_id;
-        $this->save_sort_number($tag);
-        $tag->save();
-        $this->id = $tag->id;
-        return true;
-    }
-
-    /**
-     * Checks the database for another tag of the same
-     * @return int|null
-     */
-    private function check_for_duplicate()
-    {
-        $tag = Tag::where("parent_tag_id", "=", $this->parent_id )->where("name", "=", $this->name )->first();
-        if(isset($tag))
-            return $tag->id;
-        else
+        if(!isset($this->id))
             return null;
-    }
+        $tagmodels = DataTags::getDataTagsQueryBuilder();
+        $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
+        if(empty($tagmodels))
+            return new TagCollection();
 
-    private function check_parent_id()
-    {
-        if($this->parent_id == -1 || !isset($this->parent_id))
-            $this->parent_id  = 0;
+        $collection = new TagCollection();
+        foreach($tagmodels as $tagmodel)
+        {
+            $tag = DataTags::get_by_row($tagmodel);
+            $childCollection = $tag->get_children_recursive();
+            $collection->add($tag);
+            $collection->addAll($childCollection);
+        }
+        return $collection;
+
     }
 
     /**
@@ -429,25 +489,7 @@ class DataTag extends DatabaseObject
         Tag_meta::where('tag_id', '=',$this->id )->delete();
         $this->id = null;
     }
-    /**
-     * Warning be sure to check if the tag has children or they will be lost
-     * @throws \Exception
-     */
-    public function forceDelete()
-    {
-        Tag::where("id", "=", $this->id)->forceDelete();
-        $this->id = null;
-    }
 
-    /**
-     * Deletes this tag and all children
-     */
-    public function delete_recursive()
-    {
-        foreach($this->get_children_recursive()->getAsArray() as $child)
-            $child->delete();
-        Tag::where("id", "=", $this->id)->delete();
-    }
     /**
      * Deletes this tag and all children
      */
@@ -459,17 +501,13 @@ class DataTag extends DatabaseObject
     }
 
     /**
-     * Gets the immediate parent of this tag. returns null if no parent is found
-     * @return DataTag
+     * Warning be sure to check if the tag has children or they will be lost
+     * @throws \Exception
      */
-    public function get_parent()
+    public function forceDelete()
     {
-        if(isset($this->cached_parent))
-            return $this->cached_parent;
-        if($this->parent_id === null)
-            return null;
-        $this->cached_parent = DataTags::get_by_id($this->parent_id);
-        return  $this->cached_parent;
+        Tag::where("id", "=", $this->id)->forceDelete();
+        $this->id = null;
     }
 
     /**
@@ -515,6 +553,17 @@ class DataTag extends DatabaseObject
     }
 
     /**
+     * @param integer $id
+     */
+    public function set_parent_id($id)
+    {
+        if(isset($id))
+            $this->parent_id = $id;
+        else
+            $this->parent_id = 0;
+    }
+
+    /**
      * Gets the root parent tag.
      * @return DataTag
      */
@@ -534,24 +583,17 @@ class DataTag extends DatabaseObject
     }
 
     /**
-     * Gets the first level children of this tag
-     * @return TagCollection
+     * Gets the immediate parent of this tag. returns null if no parent is found
+     * @return DataTag
      */
-    public function get_children()
+    public function get_parent()
     {
-        if(!isset($this->id))
+        if(isset($this->cached_parent))
+            return $this->cached_parent;
+        if($this->parent_id === null)
             return null;
-        if(isset($this->children))
-            return $this->children;
-        $tagmodels = DataTags::getDataTagsQueryBuilder();
-        $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
-        if(empty($tagmodels))
-            return new TagCollection();
-        $collection = new TagCollection();
-        foreach($tagmodels as $tagmodel)
-            $collection->add( DataTags::get_by_row($tagmodel) );
-        $this->children = $collection;
-        return $collection;
+        $this->cached_parent = DataTags::get_by_id($this->parent_id);
+        return  $this->cached_parent;
     }
 
     /**
@@ -573,6 +615,7 @@ class DataTag extends DatabaseObject
         $this->children = $collection;
         return $collection;
     }
+
     /**
      * Gets children that do not have Children
      * @return TagCollection|null
@@ -584,52 +627,13 @@ class DataTag extends DatabaseObject
         $tagmodels = DataTags::getDataTagsQueryBuilder();
         $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
         $collection = new TagCollection();
-        if(sizeOf($tagmodels) === 0)
+        if(sizeof($tagmodels) === 0)
             return $collection;
         foreach($tagmodels as $tagmodel)
             if( !Tag::where('parent_tag_id', '=', $tagmodel->id)->exists())
                 $collection->add(DataTags::get_by_row($tagmodel));
         $this->children = $collection;
         return $collection;
-    }
-
-    /**
-     * Gets all of the children of this tag recursively
-     * @return TagCollection
-     */
-    public function get_children_recursive()
-    {
-        if(!isset($this->id))
-            return null;
-        $tagmodels = DataTags::getDataTagsQueryBuilder();
-        $tagmodels = $tagmodels->where('parent_tag_id', '=', $this->id)->get();
-        if(empty($tagmodels))
-            return new TagCollection();
-
-        $collection = new TagCollection();
-        foreach($tagmodels as $tagmodel)
-        {
-            $tag = DataTags::get_by_row($tagmodel);
-            $childCollection = $tag->get_children_recursive();
-            $collection->add($tag);
-            $collection->addAll($childCollection);
-        }
-        return $collection;
-
-    }
-
-    /**
-     * Checks to see if this tag has children
-     * @return bool Returns true if this tag has children
-     */
-    public function has_children()
-    {
-        if(!isset($this->id))
-            return false;
-        if(Tag::where('parent_tag_id', '=', $this->id)->exists())
-           return true;
-        else
-           return false;
     }
 
     /**
@@ -757,7 +761,7 @@ class DataTag extends DatabaseObject
                 break;
         }
         $newstack = array(); //reversing the order
-        $stackSize = sizeOf($stack);
+        $stackSize = sizeof($stack);
         for($i = $stackSize - 1; $i >= 0; $i--)
             $newstack[$stackSize - ($i + 1) ] = $stack[$i];
         return $newstack;

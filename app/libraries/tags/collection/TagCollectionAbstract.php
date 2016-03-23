@@ -204,7 +204,7 @@ abstract class TagCollectionAbstract
      */
     public function getSize()
     {
-        return sizeOf($this->tags);
+        return sizeof($this->tags);
     }
 
     /**

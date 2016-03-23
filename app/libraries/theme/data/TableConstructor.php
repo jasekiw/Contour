@@ -25,68 +25,6 @@ class TableConstructor
     private static $readOnly = false;
 
     /**
-     * @param DataTag $parent
-     * @param DataTag[] $columns
-     * @param bool $caculated
-     */
-    public static function printChildColumns($parent, $columns, $calculated = false)
-    {
-
-        if($parent->has_children())
-        {
-            foreach($parent->get_children()->getAsArray() as $child)
-            {
-                $number_deep = $parent->get_layers_deep_to_sheet();
-                $spaces = "";
-                for($i = 0; $i < $number_deep; $i++)
-                {
-                    $spaces .= '<i class="fa fa-long-arrow-right child_seperator"></i>';
-                }
-                echo '<tr>';
-                echo '<td class="column_name_container">';
-                echo $spaces ;
-                echo "<div class='column_name' tagId='" . $child->get_id() . "'  sort_number='" . $child->get_sort_number() . "' >" . $child->get_name() . "</div>";
-                echo '</td>';
-                foreach($columns as $column)
-                {
-                    /**
-                     * @var DataTag $column
-                     */
-                    echo '<td class="cell">';
-
-
-
-                    $datablock = null;
-                    if($calculated)
-                        $datablock = DataBlocks::getByTagsArray(array($child, $column));
-                    else
-                        $datablock = DataBlocks::getValueByTagsArray(array($child, $column));
-
-
-                    //self::getByTagsArray(array($child, $column));
-                    //$finish = sizeOf($GLOBALS['queries']);
-                    //echo $finish - $start;
-                    if(isset($datablock))
-                    {
-                        ?> <input type="text" class="form-control input-sm" datablock="<?php echo $calculated ? $datablock->get_id() : $datablock->id ?>" value="<?php echo  $calculated ? $datablock->getProccessedValue() : $datablock->value; ?>" > <?php
-                    }
-                    self::$progress += 1;
-
-                    echo '</td>';
-                }
-               // UserMeta::save('tableLoading', self::$progress . "/" . self::$progress_max_value);
-                echo '<tr/>';
-
-                if($child->has_children())
-                {
-                    self::printChildColumns($child, $columns);
-                }
-            }
-        }
-    }
-
-
-    /**
      * Prints the Excel Sheet onto the screen
      * @param $id
      * @param bool $caculated
@@ -115,13 +53,13 @@ class TableConstructor
             if($tag->get_type()->getName() == Types::get_type_column()->getName())
             {
                 $columnsSize++;
-                $columnsSize += sizeOf($tag->get_children()->getAsArray());
+                $columnsSize += sizeof($tag->get_children()->getAsArray());
                 array_push($columns, $tag);
             }
             if($tag->get_type()->getName() == Types::get_type_row()->getName())
             {
                 $rowSize++;
-                $rowSize += sizeOf($tag->get_children()->getAsArray());
+                $rowSize += sizeof($tag->get_children()->getAsArray());
                 array_push($rows, $tag);
             }
         }
@@ -217,5 +155,66 @@ class TableConstructor
         </table>
         <?php
 
+    }
+
+    /**
+     * @param DataTag $parent
+     * @param DataTag[] $columns
+     * @param bool $caculated
+     */
+    public static function printChildColumns($parent, $columns, $calculated = false)
+    {
+
+        if($parent->has_children())
+        {
+            foreach($parent->get_children()->getAsArray() as $child)
+            {
+                $number_deep = $parent->get_layers_deep_to_sheet();
+                $spaces = "";
+                for($i = 0; $i < $number_deep; $i++)
+                {
+                    $spaces .= '<i class="fa fa-long-arrow-right child_seperator"></i>';
+                }
+                echo '<tr>';
+                echo '<td class="column_name_container">';
+                echo $spaces ;
+                echo "<div class='column_name' tagId='" . $child->get_id() . "'  sort_number='" . $child->get_sort_number() . "' >" . $child->get_name() . "</div>";
+                echo '</td>';
+                foreach($columns as $column)
+                {
+                    /**
+                     * @var DataTag $column
+                     */
+                    echo '<td class="cell">';
+
+
+
+                    $datablock = null;
+                    if($calculated)
+                        $datablock = DataBlocks::getByTagsArray(array($child, $column));
+                    else
+                        $datablock = DataBlocks::getValueByTagsArray(array($child, $column));
+
+
+                    //self::getByTagsArray(array($child, $column));
+                    //$finish = sizeof($GLOBALS['queries']);
+                    //echo $finish - $start;
+                    if(isset($datablock))
+                    {
+                        ?> <input type="text" class="form-control input-sm" datablock="<?php echo $calculated ? $datablock->get_id() : $datablock->id ?>" value="<?php echo  $calculated ? $datablock->getProccessedValue() : $datablock->value; ?>" > <?php
+                    }
+                    self::$progress += 1;
+
+                    echo '</td>';
+                }
+               // UserMeta::save('tableLoading', self::$progress . "/" . self::$progress_max_value);
+                echo '<tr/>';
+
+                if($child->has_children())
+                {
+                    self::printChildColumns($child, $columns);
+                }
+            }
+        }
     }
 }

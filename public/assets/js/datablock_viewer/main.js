@@ -8,7 +8,7 @@ var Main = (function () {
         this.dataBlockviewer = new DataBlockViewer(sheet);
     }
     return Main;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -69,11 +69,10 @@ var DataBlockViewer = (function () {
         this.populator.getNextDataBlock(function (e) { return _this.addDataBlock(e); });
     };
     return DataBlockViewer;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
-///<reference path="../js/jquery/jquery.d.ts" />
 var Ajax = (function () {
     function Ajax() {
     }
@@ -89,6 +88,12 @@ var Ajax = (function () {
             functiontoCall(e);
         });
     };
+    /**
+     *
+     * @param url
+     * @param data
+     * @param functiontoCall
+     */
     Ajax.prototype.post = function (url, data, functiontoCall) {
         $.ajax({
             type: "POST",
@@ -104,8 +109,23 @@ var Ajax = (function () {
             functiontoCall(e);
         });
     };
+    Ajax.prototype.put = function (url, data, functiontoCall) {
+        $.ajax({
+            type: "PUT",
+            url: url,
+            success: function (e) {
+                e.success = true;
+                functiontoCall(e);
+            },
+            data: data,
+            dataType: 'json'
+        }).fail(function (e) {
+            e.success = false;
+            functiontoCall(e);
+        });
+    };
     return Ajax;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
@@ -113,7 +133,7 @@ var DataTag = (function () {
     function DataTag() {
     }
     return DataTag;
-})();
+}());
 /**
  * Created by Jason on 12/22/2015.
  */
@@ -121,7 +141,7 @@ var DataBlock = (function () {
     function DataBlock() {
     }
     return DataBlock;
-})();
+}());
 /**
  * Created by Jason on 12/22/2015.
  */
@@ -148,5 +168,5 @@ var DataBlockPopulator = (function () {
         }
     };
     return DataBlockPopulator;
-})();
+}());
 //# sourceMappingURL=main.js.map

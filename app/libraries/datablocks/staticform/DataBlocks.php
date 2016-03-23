@@ -11,6 +11,7 @@ namespace app\libraries\datablocks\staticform;
 use app\libraries\Data_Blocks\DataBlockQueryEngine;
 use app\libraries\database\Query;
 use app\libraries\datablocks\DataBlock;
+use app\libraries\datablocks\DataBlockCollection;
 use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\tags\DataTag;
@@ -134,6 +135,22 @@ class DataBlocks
 //        echo $queries;
 //        exit;
         return $datablock;
+    }
+
+    /**
+     *  returns a Datablock if found. else returns null
+     * @param DataTag[] $dataTags
+     * @param string $selectionType
+     * @param bool $showTrashed
+     * @param bool $sort
+     * @return DataBlockCollection
+     */
+    public static function getMultipleByTagsArray($dataTags, $selectionType = DataBlocks::SELCTION_TYPE_LIGHT, $showTrashed = false, $sort = false)
+    {
+        $queryEngine = new DataBlockQueryEngine($dataTags, $showTrashed, $sort);
+        $datablock =  $queryEngine->getDataBlocks();
+        $datablockCollection = new DataBlockCollection($datablock);
+        return $datablockCollection;
     }
 
     /**

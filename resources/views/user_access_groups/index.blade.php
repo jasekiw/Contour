@@ -28,7 +28,7 @@
         </div>
     @endif
     <div class="users_statistics">
-        There are {{sizeOf($groups)}} User Access Group(s)
+        There are {{sizeof($groups)}} User Access Group(s)
     </div>
     <div class="users">
         @foreach($groups as $group)

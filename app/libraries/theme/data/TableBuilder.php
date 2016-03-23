@@ -67,7 +67,7 @@ class TableBuilder
         $datablockIndex = 0;
         $y = 0;
         array_unshift($this->rows, null); //compensates for the headers
-        $columnSize = sizeOf($this->columns);
+        $columnSize = sizeof($this->columns);
         foreach($this->rows as $row)
         {
             $x = 0;
@@ -108,26 +108,6 @@ class TableBuilder
         return $response;
     }
 
-
-    /**
-     * Gets the html to output a datatag
-     * @param DataTag $tag
-     * @return string
-     */
-    private function getTagHtml($tag)
-    {
-        return '<td class="column_name" >' . $tag->get_name() . "</td>";
-    }
-    /**
-     * Gets the html to output a row datagtag
-     * @param DataTag $tag
-     * @return string
-     */
-    private function getRowHtml($tag)
-    {
-        return '<td class="row_name" tag_id="' . $tag->get_id() . '" >' . $tag->get_name() . "</td>";
-    }
-
     /**
      * Gets the html to output a datatag
      * @param DataTag $tag
@@ -136,6 +116,16 @@ class TableBuilder
     private function getHeaderHtml($tag)
     {
         return '<th class="sheet_column" tag="'. $tag->get_id() . '" >' . $tag->get_name() . "</th>";
+    }
+
+    /**
+     * Gets the html to output a row datagtag
+     * @param DataTag $tag
+     * @return string
+     */
+    private function getRowHtml($tag)
+    {
+        return '<td class="row_name" tag_id="' . $tag->get_id() . '" >' . $tag->get_name() . "</td>";
     }
 
     /**
@@ -176,6 +166,14 @@ class TableBuilder
         return $value;
     }
 
+    /**
+     * Gets the readOnly property
+     * @return bool
+     */
+    public function getReadOnly()
+    {
+        return $this->readOnly;
+    }
 
     /**
      * Sets the read only property
@@ -186,17 +184,19 @@ class TableBuilder
         $this->readOnly = $bool;
     }
 
-    /**
-     * Gets the readOnly property
-     * @return bool
-     */
-    public function getReadOnly()
-    {
-        return $this->readOnly;
-    }
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Gets the html to output a datatag
+     * @param DataTag $tag
+     * @return string
+     */
+    private function getTagHtml($tag)
+    {
+        return '<td class="column_name" >' . $tag->get_name() . "</td>";
     }
 
 }

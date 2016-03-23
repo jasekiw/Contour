@@ -10,7 +10,6 @@ namespace app\libraries\datablocks;
 
 use app\libraries\Data_Blocks\converter\DataBlockValueConvertor;
 use app\libraries\Data_Blocks\DataBlockAbstract;
-use app\libraries\database\DatabaseObject;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\types\Type;
 use app\libraries\types\Types;
@@ -22,8 +21,7 @@ use App\Models\Tags_reference;
  * @package app\libraries\datablocks
  */
 class DataBlock extends DataBlockAbstract {
-
-
+    
 
     /**
      * @param TagCollection $tags The tags that the datablock reference
@@ -31,7 +29,7 @@ class DataBlock extends DataBlockAbstract {
      * @param string $created_at
      * @param string $updated_at
      */
-    public function __construct($tags = null, $type = null, $created_at = null, $updated_at = null)
+    public function __construct($tags = null, $type = null, $created_at = null, $updated_at = null, $sort_number = null)
     {
         if(isset($type))
             $this->type = $type;
@@ -41,6 +39,8 @@ class DataBlock extends DataBlockAbstract {
             $this->created_at = $created_at;
         if(isset($updated_at))
             $this->updated_at = $updated_at;
+        if(isset($sort_number))
+            $this->sort_number = $sort_number;
     }
 
     /**
@@ -60,6 +60,10 @@ class DataBlock extends DataBlockAbstract {
     {
         $this->tags = $tags;
     }
+
+    /**
+     * @return Type|null
+     */
     public function get_type()
     {
         if(!isset($this->id))
@@ -121,6 +125,7 @@ class DataBlock extends DataBlockAbstract {
         $datablock = new Data_block();
         $datablock->value = $this->value;
         $datablock->type_id = $this->type->get_id();
+        $datablock->sort_number = $this->sort_number;
         $datablock->save();
         $this->id = $datablock->id;
         foreach($this->tags->getAsArray() as $datatag) {
@@ -144,6 +149,7 @@ class DataBlock extends DataBlockAbstract {
         $datablock = Data_block::where("id", "=", $this->id)->first();
         $datablock->value = $this->value;
         $datablock->type_id = $this->type->get_id();
+        $datablock->sort_number = $this->sort_number;
         $datablock->save();
         $this->id = $datablock->id;
         foreach($this->tags->getAsArray() as $datatag)

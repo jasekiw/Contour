@@ -21,7 +21,7 @@ class SheetCategoryController extends Controller
         $view = \View::make("excel.categories.index");
         $view->class = "list";
         $facilities = DataTags::get_by_string("excel", -1)->get_children();
-        $view->newLink = "new Category";
+        $view->newLink = "";
         $view->newTitle = "Add new Category";
         if(isset($letter))
         {

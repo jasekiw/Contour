@@ -285,7 +285,7 @@ class Parser
 
         $infixExpression = []; //the infix expression to insert tokens into after the datablocks have been converted
         $index = 0; // the starting index to cycle through the tokens with
-        $length = sizeOf($this->tokenStack); // the size of the token stack
+        $length = sizeof($this->tokenStack); // the size of the token stack
         while($index < $length)
         {
             $token = $this->tokenStack[$index];
@@ -410,7 +410,7 @@ class Parser
                 array_push($tags, array());
                 continue;
             }
-            array_push( $tags[sizeOf($tags) - 1],$identifier);
+            array_push( $tags[sizeof($tags) - 1],$identifier);
         }
 
         /** @var DataTag[] */
@@ -433,7 +433,7 @@ class Parser
             $previousTags = [];
             $datatag = null;
 
-            for($i = $global ? 1 : 0; $i < sizeOf($tag); $i++)
+            for($i = $global ? 1 : 0; $i < sizeof($tag); $i++)
             {
                 $token = $tag[$i];
                 if($token->getValue() == self::SLASH) // there are multiple tags
@@ -565,7 +565,7 @@ class Parser
     {
         $postfix = new TokenStack();
         $index = 0;
-        $length = sizeOf($this->tokenStack);
+        $length = sizeof($this->tokenStack);
         /** @var Token[] $postfixExpression */
         $postfixExpression = [];
         $startOfIdentifier = -1;
@@ -678,7 +678,7 @@ class Parser
     {
 
         $index = 0;
-        $length = sizeOf($postFixExpression);
+        $length = sizeof($postFixExpression);
         $stack = new TokenStack();
         while($index < $length)
         {
@@ -726,7 +726,7 @@ class Parser
     {
         $infixExpression = []; //the infix expression to insert tokens into after the datablocks have been converted
         $index = 0; // the starting index to cycle through the tokens with
-        $length = sizeOf($this->tokenStack); // the size of the token stack
+        $length = sizeof($this->tokenStack); // the size of the token stack
         $startingTags = null;
         $endingTags = null;
         while($index < $length)

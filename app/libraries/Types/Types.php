@@ -85,6 +85,43 @@ class Types
         return $tagType;
     }
 
+    private static function createTypeCategoryTag()
+    {
+        if(isset(self::$cachedCategoryExists))
+            return;
+
+        if(!Type_category::where("name", "=", "tag")->exists())
+        {
+            $category = new Type_category();
+            $category->name = 'tag';
+            $category->save();
+        }
+        if(!Type_category::where("name", "=", "datablock")->exists())
+        {
+            $category = new Type_category();
+            $category->name = 'datablock';
+            $category->save();
+        }
+        self::$cachedCategoryExists = true;
+
+    }
+
+    public static function getQueryObject()
+    {
+        $datatag = \DB::table('types')
+            ->leftJoin('type_categories AS category', 'types.type_category_id', '=', 'category.id')
+            ->select('types.id AS id', 'types.name AS type_name', 'types.type_category_id AS type_category_id',  'category.name AS type_category_name');
+        return $datatag;
+    }
+
+    /**
+     * @return Type
+     */
+    public static function get_type_property()
+    {
+        return self::getTypeWithName("property", "tag");
+    }
+
     /**
      * @return Type[]
      */
@@ -115,25 +152,6 @@ class Types
         return self::getTypeWithName("row", "tag");
     }
 
-    public static function getQueryObject()
-    {
-        $datatag = \DB::table('types')
-            ->leftJoin('type_categories AS category', 'types.type_category_id', '=', 'category.id')
-            ->select('types.id AS id', 'types.name AS type_name', 'types.type_category_id AS type_category_id',  'category.name AS type_category_name');
-        return $datatag;
-    }
-
-    /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @param int $id
-     * @return \Illuminate\Database\Query\Builder
-     */
-    private static function addWhereID($query, $id)
-    {
-        $query->where('types.id', '=', $id);
-        return $query;
-    }
-
     /**
      * @return Type
      */
@@ -149,6 +167,22 @@ class Types
     {
         return self::getTypeWithName("cell", "datablock");
     }
+    /**
+     * Gets a table cell type for a datablock.
+     * @return Type
+     */
+    public static function get_type_table_cell()
+    {
+        return self::getTypeWithName("table-cell", "datablock");
+    }
+    /**
+     * Gets a table header type for a tag
+     * @return Type
+     */
+    public static function get_type_table_header()
+    {
+        return self::getTypeWithName("table-cell", "tag");
+    }
 
     /**
      * @return Type
@@ -156,27 +190,6 @@ class Types
     public static function get_type_folder()
     {
         return self::getTypeWithName("folder", "tag");
-    }
-
-    private static function createTypeCategoryTag()
-    {
-        if(isset(self::$cachedCategoryExists))
-            return;
-
-        if(!Type_category::where("name", "=", "tag")->exists())
-        {
-            $category = new Type_category();
-            $category->name = 'tag';
-            $category->save();
-        }
-        if(!Type_category::where("name", "=", "datablock")->exists())
-        {
-            $category = new Type_category();
-            $category->name = 'datablock';
-            $category->save();
-        }
-        self::$cachedCategoryExists = true;
-
     }
 
     /**
@@ -223,6 +236,17 @@ class Types
     }
 
     /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param int $id
+     * @return \Illuminate\Database\Query\Builder
+     */
+    private static function addWhereID($query, $id)
+    {
+        $query->where('types.id', '=', $id);
+        return $query;
+    }
+
+    /**
      * @param String $name
      * @return Type
      */
@@ -242,7 +266,7 @@ class Types
     public static function create_type_datablock($name)
     {
         $type = new Type($name);
-        $type->setCategory(TypeCategory::getdataBlockCategory());
+        $type->setCategory(TypeCategory::getDataBlockCategory());
         $type->save();
         return $type;
     }

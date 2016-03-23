@@ -113,11 +113,10 @@ var MenuEditor = (function () {
     };
     MenuEditor.LINKHTML = "\n    <div class=\"row menuLink\">\n        <div class=\"col-md-2 grabber\">\n            <i class=\"fa fa-bars \"></i>\n        </div>\n        <div class=\"col-md-4\">\n            <input name=\"name\" type=\"text\" value=\"\">\n        </div>\n        <div class=\"col-md-4\">\n            <input name=\"href\" type=\"text\" value=\"\">\n        </div>\n        <div class=\"col-md-2 delete\">\n            <i class=\"fa fa-trash fa-3\"></i>\n        </div>\n    </div>\n    ";
     return MenuEditor;
-})();
+}());
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
-///<reference path="../js/jquery/jquery.d.ts" />
 var Ajax = (function () {
     function Ajax() {
     }
@@ -170,5 +169,5 @@ var Ajax = (function () {
         });
     };
     return Ajax;
-})();
+}());
 //# sourceMappingURL=menu_editor.js.map

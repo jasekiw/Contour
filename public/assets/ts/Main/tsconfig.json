@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "out": "compiled.js"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+  "../typings/jquery/jquery.d.ts",
+  "../typings/jqueryui/jqueryui.d.ts",
+    "../typings/form-data/form-data.d.ts",
+  "../Ajax.ts",
+  "libraries/excelImport/ExcelImporterPage.ts",
+  "Main.ts"
+
+]
+}

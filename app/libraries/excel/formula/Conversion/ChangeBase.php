@@ -85,7 +85,7 @@ class ChangeBase
         $letterCode = strtoupper($letterCode);
         $letters = str_split($letterCode,1);
         $total = 0;
-        $maximum_size = sizeOf($letters) -1;
+        $maximum_size = sizeof($letters) -1;
         $index = 0;
         $base = 26;
         foreach($letters as $letter)
