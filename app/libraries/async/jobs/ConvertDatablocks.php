@@ -25,14 +25,26 @@ use Monolog\Logger;
 class ConvertDatablocks extends AsyncJobAbstract
 {
     /**
+     * Returns the name of the job
+     * @return string
+     */
+    public static function getName()
+    {
+        return "convertdatablocks";
+    }
+
+    /**
      * @param \stdClass $data
      * @return mixed|void
      */
     public function handle($data)
     {
         $this->turnOnErrorReporting();
+        $this->log("starting Job");
         $offset = intval( $data['offset']);
         $limit = intval( $data['length']);
+        if($limit == 0)
+            $this->markErrorAndExit("limit is set to 0, data not passed correctly perhaps?");
         $this->setProgressMax($limit);
         $type = Types::get_type_cell();
         $total = Data_block::where("type_id", "=", $type->get_id())->selectRaw("count(*)")->get()->first()["count(*)"];
@@ -45,21 +57,12 @@ class ConvertDatablocks extends AsyncJobAbstract
             $oldValue = $dataBlock->getValue();
             $converter->get_tag_value($dataBlock);
             $dataBlock->save(); // gonna give it a go!
-            $this->log("\r\nfinished datablock: " . $count . " out of " . $total . " ID: " . $dataBlock->get_id() ."\r\n" .
+            $this->log("finished datablock: " . $count . " out of " . $total . " ID: " . $dataBlock->get_id() ."\r\n" .
               "Old value: " . $oldValue . "      New Value: " . $dataBlock->getValue() . "\r\n");
             $count++;
             if($count % 5 == 0)
                 $this->saveProgress($count);
         }
         $this->saveProgress($count);
-    }
-
-    /**
-     * Returns the name of the job
-     * @return string
-     */
-    public static function getName()
-    {
-        return "convertdatablocks";
     }
 }

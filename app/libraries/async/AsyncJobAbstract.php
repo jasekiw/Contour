@@ -8,6 +8,7 @@
 
 namespace app\libraries\async;
 use App\Models\Async_Job;
+use Carbon\Carbon;
 
 
 /**
@@ -16,6 +17,7 @@ use App\Models\Async_Job;
  */
 abstract class AsyncJobAbstract implements Async
 {
+    public $errorMessages = null;
     protected $id;
     /**
      * @var Async_Job
@@ -23,12 +25,16 @@ abstract class AsyncJobAbstract implements Async
     protected $job;
 
     /**
-     * Sets the ID of the job
-     * @param int $id
+     * Logs the data into a log fileS
+     * @param $data
      */
-    public function setID($id)
+    public function log($data)
     {
-        $this->id = $id;
+        $DS = DIRECTORY_SEPARATOR;
+        $now =  Carbon::now()->toDateTimeString();
+        file_put_contents(storage_path() .$DS.'logs'.$DS.'jobs'.$DS . static::getName() . '_' . $this->getID() . '.log',
+            $now . " - " .  $data . "\r\n",
+            FILE_APPEND);
     }
 
     /**
@@ -41,13 +47,12 @@ abstract class AsyncJobAbstract implements Async
     }
 
     /**
-     * Logs the data into a log fileS
-     * @param $data
+     * Sets the ID of the job
+     * @param int $id
      */
-    public function log($data)
+    public function setID($id)
     {
-        $DS = DIRECTORY_SEPARATOR;
-        file_put_contents(storage_path() .$DS.'logs'.$DS.'jobs'.$DS . static::getName() . '_' . $this->getID() . '.log', $data . "\r\n", FILE_APPEND);
+        $this->id = $id;
     }
 
     public function saveProgress($current)
@@ -65,6 +70,26 @@ abstract class AsyncJobAbstract implements Async
         $this->job->progressMax = $total;
             $this->job->save();
 
+    }
+
+    /**
+     * Throws and exception witht he current message
+     * @param string $message
+     * @throws \Exception
+     */
+    public function markErrorAndExit($message)
+    {
+        throw new \Exception($message);
+    }
+
+    /**
+     * @param $message
+     */
+    public function markErrorAndContinue($message)
+    {
+        if($this->errorMessages === null)
+            $this->errorMessages = [];
+        array_push($this->errorMessages, $message);
     }
 
     public function markComplete()

@@ -36,6 +36,9 @@
     @endif
 
     <div class="upper-controls">
+        <div class="left">
+            <a href="{!! route('user_access_groups_index') !!}">Cancel</a>
+        </div>
         <div class="right">
             <a href="{!! route('user_access_groups_index') !!}">Cancel</a>
         </div>

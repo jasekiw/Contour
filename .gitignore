@@ -1,3 +1,4 @@
+cloc.exe
 /app/libraries/tags/Collection/TagCollection.php
 /vendor
 /node_modules
@@ -5,8 +6,10 @@ Homestead.yaml
 Homestead.json
 .env
 .idea
-.idea/
 *.xls
 app/docs/
 app/phpDocumentor.phar
 app/docs.zip
+/public/xdebug-gui
+/public/uploads
+/public/tracereader

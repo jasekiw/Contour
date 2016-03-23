@@ -31,14 +31,6 @@ class AsyncHandler
     }
 
     /**
-     * Launches the Job specified
-     */
-    public static function launchIt()
-    {
-         (new AsyncHandler())->launchjob();
-    }
-
-    /**
      * @param $id
      * @return string
      */
@@ -104,6 +96,14 @@ class AsyncHandler
     }
 
     /**
+     * Launches the Job specified
+     */
+    public static function launchIt()
+    {
+         (new AsyncHandler())->launchjob();
+    }
+
+    /**
      * Launches the job by the id
      */
     public function launchjob()
@@ -137,6 +137,12 @@ class AsyncHandler
         {
             $job->error = true;
             $handler->log($e->getMessage());
+        }
+        if($handler->errorMessages !== null)
+        {
+            $job->error = true;
+            foreach($handler->errorMessages as $errorMessage)
+                $handler->log($errorMessage);
         }
 
 
