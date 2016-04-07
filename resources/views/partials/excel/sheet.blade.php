@@ -22,7 +22,7 @@ $tag = $sheet->getParentTag();
     </thead>
     <tbody>
         @foreach($sheet->getRowTags() as $y => $row)
-            <tr>
+            <tr class="sheet_row" tag="{!! $row->get_id() !!}">
                 <td class="row_name" tag_id="{!! $row->get_id() !!}" >{!! $row->get_name() !!}</td>
                 @foreach($sheet->getColumnTags() as $x => $column)
                     <?php
