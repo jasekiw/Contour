@@ -42,6 +42,7 @@
             </span>
             <div class="form-group spaced">
                 <label for="sel1">Select Import Template</label>
+
                 <select class="form-control" id="suite">
                     @foreach($suites as $suite)
                     <option>{{ $suite->getName() }}</option>
@@ -63,3 +64,4 @@
 @section("scripts")
     @include('excelimporter.scripts')
 @endsection
+
