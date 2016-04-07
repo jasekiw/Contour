@@ -44,25 +44,22 @@ class ExcelSheet extends ExcelData
     {
         $this->parentTag = $parentTag;
         $this->tags = [];
-        $y = 0;
+
         $this->rows = array_values($rows);
         $this->columns = array_values($columns);
-        foreach($this->rows as $row)
-        {
 
+        foreach($this->rows as $y => $row)
+        {
             if(!isset($this->cells[$y]))
                 $this->cells[$y] = [];
-            $x = 0;
-            foreach($this->columns as $column)
+            foreach($this->columns as $x => $column)
             {
-                $datablock = DataBlocks::getByTagsArray(array($row,$column ));
+                $datablock = DataBlocks::getByTagsArray([ $row, $column]);
                 if(isset($datablock))
                     $this->containsData = true;
                 if(!isset($this->cells[$y][$x]))
                     $this->cells[$y][$x] = $datablock;
-                $x++;
             }
-            $y++;
         }
     }
 

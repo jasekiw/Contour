@@ -30,6 +30,7 @@ $tag = $sheet->getParentTag();
                         <?php
                         $cell  = $sheet->getCell($x,$y);
                         ?>
+
                         @if(isset($cell))
                             <td class="cell"> <input type="text" class="form-control input-sm" datablock="{!! $cell->get_id() !!}"
                                                      value="{!! $cell->getValue() !!}" /></td>

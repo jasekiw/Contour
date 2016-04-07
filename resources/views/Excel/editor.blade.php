@@ -63,12 +63,15 @@ $tabs =  $sheet->getNavTitles();
             </ul>
         </div>
         <div class="tab-content clearfix">
+            <?php $first = true; ?>
             @foreach($tabs as $tab)
-                <div class="tab-pane" id="{{$tab->getCodeName()}}">
-                    <?php $summarySheet = $tab->excelView->summarySheet; ?>
-                    {!! View::make('partials.excel.sheet', ['sheet' => $summarySheet]) !!}
-
+                <div class="tab-pane @if($first) active @endif" id="{{$tab->getCodeName()}}">
+                    {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView->summarySheet]) !!}
+                    {!! View::make('partials.excel.table', ['table' => $tab->excelView->summaryTable]) !!}
+                    {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView->summaryHybrid]) !!}
+                    {!! View::make('partials.excel.properties', ['propertiesView' => $tab->excelView->propertysView]) !!}
                 </div>
+                    <?php $first = false; ?>
             @endforeach
 
         </div>

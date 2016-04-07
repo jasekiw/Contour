@@ -50,7 +50,7 @@ Route::get('sandbox',array('as' => 'sandbox','middleware' => 'auth', 'uses' => '
 //Route::get( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'get_ajax','middleware' => 'auth', 'uses' => 'AjaxController@get'))->where('id', '(.*)');
 //Route::post( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'post_ajax','middleware' => 'auth', 'uses' => 'AjaxController@post'))->where('id', '(.*)');
 
-
+Route::get('clean',array('as' => 'cleanup.clean','middleware' => 'auth', 'uses' => 'DataBaseCleanupController@cleanDeletedTags'));
 /**
  * Excel Handlers
  */

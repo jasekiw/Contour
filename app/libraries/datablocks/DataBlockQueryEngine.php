@@ -79,7 +79,7 @@ class DataBlockQueryEngine
         if($size == 1)
         {
             $tag = $this->tags[0];
-            $query = "SELECT data_block_id as id from tags_reference WHERE ";
+            $query = "SELECT" . " data_block_id as id from tags_reference WHERE ";
             if(!$this->showTrashed)
                 $query .= "deleted_at is NULL and ";
             $query .= "tag_id = " . $tag->get_id() . " ";
@@ -100,7 +100,7 @@ class DataBlockQueryEngine
             }
             $datablockIDQuery .= ") ";
 
-            $query = "SELECT d.id AS id, d.value AS value, d.type_id AS type_id FROM data_blocks AS d WHERE ";
+            $query = "SELECT" ." d.id AS id, d.value AS value, d.type_id AS type_id FROM data_blocks AS d WHERE ";
             if(!$this->showTrashed)
                 $query .= "deleted_at is NULL AND ";
             $query .= "d.id = " . $rowsWithOnlyIds[0]["id"];
@@ -110,44 +110,45 @@ class DataBlockQueryEngine
                 $answerDatablocks = $rows;
         }
         else
+        {
             foreach($this->tags as $index => $tag)
             {
-                if($index == ($size -1)) // last index
+
+
+                $query = "SELECT" ." data_block_id as id from tags_reference WHERE ";
+                if(!$this->showTrashed)
+                    $query .= "deleted_at is NULL and ";
+                $query .= "tag_id = " . $tag->get_id() . " ";
+                $query .= $datablockIDQuery;
+
+                $this->queries .= $query . "<br />";
+                $rowsWithOnlyIds = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+
+                if(empty($rowsWithOnlyIds))
+                    return null;
+                $datablockIDQuery = "";
+                $datablockIDQuery .= "and ( ";
+                $sizeOfRows = sizeof($rowsWithOnlyIds);
+                foreach($rowsWithOnlyIds as $blockIndex => $block)
                 {
-                    $query = "SELECT d.id AS id, d.value AS value, d.type_id AS type_id, d.sort_number as sort_number FROM data_blocks AS d WHERE ";
-                    if(!$this->showTrashed)
-                        $query .= "deleted_at is NULL and ";
-                    $query .= "d.id = " . $rowsWithOnlyIds[0]["id"];
-                    $this->queries .= $query . "<br />";
-                    $rows  = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-                    if(!empty($rows))
-                        $answerDatablocks = $rows;
-
+                    $isLast = $sizeOfRows - $blockIndex == 1;
+                    $datablockIDQuery .= "data_block_id = " . $block["id"] . " " . ($isLast ? "" : "or ");
                 }
-                else
-                {
-                    $query = "SELECT data_block_id as id from tags_reference WHERE ";
-                    if(!$this->showTrashed)
-                        $query .= "deleted_at is NULL and ";
-                    $query .= "tag_id = " . $tag->get_id() . " ";
-                    $query .= $datablockIDQuery;
-
-                    $this->queries .= $query . "<br />";
-                    $rowsWithOnlyIds = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-
-                    if(empty($rowsWithOnlyIds))
-                        return null;
-                    $datablockIDQuery = "";
-                    $datablockIDQuery .= "and ( ";
-                    $sizeOfRows = sizeof($rowsWithOnlyIds);
-                    foreach($rowsWithOnlyIds as $blockIndex => $block)
-                    {
-                        $isLast = $sizeOfRows - $blockIndex == 1;
-                        $datablockIDQuery .= "data_block_id = " . $block["id"] . " " . ($isLast ? "" : "or ");
-                    }
-                    $datablockIDQuery .= ") ";
-                }
+                $datablockIDQuery .= ") ";
             }
+
+            $query = "SELECT" ." d.id AS id, d.value AS value, d.type_id AS type_id, d.sort_number as sort_number FROM data_blocks AS d WHERE ";
+            if(!$this->showTrashed)
+                $query .= "deleted_at is NULL and ";
+            $query .= "d.id = " . $rowsWithOnlyIds[0]["id"];
+            $this->queries .= $query . "<br />";
+            $rows  = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            if(!empty($rows))
+                $answerDatablocks = $rows;
+
+
+        }
+
         return $answerDatablocks;
     }
 
@@ -196,7 +197,7 @@ class DataBlockQueryEngine
         if($size == 1)
         {
             $tag = $this->tags[0];
-            $query = "SELECT data_block_id as id from tags_reference WHERE ";
+            $query = "SELECT" ." data_block_id as id from tags_reference WHERE ";
             if(!$this->showTrashed)
                 $query .= "deleted_at is NULL and ";
             $query .= "tag_id = " . $tag->get_id() . " ";
@@ -217,7 +218,7 @@ class DataBlockQueryEngine
             }
             $datablockIDQuery .= ") ";
 
-            $query = "SELECT d.id AS id, d.value AS value, d.type_id AS type_id, d.sort_number as sort_number FROM data_blocks AS d WHERE ";
+            $query = "SELECT" ." d.id AS id, d.value AS value, d.type_id AS type_id, d.sort_number as sort_number FROM data_blocks AS d WHERE ";
             if(!$this->showTrashed)
                 $query .= "deleted_at is NULL AND ";
 //            $query .= "d.id = " . $rowsWithOnlyIds[0]["id"];
@@ -233,47 +234,45 @@ class DataBlockQueryEngine
                 $answerDatablocks = $rows;
         }
         else
+        {
             foreach($this->tags as $index => $tag)
             {
-                if($index == ($size -1)) // last index
+                $query = "SELECT" ." data_block_id as id from tags_reference WHERE ";
+                if(!$this->showTrashed)
+                    $query .= "deleted_at is NULL and ";
+                $query .= "tag_id = " . $tag->get_id() . " ";
+                $query .= $datablockIDQuery;
+
+                $this->queries .= $query . "<br />";
+                $rowsWithOnlyIds = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+
+                if(empty($rowsWithOnlyIds))
+                    return [];
+                $datablockIDQuery = "";
+                $datablockIDQuery .= "and ( ";
+                $sizeOfRows = sizeof($rowsWithOnlyIds);
+                foreach($rowsWithOnlyIds as $blockIndex => $block)
                 {
-                    $query = "SELECT d.id AS id, d.value AS value, d.type_id AS type_id FROM data_blocks AS d WHERE ";
-                    if(!$this->showTrashed)
-                        $query .= "deleted_at is NULL AND ";
-                    $query .= "(";
-                    foreach($rowsWithOnlyIds as $key => $row)
-                        $query .= ($key == 0 ? "" : "OR ") . "d.id = " . $row["id"] . " ";
-                    $query .= ")";
-                    $this->queries .= $query . "<br />";
-                    $rows  = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-                    if(!empty($rows))
-                        $answerDatablocks = $rows;
-
+                    $isLast = $sizeOfRows - $blockIndex == 1;
+                    $datablockIDQuery .= "data_block_id = " . $block["id"] . " " . ($isLast ? "" : "or ");
                 }
-                else
-                {
-                    $query = "SELECT data_block_id as id from tags_reference WHERE ";
-                    if(!$this->showTrashed)
-                        $query .= "deleted_at is NULL and ";
-                    $query .= "tag_id = " . $tag->get_id() . " ";
-                    $query .= $datablockIDQuery;
-
-                    $this->queries .= $query . "<br />";
-                    $rowsWithOnlyIds = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-
-                    if(empty($rowsWithOnlyIds))
-                        return [];
-                    $datablockIDQuery = "";
-                    $datablockIDQuery .= "and ( ";
-                    $sizeOfRows = sizeof($rowsWithOnlyIds);
-                    foreach($rowsWithOnlyIds as $blockIndex => $block)
-                    {
-                        $isLast = $sizeOfRows - $blockIndex == 1;
-                        $datablockIDQuery .= "data_block_id = " . $block["id"] . " " . ($isLast ? "" : "or ");
-                    }
-                    $datablockIDQuery .= ") ";
-                }
+                $datablockIDQuery .= ") ";
             }
+
+
+            $query = "SELECT" ." d.id AS id, d.value AS value, d.type_id AS type_id FROM data_blocks AS d WHERE ";
+            if(!$this->showTrashed)
+                $query .= "deleted_at is NULL AND ";
+            $query .= "(";
+            foreach($rowsWithOnlyIds as $key => $row)
+                $query .= ($key == 0 ? "" : "OR ") . "d.id = " . $row["id"] . " ";
+            $query .= ")";
+            $this->queries .= $query . "<br />";
+            $rows  = Query::getPDO()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            if(!empty($rows))
+                $answerDatablocks = $rows;
+        }
+
         return $answerDatablocks;
     }
 

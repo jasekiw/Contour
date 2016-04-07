@@ -651,13 +651,13 @@ class DataTag extends DatabaseObject
         if($this->parent_id !== null)
         {
 
-            $query = "SELECT parent_tag_id FROM TAGS WHERE id = '" . $this->parent_id . "';";
+            $query = "SELECT parent_tag_id FROM tags WHERE id = '" . $this->parent_id . "';";
             $parent = Query::getPDO()->query($query)->fetchColumn(0);
             $count = 0;
             while($parent !== 0)
             {
                 $count++;
-                $query = "SELECT parent_tag_id FROM TAGS WHERE id = '" . $parent . "';";
+                $query = "SELECT parent_tag_id FROM tags WHERE id = '" . $parent . "';";
                 $parent = Query::getPDO()->query($query)->fetchColumn(0);
             }
             $this->cached_layers_deep = $count;
