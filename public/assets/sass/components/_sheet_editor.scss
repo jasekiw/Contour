@@ -1,50 +1,49 @@
 $editorGray: #8198A3;
-#sheet_tabbed {
-    .nav-pills>li.active>a {
-        background-color: $evergreen
+
+.nav-pills>li.active>a {
+    background-color: $evergreen
+}
+.nav-pills>li>a
+{
+    font-size:20px;
+}
+.sheet_editor {
+    .sheet_column {
+        color: $editorGray;
+        text-align: center;
+        padding-bottom: 10px;
     }
-    .nav-pills>li>a
-    {
-        font-size:20px;
-    }
-    .sheet_editor {
-        .sheet_column {
-            color: $editorGray;
-            text-align: center;
-            padding-bottom: 10px;
+
+    .sheet_row {
+
+        .row_name {
+            padding-right: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #8198A3;
         }
+        .cell {
+            border: 1px solid $evergreen;
 
-        .sheet_row {
-
-            .row_name {
-                padding-right: 20px;
+            input {
+                padding: 5px 10px;
                 font-size: 16px;
-                font-weight: 600;
-                color: #8198A3;
-            }
-            .cell {
-                border: 1px solid $evergreen;
-
-                input {
-                    padding: 5px 10px;
-                    font-size: 16px;
-                    border: none;
-                    height: auto;
-                    background-color: transparent;
-                    &:focus {
-                        background-color: $evergreenLighter;
-                    }
+                border: none;
+                height: auto;
+                background-color: transparent;
+                &:focus {
+                    background-color: $evergreenLighter;
                 }
+            }
 
-            }
-            &:not(.current_row) .cell input {
-                color: $editorGray;
-            }
-            &:nth-child(even) .cell {
-                background-color: $evergray;
-
-            }
         }
+        &:not(.current_row) .cell input {
+            color: $editorGray;
+        }
+        &:nth-child(even) .cell {
+            background-color: $evergray;
 
+        }
     }
+
 }

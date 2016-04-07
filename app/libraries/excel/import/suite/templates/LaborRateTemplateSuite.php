@@ -37,7 +37,7 @@ class LaborRateTemplateSuite extends SuiteTemplateAbstract
         /**
          * test
          */
-        $mainSheet = new ImportTemplate("test");
+        $mainSheet = new ImportTemplate("labor rate calculation");
         $headerRow = new Area(new Point(4, 2), new Point(12, 2));
         $specialRows = new Area(new Point(4, 48), new Point(4, 56));
         $mainSheet->getRules()->add(ImportRule::createTagHeaderRule($headerRow, Types::get_type_table_header()));

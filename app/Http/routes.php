@@ -193,8 +193,10 @@ Route::get('sheetcategories/{id}/{letter}',array('as' => 'sheetcategories_show_l
 Route::get('generatetemplates',array('as' => 'sheetcategories_generate','middleware' => 'auth', 'uses' => 'SheetsController@generateFacilityTemplate'));
 Route::get('deletetemplates',array('as' => 'sheetcategories_delete_template','middleware' => 'auth', 'uses' => 'SheetsController@deleteGeneratedFacilityTemplate'));
 Route::get('sheets/create/{id}',array('as' => 'sheet_create','middleware' => 'auth', 'uses' => 'SheetsController@create'));
+Route::get('sheets/createfacility/{id}',array('as' => 'sheet.createfacility','middleware' => 'auth', 'uses' => 'SheetsController@createFacility'));
 Route::get('sheets/delete/{id}',array('as' => 'sheet_delete','middleware' => 'auth', 'uses' => 'SheetsController@destroy'));
 Route::post('sheets/create',array('as' => 'sheet.store','middleware' => 'auth', 'uses' => 'SheetsController@store'));
+
 Route::get('sheets/{id}',array('as' => 'sheet_edit','middleware' => 'auth', 'uses' => 'SheetsController@edit'));
 
 /**

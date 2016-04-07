@@ -14,6 +14,7 @@
     "../typings/form-data/form-data.d.ts",
   "../Ajax.ts",
   "libraries/excelImport/ExcelImporterPage.ts",
+  "libraries/newfacility/NewFacilityPage.ts",
   "Main.ts"
 
 ]

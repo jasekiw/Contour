@@ -69,6 +69,23 @@ class SheetsController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function createFacility($id) {
+        \Theme::enqueue_script('data_block_editor', "assets/ts/Main/compiled.js");
+        $view = View::make('sheets.createfacility');
+        $excel = DataTags::get_by_string('excel', -1);
+        $templateTag = $excel->findChild('templates');
+        $template = $templateTag->findChild("labor_rate_calculation");
+        $excelView = new ExcelView($template);
+        $view->laborTemplate = $excelView;
+        $view->title = "Add New Facility";
+        $view->parentID = $id;
+        return $view;
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
