@@ -451,7 +451,7 @@ class DataTag extends DatabaseObject
     {
         foreach($this->get_children_recursive()->getAsArray() as $child)
             $child->delete();
-        Tag::where("id", "=", $this->id)->delete();
+        $this->delete();
     }
 
     /**

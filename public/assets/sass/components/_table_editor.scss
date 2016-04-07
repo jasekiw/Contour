@@ -1,0 +1,37 @@
+$editorGray: #8198A3;
+
+
+.table_editor {
+    .table_column {
+        color: $editorGray;
+        text-align: center;
+        padding-bottom: 10px;
+    }
+
+    .table_row {
+
+        .cell {
+            border: 1px solid $evergreen;
+
+            input {
+                padding: 5px 10px;
+                font-size: 16px;
+                border: none;
+                height: auto;
+                background-color: transparent;
+                &:focus {
+                    background-color: $evergreenLighter;
+                }
+            }
+
+        }
+        &:not(.current_row) .cell input {
+            color: $editorGray;
+        }
+        &:nth-child(even) .cell {
+            background-color: $evergray;
+
+        }
+    }
+
+}

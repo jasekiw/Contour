@@ -95,6 +95,9 @@ body {
       border-radius: 5px;
       color: white; }
 
+.editor {
+  margin: 40px 0; }
+
 #sheet_tabbed .nav-pills > li.active > a {
   background-color: #47A491; }
 #sheet_tabbed .nav-pills > li > a {
@@ -106,7 +109,8 @@ body {
 #sheet_tabbed .sheet_editor .sheet_row .row_name {
   padding-right: 20px;
   font-size: 16px;
-  font-weight: 600; }
+  font-weight: 600;
+  color: #8198A3; }
 #sheet_tabbed .sheet_editor .sheet_row .cell {
   border: 1px solid #47A491; }
   #sheet_tabbed .sheet_editor .sheet_row .cell input {
@@ -121,6 +125,39 @@ body {
   color: #8198A3; }
 #sheet_tabbed .sheet_editor .sheet_row:nth-child(even) .cell {
   background-color: #EBECE8; }
+
+.table_editor .table_column {
+  color: #8198A3;
+  text-align: center;
+  padding-bottom: 10px; }
+.table_editor .table_row .cell {
+  border: 1px solid #47A491; }
+  .table_editor .table_row .cell input {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    height: auto;
+    background-color: transparent; }
+    .table_editor .table_row .cell input:focus {
+      background-color: #9DD0C6; }
+.table_editor .table_row:not(.current_row) .cell input {
+  color: #8198A3; }
+.table_editor .table_row:nth-child(even) .cell {
+  background-color: #EBECE8; }
+
+.properties_editor .property .tag {
+  padding: 0 20px 0 0;
+  color: #8198A3; }
+.properties_editor .property .datablock {
+  border: 1px solid #47A491; }
+  .properties_editor .property .datablock input {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    height: auto;
+    background-color: transparent; }
+    .properties_editor .property .datablock input:focus {
+      background-color: #9DD0C6; }
 
 .top-bar {
   padding: 0;

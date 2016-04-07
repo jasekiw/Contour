@@ -38,6 +38,10 @@ class ExcelView
      * @var ExcelView[]
      */
     public $composits = [];
+    /**
+     * @var ExcelProperties
+     */
+    public $propertysView;
 
     private $loopedChildren = false;
 
@@ -64,9 +68,11 @@ class ExcelView
         $rows = $children->getTagWithTypesAsArray([Types::get_type_row()]);
         $children->remove([Types::get_type_row()]);
         
-        $this->summaryTable = new ExcelTable($headers);
+        $this->summaryTable = new ExcelTable($headers, $tag);
         $this->summaryHybrid = new ExcelSheet($rows, $headers, $tag);
         $this->summarySheet = new ExcelSheet($rows, $columns, $tag);
+        $properties = $children->getTagWithTypesAsArray([Types::get_type_property()]);
+        $this->propertysView = new ExcelProperties($properties, $tag);
         foreach($composits->getAsArray() as $composit)
             array_push($this->composits, new ExcelView($composit,$headers, $columns));
 
@@ -141,10 +147,15 @@ class ExcelView
         return $name;
     }
 
+    /**
+     * @return string
+     */
     public function get_name()
     {
         return $this->parentTag->get_name();
     }
+
+
 
 
 

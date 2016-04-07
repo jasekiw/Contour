@@ -16,10 +16,9 @@ use app\libraries\tags\DataTag;
  * Class ExcelSheet
  * @package app\libraries\excel
  */
-class ExcelSheet
+class ExcelSheet extends ExcelData
 {
-
-    private $containsData = false;
+    
     /**
      * @var DataTag[]
      */
@@ -33,15 +32,13 @@ class ExcelSheet
      */
     private $cells = [];
     private $tagsById = [];
-    /**
-     * @var DataTag
-     */
-    private $parentTag;
+
 
     /**
      * Sets the tags and grabs the datablocks
      * @param DataTag[] $rows
      * @param DataTag[] $columns
+     * @param DataTag $parentTag
      */
     function __construct($rows, $columns, $parentTag)
     {
@@ -95,10 +92,7 @@ class ExcelSheet
     {
         return $this->cells;
     }
-    public function hasData()
-    {
-        return $this->containsData;
-    }
+
 
     /**
      * @param $x
@@ -112,12 +106,6 @@ class ExcelSheet
         return null;
     }
 
-    /**
-     * @return DataTag
-     */
-    public function getParentTag()
-    {
-        return $this->parentTag;
-    }
+    
 
 }

@@ -18,7 +18,7 @@ use app\libraries\types\Types;
  * Class ExcelTable
  * @package app\libraries\excel
  */
-class ExcelTable
+class ExcelTable extends ExcelData
 {
     /**
      * @var DataTag[]
@@ -33,15 +33,19 @@ class ExcelTable
     /**
      * ExcelTable constructor.
      * @param DataTag[] $headers
+     * @param DataTag $parentTag
      */
-    function __construct($headers)
+    function __construct($headers, $parentTag)
     {
+        $this->parentTag = $parentTag;
         $this->headers = array_values($headers);
         $x = 0;
         foreach($this->headers as $header)
         {
-            $table_cells[$x] = DataBlocks::getMultipleByTagsArray(array($header ),
+            $this->table_cells[$x] = DataBlocks::getMultipleByTagsArray(array($header ),
                     DataBlocks::SELCTION_TYPE_LIGHT, false, true)->getByTypes([Types::get_type_table_cell()]);
+            if(sizeof($this->table_cells[$x]) > 0)
+                $this->containsData = true;
             $x++;
         }
     }
@@ -62,5 +66,31 @@ class ExcelTable
     {
         return $this->table_cells;
     }
+
+    /**
+     * @param int $x
+     * @param int $y
+     * @return DataBlock | null
+     */
+    public function getCell($x, $y)
+    {
+        if(isset($this->table_cells[$x][$y]))
+            return $this->table_cells[$x][$y];
+        return null;
+    }
+
+    /**
+     * Checks to see if the row has data
+     * @param int $y
+     * @return bool
+     */
+    public function rowHasData($y)
+    {
+        foreach($this->table_cells as $row)
+            if(isset($row[$y]) && !empty($row[$y]))
+                return true;
+        return false;
+    }
+
 
 }

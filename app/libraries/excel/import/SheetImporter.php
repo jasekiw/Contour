@@ -128,11 +128,10 @@ class SheetImporter {
 			/** Gets the rule that applies to the coords */
 			$rule = $this->template->getRules()->getRuleIn($column_number, $row_number);
             $rules = $this->template->getRules()->getRulesIn($column_number, $row_number);
+            $location = new Point($column_number, $row_number);
             if(sizeof($rules) > 1)
-            {
-                $test = "";
                 throw new \Exception("multiple rules found");
-            }
+
             if ($rule->getFunction() == ImportRule::TAG_CHILD_OF_FUNCTION) //children function
                 $this->importChildOf($rule, $cell, $column_number, $row_number);
             else if ($rule->getFunction() == ImportRule::TAG_HEADER_FUNCTION) // header tags
@@ -143,7 +142,15 @@ class SheetImporter {
                 array_push($this->cells_to_add, new ImportCell($cell, $column_number, $row_number, $rule)); //to be processed once we create all the tags.
             else if($rule->getFunction() == ImportRule::CELL_ONE_DIMENSION_TAG_FUNCTION)
                 array_push($this->cells_to_add, new ImportCell($cell, $column_number, $row_number, $rule)); //to be processed once we create all the tags.
-		}
+		    else if($rule->getFunction() == ImportRule::TAG_PROPERTY_FUNCTION || $rule->getFunction() == ImportRule::CELL_ONE_TAG_FUNCTION)
+            {
+                if($rule->getParent()->toArea()->isWithin($location))
+                    $this->importHeaderTag($rule, $cell, $column_number, $row_number);
+                else
+                    array_push($this->cells_to_add, new ImportCell($cell, $column_number, $row_number, $rule));
+            }
+        }
+        
 		else // add the cell as a two dimensional cell
 			array_push($this->cells_to_add, new ImportCell($cell, $column_number, $row_number,
                 ImportRule::createTwoDimensionalCellRule( ( new Point($column_number,$row_number ) )->toArea() )));
@@ -187,7 +194,6 @@ class SheetImporter {
         return $this->tags[$point->getY()][$point->getX()];
     }
 
-
     /**
      * Adds a datatag to the tracker.
      * @param int $column
@@ -210,6 +216,7 @@ class SheetImporter {
             $this->tags[$row] = [];
         $this->tags[$row][$column] = $tag;
     }
+
     /**
      * Imports a header tag
      * @param ImportRule $rule
@@ -219,12 +226,15 @@ class SheetImporter {
      */
     public function importHeaderTag($rule, $cell, $column_number, $row_number)
     {
-        $tag = new DataTag($cell, $this->sheetTag->get_id(), $rule->getType(), $column_number);
+        $type = null;
+        if($rule->getFunction() == ImportRule::CELL_ONE_TAG_FUNCTION)
+            $type = $rule->parentType;
+        else
+            $type = $rule->getType();
+        $tag = new DataTag($cell, $this->sheetTag->get_id(), $type, $column_number);
         $tag->create();
         $this->addTag($column_number, $row_number, $rule, $tag);
     }
-
-
 
     /**
 	 * Adds tags to the datablocks then adds them to the database
@@ -276,5 +286,10 @@ class SheetImporter {
 
 		} //foreach cells to add
 	}
+
+    private function importPropertyTag()
+    {
+
+    }
 
 } 

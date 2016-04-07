@@ -33,6 +33,10 @@ class ImportRule
     const ONE_DIMENSIONS_TAG_AXIS_Y = "ONE_DIMENSIONS_TAG_AXIS_Y";
     const CELL_ONE_TAG_FUNCTION = "CELL_ONE_TAG_FUNCTION";
     /**
+     * @var Type
+     */
+    public $parentType = null;
+    /**
      * @var Area
      */
     private $area;
@@ -129,17 +133,10 @@ class ImportRule
     public static function createPropertyCellRule($point, $tagLocation)
     {
         $rule = new ImportRule($point->toArea(), ImportRule::CELL_ONE_TAG_FUNCTION);
+        $rule->parentType = Types::get_type_property();
         $rule->type = Types::get_type_cell();
         $rule->parent = $tagLocation;
         return $rule;
-    }
-
-    /**
-     * Gets the parent location in the excel sheet
-     *@return Point
-     */
-    public function getParent(){
-        return $this->parent;
     }
 
     /**
@@ -167,9 +164,16 @@ class ImportRule
     {
         if($this->area->isWithin($point))
             return true;
+        else if(
+                    (
+                        $this->getFunction() == self::TAG_PROPERTY_FUNCTION ||
+                        $this->getFunction() == self::CELL_ONE_TAG_FUNCTION
+                    ) &&
+                    $this->getParent()->toArea()->isWithin($point)
+                )
+            return true;
         return false;
     }
-
 
     /**
      * @return string
@@ -177,6 +181,14 @@ class ImportRule
     public function getFunction()
     {
         return $this->function;
+    }
+
+    /**
+     * Gets the parent location in the excel sheet
+     *@return Point
+     */
+    public function getParent(){
+        return $this->parent;
     }
 
     /**
