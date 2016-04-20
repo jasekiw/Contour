@@ -46,13 +46,18 @@ class Handler extends ExceptionHandler
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
-        if($this->isHttpException($e) && $e->getStatusCode() == '404') {
-
-            \Log::error($e);
-            $controller = new ErrorController();
-
-            return \Response::make($controller->show());
-        }
+//        if($this->isHttpException($e) && $e->getStatusCode() == '404') {
+//
+//            \Log::error($e);
+//            $status = $e->getStatusCode();
+//            $controller = new ErrorController();
+//
+//            if (view()->exists("errors.{$status}")) {
+//                return response()->view("errors.{$status}", ['exception' => $e], $status);
+//            } else {
+//                return $this->convertExceptionToResponse($e);
+//            }
+//        }
 
         return parent::render($request, $e);
     }

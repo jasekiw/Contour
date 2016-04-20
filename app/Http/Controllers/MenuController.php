@@ -84,11 +84,13 @@ class MenuController extends Controller {
 		{
 			$response->success = false;
 //			$view->message = "no name given";
-			return redirect()->route("menu.create")->with("message", "Name has to be filled out!");
+            /** @var \Illuminate\Routing\Redirector $redirect */
+            $redirect = redirect();
+			return $redirect->route("menu.create")->with("message", "Name has to be filled out!");
 		}
         
 		$id = $menuManager->addMenu($name);
-		return redirect()->route("menu.edit", [$id])->with("message", "Menu Created");
+		  /** @var \Illuminate\Routing\Redirector $redirect */         $redirect = redirect();         return $redirect->route("menu.edit", [$id])->with("message", "Menu Created");
 	}
 
 	/**
@@ -114,7 +116,6 @@ class MenuController extends Controller {
 	{
 		Contour::getThemeManager()->enqueueScript('jquery-ui', 'assets/js/jquery-ui/jquery-ui-1.10.4.custom.js');
 		Contour::getThemeManager()->enqueueScript('menu_editor','assets/ts/menu_editor/menu_editor.js');
-		$manager = Contour::getThemeManager()->getMenuManager();
 		$menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
 		if(isset($menu))
 		{
@@ -161,7 +162,11 @@ class MenuController extends Controller {
 				$item->delete();
 		$isAjax = (boolean) \Input::get("isAjax");
 		if(!$isAjax)
-			return redirect()->route("menu.index")->with("message", "Menu Saved");
+        {
+            /** @var \Illuminate\Routing\Redirector $redirect */
+            $redirect = redirect();
+            return $redirect->route("menu.index")->with("message", "Menu Saved");
+        }
 		$resonse = new \stdClass();
 		$resonse->redirect = route("menu.index");
 		$resonse->message = "Menu Saved";
@@ -197,7 +202,10 @@ class MenuController extends Controller {
 	{
 		$menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
 		$menu->delete();
-		return redirect()->route("menu.index")->with("message", "Menu Deleted");
+
+        /** @var \Illuminate\Routing\Redirector $redirect */
+        $redirect = redirect();
+        return $redirect->route("menu.index")->with("message", "Menu Deleted");
 	}
 
 }

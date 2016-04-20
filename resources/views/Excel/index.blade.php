@@ -5,7 +5,7 @@
  * Date: 7/2/2015
  * Time: 8:43 AM
  */
-use app\libraries\theme\UserInterface\DataBlockEditor;
+use app\libraries\theme\userInterface\DataBlockEditor;
 use app\libraries\theme\data\TableConstructor;
 
 ?>

@@ -5,7 +5,7 @@
  * Date: 9/9/2015
  * Time: 4:13 PM
  */
-use app\libraries\tags\DataTag;
+use app\libraries\tags\DataTag;use app\libraries\theme\userInterface\UserInterface;
 
 /* @var DataTag $currently_viewing */
 ?>

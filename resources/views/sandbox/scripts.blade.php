@@ -5,7 +5,7 @@
  * Date: 11/4/2015
  * Time: 2:04 AM
  */
-use app\libraries\theme\UserInterface\DataBlockEditor;
+use app\libraries\theme\userInterface\DataBlockEditor;
         ?>
 <?php
 echo DataBlockEditor::get();

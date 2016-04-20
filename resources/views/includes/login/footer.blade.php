@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    {!!$copyright_html!!}
+    @if(isset($copyright_html)) {!!$copyright_html!!} @endif
 
     <!-- Javascript -->
     <script src="{!! asset('assets/js/jquery/jquery-2.1.0.min.js') !!}"></script>

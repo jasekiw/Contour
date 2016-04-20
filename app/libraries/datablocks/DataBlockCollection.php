@@ -8,7 +8,7 @@
 
 namespace app\libraries\datablocks;
 
-use app\libraries\memory\datablocks\DataBlock;
+use app\libraries\memory\datablocks\DataBlock as MemoryDataBlock;
 use app\libraries\types\Type;
 use app\libraries\types\Types;
 use Exception;
@@ -28,6 +28,7 @@ class DataBlockCollection extends DataBlockCollectionAbstract
      */
     function __construct($inputBlocks = null)
     {
+        parent::__construct();
         if(!isset($inputBlocks))
             return;
         if(is_array($inputBlocks))

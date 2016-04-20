@@ -8,18 +8,6 @@ use Illuminate\Routing\Router;
 class Kernel extends HttpKernel
 {
     /**
-     * Create a new HTTP kernel instance.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application $app
-     * @param  \Illuminate\Routing\Router $router
-     */
-    function __construct(Application $app, Router $router)
-    {
-
-        parent::__construct($app, $router);
-    }
-
-    /**
      * The application's global HTTP middleware stack.
      *
      * @var array
@@ -30,9 +18,9 @@ class Kernel extends HttpKernel
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\HeaderTasksMiddleware::class
         //\App\Http\Middleware\VerifyCsrfToken::class,
     ];
-
     /**
      * The application's route middleware.
      *
@@ -43,4 +31,16 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
     ];
+
+    /**
+     * Create a new HTTP kernel instance.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application $app
+     * @param  \Illuminate\Routing\Router $router
+     */
+    function __construct(Application $app, Router $router)
+    {
+
+        parent::__construct($app, $router);
+    }
 }

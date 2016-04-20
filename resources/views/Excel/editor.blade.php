@@ -13,7 +13,7 @@
  */
 use \app\libraries\tags\DataTag;
 use app\libraries\theme\data\TableBuilder;
-use app\libraries\theme\UserInterface\DataBlockEditor;
+use app\libraries\theme\userInterface\DataBlockEditor;
 
 /**
  * @var \app\libraries\excel\ExcelView $sheet

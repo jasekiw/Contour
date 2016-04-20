@@ -5,7 +5,7 @@
  * Date: 8/12/2015
  * Time: 10:19 AM
  */
-
+use app\libraries\theme\userInterface\UserInterface;
 ?>
 
 @extends('layouts.default')
@@ -35,8 +35,8 @@
                         <img src="{!! isset($user_pic) ?  $user_pic : $user_default_pic  !!}" alt="Profile Picture" id="profile_picture"/>
                         {!! UserInterface::mini_drop_zone('profile') !!}
                         <h2>
-                            {!! \UserInterface::editable('first_name',route('save_profile'), $first_name,'text', 'Enter Your First Name') !!}
-                            {!!\UserInterface::editable('last_name',route('save_profile'), $last_name,'text', 'Enter Your Last Name') !!}
+                            {!! UserInterface::editable('first_name',route('save_profile'), $first_name,'text', 'Enter Your First Name') !!}
+                            {!!UserInterface::editable('last_name',route('save_profile'), $last_name,'text', 'Enter Your Last Name') !!}
                             <i class="fa fa-circle green-font online-icon"></i><sup class="sr-only">online</sup>
                         </h2>
                         <div class="contact">
@@ -58,11 +58,11 @@
                             </p>
                             <p class="data-row">
                                 <span class="data-name">Birth Date</span>
-                                {!! \UserInterface::editable('birthday',route('save_profile'), $birthday,'date', 'Enter Birthday') !!}
+                                {!! UserInterface::editable('birthday',route('save_profile'), $birthday,'date', 'Enter Birthday') !!}
                             </p>
                             <p class="data-row">
                                 <span class="data-name">Gender</span>
-                                {!! \UserInterface::editable('gender',route('save_profile'), $gender,'text', 'Enter Gender') !!}
+                                {!! UserInterface::editable('gender',route('save_profile'), $gender,'text', 'Enter Gender') !!}
                             </p>
                             <p class="data-row">
                                 <span class="data-name">Last Login</span>
@@ -78,20 +78,20 @@
                             <p class="data-row">
                                 <span class="data-name">Email</span>
                                 {{--<span class="data-value">{{$email}}</span>--}}
-                                {!! \UserInterface::editable('email',route('save_profile'), $email,'text', 'Enter Email Address') !!}
+                                {!! UserInterface::editable('email',route('save_profile'), $email,'text', 'Enter Email Address') !!}
                             </p>
                             <p class="data-row">
                                 <span class="data-name">Phone</span>
-                                {!! \UserInterface::editable('phone',route('save_profile'), $phone,'text', 'Enter Phone Number') !!}
+                                {!! UserInterface::editable('phone',route('save_profile'), $phone,'text', 'Enter Phone Number') !!}
                             </p>
                             <p class="data-row">
                                 <span class="data-name">Company</span>
-                                {!! \UserInterface::editable('company',route('save_profile'), $company,'text', 'Enter the company you belong to.') !!}
+                                {!! UserInterface::editable('company',route('save_profile'), $company,'text', 'Enter the company you belong to.') !!}
                             </p>
                         </div>
                         <div class="about">
                             <h3><i class="fa fa-square"></i> About Me</h3>
-                            {!! \UserInterface::editable('about',route('save_profile'), $about,'textarea', 'Enter information about you.') !!}
+                            {!! UserInterface::editable('about',route('save_profile'), $about,'textarea', 'Enter information about you.') !!}
                         </div>
                     </div>
                 </div>

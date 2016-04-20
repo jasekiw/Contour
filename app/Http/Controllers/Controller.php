@@ -22,16 +22,16 @@ abstract class Controller extends BaseController
      */
     function __construct()
     {
-        \Session::set('uploads_folder', public_path() . DIRECTORY_SEPARATOR . "uploads");
-        \Session::set('uploads_url',url('uploads'));
-        Theme::construct_theme();
-
-//        require_once(base_path() . "/app/libraries/kint/Kint.class.php");
-        //created variables for the theme to use
-        $header_variables = new HeaderTasks();
-        $header_variables->perform();
-
-        require_once(base_path() . "/app/libraries/theme/includes.php");
+//        \Session::set('uploads_folder', public_path() . DIRECTORY_SEPARATOR . "uploads");
+//        \Session::set('uploads_url',url('uploads'));
+//        Theme::construct_theme();
+//
+////        require_once(base_path() . "/app/libraries/kint/Kint.class.php");
+//        //created variables for the theme to use
+//        $header_variables = new HeaderTasks();
+//        $header_variables->perform();
+//
+//        require_once(base_path() . "/app/libraries/theme/includes.php");
         // disables query logging. The logging filled up the memory and caused the program to crash.
        // \DB::connection()->disableQueryLog();
 

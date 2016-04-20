@@ -24,8 +24,9 @@ class HeaderTasks {
      */
     function perform()
     {
-        if(\App::runningInConsole())
-           return;
+
+//        if(\App::runningInConsole())
+//           return;
         $developer = "Jason Gallavin";
         $company_name = ConfigHelper::get('company_name', '');
         $logo_url = ConfigHelper::get('logo', asset("assets/img/logo.png"));
@@ -43,8 +44,10 @@ class HeaderTasks {
         View::share('logo_url', $logo_url);
         View::share('company_name', $company_name);
         //if logged in
+
         if(Auth::check())
         {
+
             $user_id = Auth::user()->id;
             $username = Auth::user()->username;
 

@@ -10,20 +10,21 @@ use app\libraries\theme\Theme;
 /**
  * All
  */
-Theme::enqueue_style('main_style', 'assets/sass/style.css');
 
-/*
+Theme::enqueue_style('main_style', 'assets/sass/style.css');
+Theme::enqueue_script('flash_message', 'theme/js/plugins/jquery-gritter/jquery.gritter.min.js');
+
+/**
  * Profile Page
  */
-Theme::enqueue_script('mockajax', 'assets/js/plugins/bootstrap-editable/jquery.mockjax.min.js', 'profile');
-Theme::enqueue_script('inline-editor', 'assets/js/plugins/bootstrap-editable/bootstrap-editable.min.js', 'profile');
-Theme::enqueue_script('jquery-ui', 'assets/js/jquery-ui/jquery-ui-1.10.4.custom.js', 'profile');
-Theme::enqueue_script('masked-input', 'assets/js/plugins/jquery-maskedinput/jquery.masked-input.min.js', 'profile');
-Theme::enqueue_script('dropzone', 'assets/js/plugins/dropzone/dropzone.min.js', 'profile');
-Theme::enqueue_script('select2', 'assets/js/plugins/select2/select2.min.js', 'profile');
-
+Theme::enqueue_script('mockajax', 'theme/js/plugins/bootstrap-editable/jquery.mockjax.min.js', 'profile');
+Theme::enqueue_script('inline-editor', 'theme/js/plugins/bootstrap-editable/bootstrap-editable.min.js', 'profile');
+Theme::enqueue_script('jquery-ui', 'theme/js/jquery-ui/jquery-ui-1.10.4.custom.js', 'profile');
+Theme::enqueue_script('masked-input', 'theme/js/plugins/jquery-maskedinput/jquery.masked-input.min.js', 'profile');
+Theme::enqueue_script('dropzone', 'theme/js/plugins/dropzone/dropzone.min.js', 'profile');
+Theme::enqueue_script('select2', 'theme/js/plugins/select2/select2.min.js', 'profile');
 Theme::enqueue_script('drop-zone', 'assets/js/mini_drop_zone/dropzone.js', 'profile');
-Theme::enqueue_style('drop-zone', 'css/mini_drop_zone/style.css', 'profile');
+Theme::enqueue_style('drop-zone', 'assets/css/mini_drop_zone/style.css', 'profile');
 
 /*
  * Dashboard
@@ -35,7 +36,6 @@ Theme::enqueue_style('drop-zone', 'css/mini_drop_zone/style.css', 'profile');
  * Configuration
  */
 
-Theme::enqueue_script('flash_message', 'assets/js/plugins/jquery-gritter/jquery.gritter.min.js');
 
 
 /**

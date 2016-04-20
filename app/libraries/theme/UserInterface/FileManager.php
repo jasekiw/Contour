@@ -1,4 +1,5 @@
 <?php
+namespace app\libraries\theme\userInterface;
 
 /**
  * Created by PhpStorm.

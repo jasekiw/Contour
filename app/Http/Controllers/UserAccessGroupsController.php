@@ -67,7 +67,9 @@ class UserAccessGroupsController extends Controller
         $group = new User_Access_Group();
         $group->name = $groupName;
         $group->save();
-        return redirect()->route("user_access_groups_index")->with("message", "New User Access Group created!");
+        /** @var \Illuminate\Routing\Redirector $redirect */
+        $redirect = redirect();
+        return $redirect->route("user_access_groups_index")->with("message", "New User Access Group created!");
     }
 
     /**
@@ -117,7 +119,9 @@ class UserAccessGroupsController extends Controller
             $group->name = $name;
         $group->menu_id = \Input::get("menu");
         $group->save();
-        return redirect()->route('user_access_groups_index')->with('message', "Successfully Saved!");
+        /** @var \Illuminate\Routing\Redirector $redirect */
+        $redirect = redirect();
+        return $redirect->route('user_access_groups_index')->with('message', "Successfully Saved!");
     }
 
     /**
