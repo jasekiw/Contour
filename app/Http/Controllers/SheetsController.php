@@ -9,6 +9,7 @@ use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\tags\DataTag;
 use app\libraries\tags\DataTags;
+use app\libraries\theme\Theme;
 use app\libraries\types\Types;
 use Illuminate\Http\Request;
 
@@ -73,7 +74,7 @@ class SheetsController extends Controller
      * @return \Illuminate\Contracts\View\View
      */
     public function createFacility($id) {
-        \Theme::enqueue_script('data_block_editor', "assets/ts/Main/compiled.js");
+        Theme::enqueue_script('data_block_editor', "assets/ts/Main/compiled.js");
         $view = View::make('sheets.createfacility');
         $excel = DataTags::get_by_string('excel', -1);
         $templateTag = $excel->findChild('templates');
@@ -126,7 +127,7 @@ class SheetsController extends Controller
     public function edit($id)
     {
 
-        \Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
+        Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
 
         $view = \View::make("excel.editor"); // gets the editor view
 //        $timeTracker = new TimeTracker();

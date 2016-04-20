@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use app\libraries\memory\MemoryDataManager;
-use App\Models\Data_block;
+use app\libraries\contour\Contour;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
@@ -22,16 +22,11 @@ class TestController extends Controller
     public function index()
     {
         ini_set('memory_limit','512M');
-        \Contour::getConfigManager()->turnOnErrorReporting();
-        \Contour::getConfigManager()->setTimeLimit(60);
+        Contour::getConfigManager()->turnOnErrorReporting();
+        Contour::getConfigManager()->setTimeLimit(60);
 
         $start = microtime(true);
         MemoryDataManager::initialize();
-        $manager = MemoryDataManager::getInstance();
-        $manager = MemoryDataManager::getInstance();
-        $manager = MemoryDataManager::getInstance();
-        $manager = MemoryDataManager::getInstance();
-        $manager = MemoryDataManager::getInstance();
         $manager = MemoryDataManager::getInstance();
 
 

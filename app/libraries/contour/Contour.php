@@ -5,7 +5,14 @@
  * Date: 10/13/2015
  * Time: 9:01 PM
  */
+namespace app\libraries\contour;
 
+
+use app\libraries\config\Config;
+use app\libraries\contour\routes\RoutesManager;
+use app\libraries\theme\Theme;
+use app\libraries\theme\ThemeManager;
+use app\libraries\user\UserMeta;
 
 /**
  * Class System
@@ -24,14 +31,14 @@ class Contour
     public static function construct()
     {
 
-        self::$theme = new \app\libraries\theme\ThemeManager();
-        self::$config = new \app\libraries\config\Config();
-        self::$userMeta = new \app\libraries\user\UserMeta();
-        self::$routesManager = new \app\libraries\contour\routes\RoutesManager();
+        self::$theme = new ThemeManager();
+        self::$config = new Config();
+        self::$userMeta = new UserMeta();
+        self::$routesManager = new RoutesManager();
     }
 
     /**
-     * @return \app\libraries\theme\ThemeManager
+     * @return ThemeManager
      */
     public static function getThemeManager()
     {
@@ -39,7 +46,7 @@ class Contour
     }
 
     /**
-     * @return \app\libraries\config\Config
+     * @return Config
      */
     public static function getConfigManager()
     {
@@ -47,7 +54,7 @@ class Contour
     }
 
     /**
-     * @return \app\libraries\user\UserMeta
+     * @return UserMeta
      */
     public static function getUserMetaManager()
     {
@@ -56,7 +63,7 @@ class Contour
 
     /**
      * Gets the Routes Manager
-     * @return \app\libraries\contour\routes\RoutesManager
+     * @return RoutesManager
      */
     public static function getRoutesManager()
     {

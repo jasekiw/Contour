@@ -8,6 +8,7 @@
 
 namespace app\libraries\theme;
 
+use app\libraries\modelHelpers\ConfigHelper;
 use View;
 use Auth;
 use App\Models\User_Meta;
@@ -26,11 +27,11 @@ class HeaderTasks {
         if(\App::runningInConsole())
            return;
         $developer = "Jason Gallavin";
-        $company_name = \ConfigHelper::get('company_name', '');
-        $logo_url = \ConfigHelper::get('logo', asset("assets/img/logo.png"));
-        $website_name = \ConfigHelper::get('website_name', "Management Dashboard");
-        $website_description = \ConfigHelper::get('website_description',$company_name . " " . $website_name);
-        $favicon_url = \ConfigHelper::get('favicon', asset('assets/ico/favicon.ico'));
+        $company_name = ConfigHelper::get('company_name', '');
+        $logo_url = ConfigHelper::get('logo', asset("assets/img/logo.png"));
+        $website_name = ConfigHelper::get('website_name', "Management Dashboard");
+        $website_description = ConfigHelper::get('website_description',$company_name . " " . $website_name);
+        $favicon_url = ConfigHelper::get('favicon', asset('assets/ico/favicon.ico'));
         $user_access_group = "administrators";
         //sharing the variables
         View::share('user_access_group', $user_access_group);
@@ -63,7 +64,7 @@ class HeaderTasks {
             View::share('username', $username);
 
 
-            view::share('isAdmin',  \Auth::user()->user_access_group_id == 1 ? true : false);
+            View::share('isAdmin',  \Auth::user()->user_access_group_id == 1 ? true : false);
         }
         else
         {

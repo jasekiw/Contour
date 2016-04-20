@@ -10,6 +10,7 @@ namespace app\libraries\user;
 
 use App\Models\User_Meta;
 use Auth;
+use app\libraries\contour\Contour;
 
 /**
  * Class UserMeta
@@ -51,6 +52,23 @@ class UserMeta
     }
 
     /**
+     * Saves a file to the current user and moves it to the uploads folder
+     * @param $name
+     * @return string
+     */
+    public static function save_file($name)
+    {
+        if(\Input::hasFile($name))
+        {
+            $filename = \Input::file($name)->getClientOriginalName();
+            \Input::file($name)->move( Contour::getConfigManager()->get('constants.uploads_folder'), $filename);
+            self::save($name, Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
+            return Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename;
+        }
+        return '';
+    }
+
+    /**
      * Saves a value to the current user under the key $name
      * @param string $name
      * @param string $value
@@ -77,22 +95,5 @@ class UserMeta
             $answer->value = $value;
             $answer->save();
         }
-    }
-
-    /**
-     * Saves a file to the current user and moves it to the uploads folder
-     * @param $name
-     * @return string
-     */
-    public static function save_file($name)
-    {
-        if(\Input::hasFile($name))
-        {
-            $filename = \Input::file($name)->getClientOriginalName();
-            \Input::file($name)->move( \Contour::getConfigManager()->get('constants.uploads_folder'), $filename);
-            self::save($name, \Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
-            return \Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename;
-        }
-        return '';
     }
 }

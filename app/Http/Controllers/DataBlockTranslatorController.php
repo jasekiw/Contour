@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use app\libraries\Data_Blocks\formula\Parser;
+use app\libraries\datablocks\formula\Parser;
 use app\libraries\database\DataManager;
 use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\helpers\TimeTracker;

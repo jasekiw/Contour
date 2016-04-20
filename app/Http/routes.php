@@ -11,7 +11,9 @@
 */
 
 
-\Contour::construct();
+use app\libraries\contour\Contour;
+
+Contour::construct();
 /**
  * Home Route
  */
@@ -203,7 +205,7 @@ Route::get('sheets/{id}',array('as' => 'sheet_edit','middleware' => 'auth', 'use
  * Menus
  */
 Route::get('menu/index/{letter}',array('as' => 'menu_index_letter', 'middleware' => 'auth', 'uses' => 'MenuController@index'));
-route::resource('menu', 'MenuController');
+Route::resource('menu', 'MenuController');
 
 Route::post('menuitem',array('as' => 'create_menu_item','middleware' => 'auth', 'uses' => 'MenuItemController@store'));
 Route::get('menuitem/{id}',array('as' => 'menu_item_edit','middleware' => 'auth', 'uses' => 'MenuItemController@edit'));
@@ -222,4 +224,4 @@ Route::post('jobs/{id}',array('as' => 'async_jobs', 'uses' => 'AsyncController@h
  */
 //Route::get('/{id}',array('as' => 'get_dynamic', 'uses' => 'DynamicRouteController@get'))->where('id', '(.*)');
 //Route::post('/{id}',array('as' => 'post_dynamic','uses' => 'DynamicRouteController@post'))->where('id', '(.*)');
-\Contour::getRoutesManager()->printRoutes();
+Contour::getRoutesManager()->printRoutes();

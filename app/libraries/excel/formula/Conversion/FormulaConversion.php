@@ -1,6 +1,6 @@
 <?php
 namespace app\libraries\excel\formula\conversion;
-use app\libraries\Data_Blocks\DataBlockAbstract;
+use app\libraries\datablocks\DataBlockAbstract;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\excel\formula\TokenParsing;
 use app\libraries\excel\formula\TokenParsing\FormulaParser;

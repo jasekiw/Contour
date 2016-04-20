@@ -8,8 +8,8 @@
 
 namespace app\libraries\datablocks;
 
-use app\libraries\Data_Blocks\converter\DataBlockValueConvertor;
-use app\libraries\Data_Blocks\DataBlockAbstract;
+use app\libraries\datablocks\converter\DataBlockValueConvertor;
+use app\libraries\datablocks\DataBlockAbstract;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\types\Type;
 use app\libraries\types\Types;

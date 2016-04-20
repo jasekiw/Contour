@@ -9,7 +9,7 @@
 namespace app\libraries\memory\datablocks;
 
 
-use app\libraries\Data_Blocks\DataBlockAbstract;
+use app\libraries\datablocks\DataBlockAbstract;
 use app\libraries\memory\tags\TagCollection;
 use app\libraries\memory\types\Type;
 

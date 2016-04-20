@@ -8,7 +8,7 @@
 
 namespace app\libraries\excel\import;
 
-use app\libraries\excel\templates\imports\ImportUnit;
+use app\libraries\excel\import\ImportUnit;
 
 /**
  * Class ImportCollection

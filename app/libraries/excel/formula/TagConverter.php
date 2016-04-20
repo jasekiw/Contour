@@ -6,7 +6,7 @@
  * Time: 2:04 PM
  */
 namespace app\libraries\excel\Formula;
-use app\libraries\Data_Blocks\DataBlockAbstract;
+use app\libraries\datablocks\DataBlockAbstract;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\excel\formula\conversion\FormulaConversion;
 

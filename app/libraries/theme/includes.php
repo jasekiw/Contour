@@ -5,6 +5,7 @@
  * Date: 8/13/2015
  * Time: 1:11 PM
  */
+use app\libraries\theme\Theme;
 
 /**
  * All

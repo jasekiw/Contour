@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use app\libraries\contour\Contour;
 use app\libraries\theme\data\LinkGenerator;
 use app\libraries\theme\menu\item\MenuItem;
-use Contour;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -79,13 +79,14 @@ class MenuController extends Controller {
 		$name = \Input::get("name");
 //		$view = \View::make("menu.index");
 //		$view->title = "Menus";
-		$menuManager = \Contour::getThemeManager()->getMenuManager();
+		$menuManager = Contour::getThemeManager()->getMenuManager();
 		if(!isset($name))
 		{
 			$response->success = false;
 //			$view->message = "no name given";
 			return redirect()->route("menu.create")->with("message", "Name has to be filled out!");
 		}
+        
 		$id = $menuManager->addMenu($name);
 		return redirect()->route("menu.edit", [$id])->with("message", "Menu Created");
 	}
@@ -113,8 +114,8 @@ class MenuController extends Controller {
 	{
 		Contour::getThemeManager()->enqueueScript('jquery-ui', 'assets/js/jquery-ui/jquery-ui-1.10.4.custom.js');
 		Contour::getThemeManager()->enqueueScript('menu_editor','assets/ts/menu_editor/menu_editor.js');
-		$manager = \Contour::getThemeManager()->getMenuManager();
-		$menu = \Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
+		$manager = Contour::getThemeManager()->getMenuManager();
+		$menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
 		if(isset($menu))
 		{
 			/** @var \Illuminate\Routing\Route[] $routes */
@@ -139,7 +140,7 @@ class MenuController extends Controller {
 	public function update($id)
 	{
 		$links = \Input::get("links");
-		$menu = \Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
+		$menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
 		$this->menuItems = $menu->getMenuItems();
 		foreach($links as $link)
 		{
@@ -194,7 +195,7 @@ class MenuController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$menu = \Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
+		$menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
 		$menu->delete();
 		return redirect()->route("menu.index")->with("message", "Menu Deleted");
 	}

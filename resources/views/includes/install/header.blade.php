@@ -43,7 +43,7 @@
     <link rel="shortcut icon" href="{!! asset('assets/ico/favicon.ico') !!}">
 
 
-    {!! Theme::header() !!}
+    {!! app\libraries\theme\Theme::header() !!}
 </head>
 
 <body>

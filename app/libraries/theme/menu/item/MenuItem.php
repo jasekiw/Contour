@@ -8,10 +8,7 @@
 
 namespace app\libraries\theme\menu\item;
 
-
 use app\libraries\database\DatabaseObject;
-use app\libraries\datablocks\DataBlock;
-use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\tags\DataTag;
 use app\libraries\types\TypeCategory;
 use app\libraries\types\Types;
@@ -97,6 +94,18 @@ class MenuItem extends DatabaseObject
     }
 
     /**
+     * sets the name or label of the menu link
+     * @param $value
+     */
+    public function set_name($value)
+    {
+        $this->name = $value;
+        $this->tag->set_name($value );
+        $this->tag->setNiceName($value);
+        $this->tag->save();
+    }
+
+    /**
      * Gets the Tag Name of the menu
      * @return string
      */
@@ -125,33 +134,6 @@ class MenuItem extends DatabaseObject
         return $this->icon;
     }
 
-    public function set_sort_number($number)
-    {
-        $this->tag->set_sort_number($number);
-        $this->tag->save();
-    }
-
-
-    /**
-     * sets the name or label of the menu link
-     * @param $value
-     */
-    public function set_name($value)
-    {
-        $this->name = $value;
-        $this->tag->set_name($value );
-        $this->tag->setNiceName($value);
-        $this->tag->save();
-    }
-    /**
-     * Sets the href of the menu link
-     * @param $value
-     */
-    public function set_href($value)
-    {
-        $this->link = $value;
-        $this->tag->setMetaValue("link", $value);
-    }
     /**
      * sets the icon html to be used
      * @param $value
@@ -160,6 +142,22 @@ class MenuItem extends DatabaseObject
     {
         $this->icon = $value;
         $this->tag->setMetaValue("icon", $value);
+    }
+
+    public function set_sort_number($number)
+    {
+        $this->tag->set_sort_number($number);
+        $this->tag->save();
+    }
+
+    /**
+     * Sets the href of the menu link
+     * @param $value
+     */
+    public function set_href($value)
+    {
+        $this->link = $value;
+        $this->tag->setMetaValue("link", $value);
     }
 
     /**

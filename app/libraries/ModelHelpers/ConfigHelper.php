@@ -5,7 +5,11 @@
  * Date: 8/13/2015
  * Time: 10:34 PM
  */
+namespace app\libraries\modelHelpers;
+
 use App\Models\Configuration;
+use Config;
+use Input;
 
 
 /**
@@ -36,6 +40,22 @@ class ConfigHelper
     }
 
     /**
+     * Saves a file to the database and moves it to the uploads folder
+     * @param string $name
+     */
+    public static function save_file($name)
+    {
+        if(!Input::hasFile($name))
+            return;
+        $filename = Input::file($name)->getClientOriginalName();
+        $uploadsFolder = Config::get('constants.uploads_folder');
+        $uplodsUrl = Config::get('constants.uploads_url');
+        Input::file($name)->move( \Session::get('uploads_folder'), $filename);
+        ConfigHelper::save($name, \Session::get('uploads_url') . DIRECTORY_SEPARATOR . $filename);
+
+    }
+
+    /**
      * Saves the value to the configuration at the $name
      * @param string $name
      * @param string $value
@@ -61,22 +81,6 @@ class ConfigHelper
             $answer->value = $value;
             $answer->save();
         }
-
-    }
-
-    /**
-     * Saves a file to the database and moves it to the uploads folder
-     * @param string $name
-     */
-    public static function save_file($name)
-    {
-        if(!Input::hasFile($name))
-            return;
-        $filename = Input::file($name)->getClientOriginalName();
-        $uploadsFolder = Config::get('constants.uploads_folder');
-        $uplodsUrl = Config::get('constants.uploads_url');
-        Input::file($name)->move( \Session::get('uploads_folder'), $filename);
-        ConfigHelper::save($name, \Session::get('uploads_url') . DIRECTORY_SEPARATOR . $filename);
 
     }
 

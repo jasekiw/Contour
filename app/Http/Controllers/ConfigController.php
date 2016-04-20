@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use ConfigHelper;
+use app\libraries\modelHelpers\ConfigHelper;
 use App\Http\Requests;
 use Input;
 use Redirect;

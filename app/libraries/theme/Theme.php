@@ -6,7 +6,7 @@
  * Time: 4:30 PM
  */
 
-
+namespace app\libraries\theme;
 
 
 class Theme

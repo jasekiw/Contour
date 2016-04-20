@@ -49,23 +49,23 @@ class MathController extends Controller {
 	public function store()
 	{
 		//
-        $view = \View::make('math.index');
-        $view->title = "Evaluator";
-        $view->equation = Input::get('equation');
-        $view->variables = Input::get('variables');
-        $evaluator = new app\libraries\Math\EvalMath();
-        $variables = Input::get('variables');
-        $variables = explode(";", $variables);
-        foreach($variables as $variable)
-        {
-            $evaluator->evaluate($variable);
-        }
-
-
-        $answer = $evaluator->e(Input::get('equation'));
-        $view->answer = $answer;
-
-        return $view;
+//        $view = \View::make('math.index');
+//        $view->title = "Evaluator";
+//        $view->equation = Input::get('equation');
+//        $view->variables = Input::get('variables');
+//        $evaluator = new app\libraries\Math\EvalMath();
+//        $variables = Input::get('variables');
+//        $variables = explode(";", $variables);
+//        foreach($variables as $variable)
+//        {
+//            $evaluator->evaluate($variable);
+//        }
+//
+//
+//        $answer = $evaluator->e(Input::get('equation'));
+//        $view->answer = $answer;
+//
+//        return $view;
 	}
 
 	/**

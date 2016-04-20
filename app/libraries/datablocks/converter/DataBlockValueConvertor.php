@@ -6,17 +6,17 @@
  * Time: 2:34 PM
  */
 
-namespace app\libraries\Data_Blocks\converter;
+namespace app\libraries\datablocks\converter;
 
 
-use app\libraries\Data_Blocks\formula\Parser;
+use app\libraries\datablocks\formula\Parser;
 use app\libraries\database\DataManager;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\memory\MemoryDataManager;
 
 /**
  * Class DataBlockValueConvertor
- * @package app\libraries\Data_Blocks\converter
+ * @package app\libraries\datablocks\converter
  */
 class DataBlockValueConvertor
 {

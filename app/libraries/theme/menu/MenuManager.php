@@ -24,13 +24,12 @@ use App\Models\User_Access_Group;
 class MenuManager
 {
 
+    private static $cached_menus = null;
     private $main_menu_tag = null;
     /**
      * @var Menu[] $menus
      */
     private $menus;
-    private static $cached_menus = null;
-
 
     /**
      * MenuManager constructor.
@@ -50,74 +49,7 @@ class MenuManager
         }
     }
 
-    /**
-     * Gets the Menus
-     * @return Menu[]
-     */
-    public function getMenus()
-    {
-        return $this->menus;
-    }
-
-
-    /**
-     * @param $name
-     * @return Menu
-     */
-    public function get_menu($name)
-    {
-        foreach($this->menus as $menu)
-        {
-            if($menu->getName() == $name)
-            {
-                return $menu;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets a menu by the id
-     * @param $id
-     * @return Menu
-     */
-    public function get_menu_by_id($id)
-    {
-        foreach($this->menus as $menu)
-        {
-            if($menu->get_id() == $id)
-            {
-                return $menu;
-            }
-        }
-        return null;
-    }
-    public function getAssociatedMenu()
-    {
-        $groupID = \Auth::user()->user_access_group_id;
-        $group = User_Access_Group::where('id', '=', $groupID)->first();
-        $menuId = $group->menu_id;
-            if($menuId == null)
-                return null;
-        return $this->get_menu_by_id($menuId);
-    }
-
-
-    /**
-     * Adds a new Menu By Name
-     * @param $name
-     * @return int The Menu ID
-     */
-    public function addMenu($name)
-    {
-        $menu = Menu::make($name, self::getMenusTag());
-        array_push($this->menus, $menu);
-        return $menu->get_id();
-    }
-
-
-
-    private static function getMenusTag()
+    public static function getMenusTag()
     {
         if(isset(self::$cached_menus))
         {
@@ -137,6 +69,70 @@ class MenuManager
             self::$cached_menus = $menus;
             return $menus;
         }
+    }
+
+    /**
+     * Gets the Menus
+     * @return Menu[]
+     */
+    public function getMenus()
+    {
+        return $this->menus;
+    }
+
+    /**
+     * @param $name
+     * @return Menu
+     */
+    public function get_menu($name)
+    {
+        foreach($this->menus as $menu)
+        {
+            if($menu->getName() == $name)
+            {
+                return $menu;
+            }
+        }
+        return null;
+    }
+
+    public function getAssociatedMenu()
+    {
+        $groupID = \Auth::user()->user_access_group_id;
+        $group = User_Access_Group::where('id', '=', $groupID)->first();
+        $menuId = $group->menu_id;
+            if($menuId == null)
+                return null;
+        return $this->get_menu_by_id($menuId);
+    }
+
+    /**
+     * Gets a menu by the id
+     * @param $id
+     * @return Menu
+     */
+    public function get_menu_by_id($id)
+    {
+        foreach($this->menus as $menu)
+        {
+            if($menu->get_id() == $id)
+            {
+                return $menu;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds a new Menu By Name
+     * @param $name
+     * @return int The Menu ID
+     */
+    public function addMenu($name)
+    {
+        $menu = Menu::make($name, self::getMenusTag());
+        array_push($this->menus, $menu);
+        return $menu->get_id();
     }
 
 }

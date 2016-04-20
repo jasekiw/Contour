@@ -6,7 +6,7 @@
  * Time: 5:38 PM
  */
 
-namespace app\libraries\Data_Blocks;
+namespace app\libraries\datablocks;
 
 
 use app\libraries\database\Query;
@@ -20,7 +20,7 @@ use PDO;
 
 /**
  * Class DataBlockQueryEngine
- * @package app\libraries\Data_Blocks
+ * @package app\libraries\datablocks
  */
 class DataBlockQueryEngine
 {

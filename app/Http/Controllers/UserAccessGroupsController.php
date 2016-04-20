@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use app\libraries\theme\data\LinkGenerator;
 use App\Models\User_Access_Group;
+use app\libraries\contour\Contour;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 /**
  * Class UserAccessGroupsController
@@ -26,9 +26,13 @@ class UserAccessGroupsController extends Controller
         $view = \View::make('general.list');
         LinkGenerator::generateAlphabetLinks($view, 'user_access_groups_index_letter');
         LinkGenerator::setupLinksAtoZ($view, 'user_access_groups_show', 'name', 'id', $letter, User_Access_Group::all());
+        /** @noinspection PhpUndefinedFieldInspection */
         $view->indexURL = route('user_access_groups_index');
+        /** @noinspection PhpUndefinedFieldInspection */
         $view->title = "User Access Groups";
+        /** @noinspection PhpUndefinedFieldInspection */
         $view->newTitle = "Create New User Access Group";
+        /** @noinspection PhpUndefinedFieldInspection */
         $view->newLink = route('user_access_groups_create');
         return $view;
     }
@@ -40,7 +44,7 @@ class UserAccessGroupsController extends Controller
      */
     public function create()
     {
-        $menues = \Contour::getThemeManager()->getMenuManager()->getMenus();
+        $menues = Contour::getThemeManager()->getMenuManager()->getMenus();
         $menuIds = [];
         foreach($menues as $menu)
             $menuIds[$menu->get_id()] = $menu->getName();
@@ -74,7 +78,7 @@ class UserAccessGroupsController extends Controller
      */
     public function show($id)
     {
-        $menues = \Contour::getThemeManager()->getMenuManager()->getMenus();
+        $menues = Contour::getThemeManager()->getMenuManager()->getMenus();
         $menuIds = [];
         foreach($menues as $menu)
             $menuIds[$menu->get_id()] = $menu->getName();

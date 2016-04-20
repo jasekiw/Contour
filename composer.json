@@ -22,14 +22,11 @@
     },
     "autoload": {
         "classmap": [
-            "database",
-            "app/Models",
-            "app/libraries",
-            "app/plugins",
-            "app/themes"
+            "database"
         ],
         "psr-4": {
-            "App\\": "app/"
+          "App\\": "app/",
+          "app\\": "app/"
         },
         "files": [
             "app/libraries/HelperMethods/Strings/functions.php",

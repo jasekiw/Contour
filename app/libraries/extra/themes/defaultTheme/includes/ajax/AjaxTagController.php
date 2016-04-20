@@ -6,11 +6,12 @@
  * Time: 1:38 PM
  */
 
-namespace app\libraries\extra\themes\defaultTheme;
+namespace app\libraries\extra\themes\defaultTheme\includes\ajax;
 
 use app\libraries\ajax\AjaxScript;
 use Input;
 use app\libraries\tags\DataTags;
+
 class AjaxTagController extends AjaxScript
 {
 

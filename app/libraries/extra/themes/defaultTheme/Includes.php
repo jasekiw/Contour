@@ -8,8 +8,8 @@
 
 namespace app\libraries\extra\themes\defaultTheme;
 
-
-use Theme;
+use app\libraries\extra\themes\defaultTheme\includes\ajax\AjaxTagController;
+use app\libraries\theme\Theme;
 
 /**
  * Class Includes

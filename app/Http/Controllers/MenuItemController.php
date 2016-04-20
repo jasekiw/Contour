@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use app\libraries\tags\DataTags;
 use app\libraries\theme\menu\item\MenuItem;
-use Contour;
+use app\libraries\contour\Contour;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

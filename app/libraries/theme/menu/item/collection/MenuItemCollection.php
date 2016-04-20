@@ -72,7 +72,7 @@ class MenuItemCollection
         $menuItems = $menu_items->get_children();
         foreach($menuItems->getAsArray() as $menu_item)
         {
-            $menuItem = MenuItem::get_by_menu_tag($menu_item);
+            $menuItem = new MenuItem($menu_item);
             $menucollection->add($menuItem);
         }
         return $menucollection;

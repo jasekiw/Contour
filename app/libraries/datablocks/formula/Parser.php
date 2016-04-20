@@ -6,7 +6,7 @@
  * Time: 10:33 AM
  */
 
-namespace app\libraries\Data_Blocks\formula;
+namespace app\libraries\datablocks\formula;
 
 
 use app\libraries\database\DataManager;
@@ -22,7 +22,7 @@ use app\libraries\types\Types;
 
 /**
  * Class Parser
- * @package app\libraries\Data_Blocks
+ * @package app\libraries\datablocks
  */
 class Parser
 {
@@ -691,10 +691,6 @@ class Parser
                 $tokenValue = $token->getValue();
                 if($tokenValue == '/')
                 {
-                    if($second == 0)
-                    {
-                        $test = "test";
-                    }
                     $answer = $first / $second;
                 }
                 else if($tokenValue == '*')

@@ -43,7 +43,6 @@ class ExcelSheet extends ExcelData
     function __construct($rows, $columns, $parentTag)
     {
         $this->parentTag = $parentTag;
-        $this->tags = [];
 
         $this->rows = array_values($rows);
         $this->columns = array_values($columns);

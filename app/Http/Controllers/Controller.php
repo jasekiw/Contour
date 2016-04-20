@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use app\libraries\theme\HeaderTasks;
+use app\libraries\theme\Theme;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -23,9 +24,9 @@ abstract class Controller extends BaseController
     {
         \Session::set('uploads_folder', public_path() . DIRECTORY_SEPARATOR . "uploads");
         \Session::set('uploads_url',url('uploads'));
-        \Theme::construct_theme();
+        Theme::construct_theme();
 
-        require_once(base_path() . "/app/libraries/kint/Kint.class.php");
+//        require_once(base_path() . "/app/libraries/kint/Kint.class.php");
         //created variables for the theme to use
         $header_variables = new HeaderTasks();
         $header_variables->perform();

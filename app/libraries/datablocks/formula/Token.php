@@ -22,12 +22,12 @@
 	http://ewbi.blogs.com/develops/2004/12/excel_formula_p.html
 */
 
-namespace app\libraries\Data_Blocks\formula;
+namespace app\libraries\datablocks\formula;
 
 
 /**
  * Class Token
- * @package app\libraries\Data_Blocks\formula
+ * @package app\libraries\datablocks\formula
  */
 class Token {
     /* Token types */

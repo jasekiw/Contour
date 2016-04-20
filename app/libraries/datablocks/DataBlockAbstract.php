@@ -6,7 +6,7 @@
  * Time: 10:48 AM
  */
 
-namespace app\libraries\Data_Blocks;
+namespace app\libraries\datablocks;
 
 
 use app\libraries\database\DatabaseObject;
@@ -16,7 +16,7 @@ use app\libraries\types\Type;
 
 /**
  * Class DataBlockAbstract
- * @package app\libraries\Data_Blocks
+ * @package app\libraries\datablocks
  */
 abstract class DataBlockAbstract extends DatabaseObject
 {

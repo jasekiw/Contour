@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 
 use app\libraries\excel\import\Importer;
 use app\libraries\excel\import\suite\TemplateSuiteManager;
+use app\libraries\contour\Contour;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\View;
 
 /**
  * Class ExcelImporterController
@@ -24,12 +22,13 @@ class ExcelImporterController extends Controller
      */
     public function index()
     {
-        \Contour::getThemeManager()->enqueueScript('MainJavascript', 'assets/ts/main/compiled.js');
+        Contour::getThemeManager()->enqueueScript('MainJavascript', 'assets/ts/main/compiled.js');
         $view = \View::make('excelimporter.index');
         $suiteManager = new TemplateSuiteManager();
         $suites = $suiteManager->getSuiteCollection()->getAll();
-        
+        /** @noinspection PhpUndefinedFieldInspection */
         $view->title = "Excel Importer";
+        /** @noinspection PhpUndefinedFieldInspection */
         $view->suites = $suites;
         return $view;
     }
@@ -40,7 +39,7 @@ class ExcelImporterController extends Controller
         $suiteName = \Input::get("suite");
         $suite = $suiteManager->getSuiteCollection()->get($suiteName);
         $importTagLocation = \Input::get("importLocation");
-        \Contour::getConfigManager()->turnOnErrorReporting();
+        Contour::getConfigManager()->turnOnErrorReporting();
         $importer = new Importer();
         $importLocation = public_path("uploads{$ds}import{$ds}import.xls");
         $message = $importer->run($suite, $importLocation, $importTagLocation);

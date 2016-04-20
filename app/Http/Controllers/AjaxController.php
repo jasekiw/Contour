@@ -1,12 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Response;
-use Theme;
+use app\libraries\theme\Theme;
 
 /**
  * Class AjaxController
@@ -29,7 +27,7 @@ class AjaxController extends Controller {
 		$parameters = explode("/",$id);
 		$id = $parameters[0];
 		array_shift($parameters);
-		\Theme::get_ajax_manager()->call_script_get($id, $parameters );
+		Theme::get_ajax_manager()->call_script_get($id, $parameters );
 	}
 
 

@@ -2,15 +2,13 @@
 namespace App\Http\Controllers;
 
 use app\libraries\excel\import\suite\TemplateSuiteManager;
-use app\libraries\excel\templates\TableCompiler;
 use app\libraries\tags\DataTags;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use app\libraries\excel\import\Importer;
-use \app\libraries\excel\convert\datablocks\DataBlockImporter;
+use app\libraries\excel\convert\datablocks\DataBlockImporter;
+use Illuminate\Contracts\View\View;
 use Response;
+use app\libraries\theme\Theme;
 use URL;
 
 /**
@@ -106,7 +104,7 @@ class ExcelController extends Controller {
 	 */
 	public function edit($id)
 	{
-		\Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
+		Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
 		$datatag = DataTags::get_by_id($id);
 		$view = \View::make('excel.index');
 		$view->title = "Excel Editor";
@@ -127,13 +125,13 @@ class ExcelController extends Controller {
 	}
 
 
-
-	/**
-	 * @param $id
+    /**
+     * @param $id
+     * @return View
      */
 	public function show($id)
 	{
-		\Theme::enqueue_script('data_block_editor', "assets/js/datablock_viewer/main.js");
+		Theme::enqueue_script('data_block_editor', "assets/js/datablock_viewer/main.js");
 		$datatag = DataTags::get_by_id($id);
 		$view = \View::make('excel.calculated');
 		$view->title = "Excel Viewer";

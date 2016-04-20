@@ -43,8 +43,8 @@
     <link rel="shortcut icon" href="{!! asset('assets/ico/favicon.ico') !!}">
 
 
-    {!! Theme::header() !!}
-    {!! Contour::getThemeManager()->head() !!}
+    {!! app\libraries\theme\Theme::header() !!}
+    {!! app\libraries\contour\Contour::getThemeManager()->head() !!}
 </head>
 
 <body>

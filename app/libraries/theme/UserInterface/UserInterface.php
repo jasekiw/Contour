@@ -1,4 +1,6 @@
 <?php
+use app\libraries\theme\Theme;
+
 /**
  * Created by PhpStorm.
  * User: Jason

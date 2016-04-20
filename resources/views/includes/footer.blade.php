@@ -7,22 +7,9 @@
  */
 ?>
 
-                                </div><!-- main-content-->
-                            </div>
-                        <!-- /main -->
-                        </div>
-                    <!-- /content-wrapper -->
-                    </div>
-                <!-- /row -->
-                </div>
-            <!-- /container -->
-            </div>
-        <!-- END BOTTOM: LEFT NAV AND RIGHT MAIN CONTENT -->
-        <!-- FOOTER -->
         {!!  $copyright_html !!}
         <!-- END FOOTER -->
-        </div>
-        <!-- /wrapper -->
+
 
 
         <script src="{{ asset('assets/js/jquery/jquery-2.1.0.min.js') }}"></script>
@@ -46,9 +33,9 @@
         <script src="{{ asset('assets/js/king-chart-stat.js') }}"></script>
         <script src="{{ asset('assets/js/king-table.js') }}"></script>
         <script src="{{ asset('assets/js/king-components.js') }}"></script>
-        {!!  Theme::footer() !!}
-        {!!  Theme::footer($title) !!}
-        {!! Contour::getThemeManager()->footer() !!}
+        {!!  \app\libraries\theme\Theme::footer() !!}
+        {!!  \app\libraries\theme\Theme::footer($title) !!}
+        {!! \app\libraries\contour\Contour::getThemeManager()->footer() !!}
                 @yield('scripts')
         @if( Session::has('message') || Session::has('message_title'))
 
@@ -61,6 +48,5 @@
                 });
             </script>
         @endif
-    </body>
 
-</html>
+

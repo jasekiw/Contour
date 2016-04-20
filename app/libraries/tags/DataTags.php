@@ -16,6 +16,7 @@ use App\Models\Tag;
 use \app\libraries\types\Type;
 use App\Models\TypeModel;
 use App\Models\Type_category;
+use app\libraries\contour\Contour;
 use DB;
 use PDO;
 
@@ -293,21 +294,24 @@ class DataTags
             $tag->where("parent_tag_id", "=", $parent_id);
         else if($parent_id === 0 || $parent_id === -1)
         {
-            $tag->Where(function ($query) { // advanced where statement to fix the issue where the tag.name was included as an optional where
+            $tag->where(function ($query) { // advanced where statement to fix the issue where the tag.name was included as an optional where
                 /** @var \Illuminate\Database\Query\Builder $query */
-                foreach(\Contour::getConfigManager()->getPathTags() as $index => $id)
+                foreach(Contour::getConfigManager()->getPathTags() as $index => $id)
                 {
                     if($index === 0)
                         $query->where("parent_tag_id", "=", $id);
                     else
-                        $query->orwhere("parent_tag_id", "=", $id);
+                        $query->orWhere("parent_tag_id", "=", $id);
                 }
             });
 
         }
-        $tag = $tag->first();
-        if( isset($tag) )
-            return DataTags::get_by_row($tag);
+        /**
+         * @var Tag $theTag
+         */
+        $theTag = $tag->first();
+        if( isset($theTag) )
+            return DataTags::get_by_row($theTag);
         return null;
     }
 
@@ -360,7 +364,7 @@ class DataTags
             $query .= "AND parent_tag_id = " . $parent_id . " ";
         else if($parent_id === 0 || $parent_id === -1)
         {
-            $pathTags = \Contour::getConfigManager()->getPathTags();
+            $pathTags = Contour::getConfigManager()->getPathTags();
             if(!empty($pathTags))
             {
                 $query .= "AND ( ";
