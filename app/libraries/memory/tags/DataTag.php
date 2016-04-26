@@ -129,14 +129,6 @@ class DataTag extends DataTagAbstract
     }
 
     /**
-     * @return string
-     */
-    public function get_name()
-    {
-        return $this->name;
-    }
-
-    /**
      * @return integer
      */
     public function get_sort_number()
@@ -154,17 +146,6 @@ class DataTag extends DataTagAbstract
     }
 
     /**
-     * Sets the sql table id
-     * @param $id
-     */
-    public function set_id($id)
-    {
-        $this->id = $id;
-        $this->setChanged("id");
-
-    }
-
-    /**
      * Sets a property as changed
      * @param $property
      */
@@ -175,6 +156,17 @@ class DataTag extends DataTagAbstract
             $this->changed = true;
         }
         $this->changedProperties[$property] = $property;
+
+    }
+
+    /**
+     * Sets the sql table id
+     * @param $id
+     */
+    public function set_id($id)
+    {
+        $this->id = $id;
+        $this->setChanged("id");
 
     }
 
@@ -465,5 +457,32 @@ class DataTag extends DataTagAbstract
     public function setNiceName($name)
     {
         // TODO: Implement setNiceName() method.
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->name = $this->get_name();
+        $std->id = $this->get_id();
+        $std->typeId = isset($this->type) ? $this->type->get_id() : -1;
+        $std->parentId = isset($this->parent) ? $this->parent->get_id() : -1;
+        return $std;
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+
+    /**
+     * @return string
+     */
+    public function get_name()
+    {
+        return $this->name;
     }
 }

@@ -22,14 +22,14 @@
     <meta name="author" content="Jason Gallavin">
 
     <!-- CSS -->
-    <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
-    <link href="{!! asset('assets/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
-    <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css">
-    <link href="{!! asset('assets/css/my-custom-styles.css') !!}" rel="stylesheet" type="text/css">
+    <link href="{!! asset('theme/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
+    <link href="{!! asset('theme/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
+    <link href="{!! asset('theme/css/main.css') !!}" rel="stylesheet" type="text/css">
+    <link href="{!! asset('theme/css/my-custom-styles.css') !!}" rel="stylesheet" type="text/css">
 
     <!--[if lte IE 9]>
-    <link href="{!! asset('assets/css/main-ie.css') !!}" rel="stylesheet" type="text/css"/>
-    <link href="{!! asset('assets/css/main-ie-part2.css') !!}" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('theme/css/main-ie.css') !!}" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('theme/css/main-ie-part2.css') !!}" rel="stylesheet" type="text/css"/>
     <![endif]-->
 
     <!-- CSS for demo style switcher. you can remove this -->

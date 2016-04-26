@@ -51,7 +51,7 @@ class MenuController extends Controller {
 		$view->title = "Menus";
 		$view->newTitle = "Create New Menu";
 		$view->newLink = route('menu.create');
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -64,7 +64,7 @@ class MenuController extends Controller {
 	{
 		$view = \View::make("menu.create");
 		$view->title = "Create new Menu";
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -114,8 +114,8 @@ class MenuController extends Controller {
 	 */
 	public function edit($id)
 	{
-		Contour::getThemeManager()->enqueueScript('jquery-ui', 'assets/js/jquery-ui/jquery-ui-1.10.4.custom.js');
-		Contour::getThemeManager()->enqueueScript('menu_editor','assets/ts/menu_editor/menu_editor.js');
+		Contour::getThemeManager()->enqueueScript('jquery-ui', 'theme/js/jquery-ui/jquery-ui-1.10.4.custom.js');
+//		Contour::getThemeManager()->enqueueScript('menu_editor','assets/ts/contour/menu_editor/menu_editor.js');
 		$menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
 		if(isset($menu))
 		{
@@ -126,7 +126,7 @@ class MenuController extends Controller {
 			$view->menuItems = $menu->getMenuItems();
 			$view->menu = $menu;
 			$view->routes = $routes;
-			return $view;
+			return $this->render($view);
 		}
 		return \View::make('errors.404');
 	}

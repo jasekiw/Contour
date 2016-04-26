@@ -1,5 +1,9 @@
 $editorGray: #8198A3;
-
+@mixin newIcon(){
+    color:$evergreen;
+    font-size: 18px;
+    cursor: pointer;
+}
 .nav-pills>li.active>a {
     background-color: $evergreen
 }
@@ -11,9 +15,27 @@ $editorGray: #8198A3;
     .sheet_column {
         color: $editorGray;
         text-align: center;
+
+    }
+    th {
         padding-bottom: 10px;
     }
+    .new_column {
+        i {
+            @include newIcon()
+        }
+        padding: 0 30px;
+    }
+    .new_row {
+        .row_name {
+            i {
+                @include newIcon()
+            }
+            padding: 10px 0;
+            text-align:center;
+        }
 
+    }
     .sheet_row {
 
         .row_name {

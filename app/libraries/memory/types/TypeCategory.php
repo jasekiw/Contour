@@ -34,24 +34,6 @@ class TypeCategory extends TypeCategoryAbstract
     }
 
     /**
-     * Gets the date at when the object was updated.
-     * @return string
-     */
-    public function updated_at()
-    {
-        return $this->updated_at;
-    }
-
-    /**
-     * Gets the date at when the object was created
-     * @return string
-     */
-    public function created_at()
-    {
-        return $this->created_at;
-    }
-
-    /**
      * Deletes The Object
      * @return mixed
      */
@@ -67,5 +49,37 @@ class TypeCategory extends TypeCategoryAbstract
     public function save()
     {
         // TODO: Implement save() method.
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->id = $this->get_id();
+        $std->name = $this->getName();
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        return $std;
+    }
+
+    /**
+     * Gets the date at when the object was updated.
+     * @return string
+     */
+    public function updated_at()
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * Gets the date at when the object was created
+     * @return string
+     */
+    public function created_at()
+    {
+        return $this->created_at;
     }
 }

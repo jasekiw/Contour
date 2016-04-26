@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class InstallController extends BaseController
+class InstallController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class InstallController extends BaseController
         $view->title = "Install";
         $installedAlready = \Schema::hasTable('config');
         $view->installedAlready = $installedAlready;
-        return $view;
+        return $this->render($view);
     }
 
 
@@ -43,7 +43,7 @@ class InstallController extends BaseController
         $view->finished = true;
         $view->output = $output;
         $view->title = "Finished Installing";
-        return $view;
+        return $this->render($view);
 
     }
 

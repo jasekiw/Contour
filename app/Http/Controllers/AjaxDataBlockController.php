@@ -23,9 +23,7 @@ class AjaxDataBlockController extends Controller {
 	{
 		$view = \View::make("sandbox.ajaxblocks");
 		$view->title = "ajaxblocks";
-		return $view;
-
-
+		return $this->render($view);
 	}
 
 	/**

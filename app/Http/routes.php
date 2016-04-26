@@ -94,9 +94,12 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
     /**
      *  Tags subsection
      */
-        Route::get('api/tags/get_children/{id}',['as' => 'api_tags_get_children','middleware' => 'auth', 'uses' => 'api\ApiTagController@get_children']);
-        Route::get('api/tags/get_children_recursive/{id}',['as' => 'api_tags_get_children_recursive','middleware' => 'auth', 'uses' => 'api\ApiTagController@get_children_recursive']);
-        Route::post('api/tags/getParentTrace',['as' => 'api_tag_getParentTrace','middleware' => 'auth', 'uses' => 'api\ApiTagController@getParentTrace']);
+        Route::get('api/tags/get_children/{id}',['as' => 'api_tags_get_children','middleware' => 'auth', 'uses' => 'api\TagController@get_children']);
+        Route::get('api/tags/get_children_recursive/{id}',['as' => 'api_tags_get_children_recursive','middleware' => 'auth', 'uses' => 'api\TagController@get_children_recursive']);
+        Route::post('api/tags/getParentTrace',['as' => 'api_tag_getParentTrace','middleware' => 'auth', 'uses' => 'api\TagController@getParentTrace']);
+        Route::post('api/tags/rename/{id}',['as' => 'api.tags.rename','middleware' => 'auth', 'uses' => 'api\TagController@rename']);
+        Route::post('api/tags/create',['as' => 'api.tags.create','middleware' => 'auth', 'uses' => 'api\TagController@create']);
+        Route::get('api/tags/types',['as' => 'api.tags.types','middleware' => 'auth', 'uses' => 'api\TagController@types']);
 
     /**
      *  Datablocks subsection

@@ -1,5 +1,18 @@
-var elixir = require('laravel-elixir');
+// var elixir = require('laravel-elixir');
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var sourcemaps = require("gulp-sourcemaps");
+gulp.task('sass', function () {
+    return gulp.src('./public/assets/sass/**/*.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass().on('error', sass.logError))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./public/assets/sass/'));
+});
 
+gulp.task('watch', function () {
+    gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
+});
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -11,6 +24,6 @@ var elixir = require('laravel-elixir');
  |
  */
 
-elixir(function(mix) {
-    mix.sass('app.scss');
-});
+// elixir(function(mix) {
+//     mix.sass('app.scss');
+// });

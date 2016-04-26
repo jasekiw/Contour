@@ -1,10 +1,32 @@
 {
   "private": true,
   "devDependencies": {
-    "gulp": "^3.8.8"
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.0",
+    "gulp-sourcemaps": "^1.6.0"
   },
   "dependencies": {
     "laravel-elixir": "^4.0.0",
     "bootstrap-sass": "^3.0.0"
-  }
+  },
+  "name": "contour",
+  "description": "## Synopsis",
+  "version": "0.1.0",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasekiw/Contour.git"
+  },
+  "author": "Jason Gallavin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jasekiw/Contour/issues"
+  },
+  "homepage": "https://github.com/jasekiw/Contour#readme"
 }

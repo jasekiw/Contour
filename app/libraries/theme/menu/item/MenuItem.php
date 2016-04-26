@@ -83,28 +83,6 @@ class MenuItem extends DatabaseObject
         return $menuItem;
     }
 
-
-    /**
-     * Gets the Name or Label of the menu Item
-     * @return String
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * sets the name or label of the menu link
-     * @param $value
-     */
-    public function set_name($value)
-    {
-        $this->name = $value;
-        $this->tag->set_name($value );
-        $this->tag->setNiceName($value);
-        $this->tag->save();
-    }
-
     /**
      * Gets the Tag Name of the menu
      * @return string
@@ -183,6 +161,46 @@ class MenuItem extends DatabaseObject
         return $this->tag->get_parent()->get_parent_id();
     }
 
+    public function delete()
+    {
+        $this->tag->delete();
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->id = $this->get_id();
+        $std->name = $this->getName();
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        return $std;
+    }
+
+    /**
+     * Gets the Name or Label of the menu Item
+     * @return String
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * sets the name or label of the menu link
+     * @param $value
+     */
+    public function set_name($value)
+    {
+        $this->name = $value;
+        $this->tag->set_name($value );
+        $this->tag->setNiceName($value);
+        $this->tag->save();
+    }
+
     /**
      * Gets the date at when the object was updated.
      * @return string
@@ -199,10 +217,5 @@ class MenuItem extends DatabaseObject
     public function created_at()
     {
         return $this->tag->created_at();
-    }
-
-    public function delete()
-    {
-        $this->tag->delete();
     }
 }

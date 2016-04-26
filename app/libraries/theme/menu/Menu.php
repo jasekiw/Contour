@@ -37,6 +37,20 @@ class Menu extends DatabaseObject
     private $items;
 
     /**
+     * Sets a menu up from the database items
+     * Menu constructor.
+     * @param DataTag $menuTag
+     */
+    function __construct($menuTag)
+    {
+        $this->name = $menuTag->get_name();
+        $this->menuTag = $menuTag;
+        $this->items = $this->menuTag->get_children()->getAsArray();
+        foreach($this->items as $key => $value) // converting tags to menu items
+            $this->items[$key] = new Menuitem($value);
+    }
+
+    /**
      * Creates a new menu and adds the database items
      * @param string $name
      * @param DataTag $menusTag
@@ -51,21 +65,19 @@ class Menu extends DatabaseObject
         return $menu;
     }
 
-
-    /**
-     * Sets a menu up from the database items
-     * Menu constructor.
-     * @param DataTag $menuTag
-     */
-    function __construct($menuTag)
+    public function addItem($name, $url, $sort, $icon = null)
     {
-        $this->name = $menuTag->get_name();
-        $this->menuTag = $menuTag;
-        $this->items = $this->menuTag->get_children()->getAsArray();
-        foreach($this->items as $key => $value) // converting tags to menu items
-            $this->items[$key] = new Menuitem($value);
+        $menuItem = MenuItem::make($this->menuTag, $name, $url, $sort,  $icon);
+        array_push($this->items,$menuItem );
+        return $menuItem;
     }
 
+    public function delete()
+    {
+       foreach($this->getMenuItems() as $menutItem)
+           $menutItem->delete();
+       $this->menuTag->delete();
+    }
 
     /**
      * Gets the menu items
@@ -83,13 +95,23 @@ class Menu extends DatabaseObject
         return $this->items;
     }
 
-
-
-    public function addItem($name, $url, $sort, $icon = null)
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
     {
-        $menuItem = MenuItem::make($this->menuTag, $name, $url, $sort,  $icon);
-        array_push($this->items,$menuItem );
-        return $menuItem;
+        $std = new \stdClass();
+        $std->id = $this->get_id();
+        $std->name = $this->getName();
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        return $std;
+    }
+
+    public function get_id()
+    {
+        return $this->menuTag->get_id();
     }
 
     /**
@@ -100,10 +122,7 @@ class Menu extends DatabaseObject
     {
         return $this->name;
     }
-    public function get_id()
-    {
-        return $this->menuTag->get_id();
-    }
+
     /**
      * Gets the date at when the object was updated.
      * @return string
@@ -112,6 +131,7 @@ class Menu extends DatabaseObject
     {
         return $this->menuTag->updated_at();
     }
+
     /**
      * Gets the date at when the object was created
      * @return string
@@ -119,12 +139,5 @@ class Menu extends DatabaseObject
     public function created_at()
     {
         return $this->menuTag->created_at();
-    }
-
-    public function delete()
-    {
-       foreach($this->getMenuItems() as $menutItem)
-           $menutItem->delete();
-       $this->menuTag->delete();
     }
 }

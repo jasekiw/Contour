@@ -62,10 +62,10 @@ class SandboxController extends Controller {
 //		$view->title = "sandbox";
 
 
-//		return $view;
+//		return $this->render($view);
 
 
-       return \View::make('partials.listroutes');
+       return $this->render(\View::make('partials.listroutes'));
 
 
 	}

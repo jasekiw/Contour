@@ -44,7 +44,7 @@ class FacilityController extends Controller {
 		$view->title = 'Facilities';
 		$view->facilities = $facilities;
 
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -87,7 +87,7 @@ class FacilityController extends Controller {
 		$view->compositTags = $compiler->compositTags;
 		$view->summaryTable = $compiler->summaryTable;
 		$view->compositTables = $compiler->compositTables;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class FacilityController extends Controller {
 		$view->revenueTable = new TableBuilder($revenue->getAsArray(), $columns, $revenueBlocks, "revenueTable" );
 		$view->expensesTable = new TableBuilder($expenses->getAsArray(), $columns, $expenseBlocks, "expensesTable" );
 
-		return $view;
+		return $this->render($view);
 
 	}
 
@@ -175,7 +175,7 @@ class FacilityController extends Controller {
 		$view->compositTags = $compiler->compositTags;
 		$view->summaryTable = $compiler->summaryTable;
 		$view->compositTables = $compiler->compositTables;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**

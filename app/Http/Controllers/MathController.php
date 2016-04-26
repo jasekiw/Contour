@@ -24,7 +24,7 @@ class MathController extends Controller {
         $view->equation = Input::get('equation');
         $view->variables = Input::get('variables');
         $view->answer = Input::get('answer');
-        return $view;
+        return $this->render($view);
 	}
 
 	/**
@@ -65,7 +65,7 @@ class MathController extends Controller {
 //        $answer = $evaluator->e(Input::get('equation'));
 //        $view->answer = $answer;
 //
-//        return $view;
+//        return $this->render($view);
 	}
 
 	/**

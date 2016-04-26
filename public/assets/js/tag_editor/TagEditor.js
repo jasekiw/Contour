@@ -16,7 +16,7 @@ function TagEditor()
     var renameUI =
         '<div class="tag_editor rename_ui">\
             <h3 class="title">Rename</h3>\
-            <form method="POST" action="/ajax/tageditor/rename">\
+            <form method="POST" action="/ajax/tag/rename">\
                 <input type="text" value="name" class="form-control name" />\
                 <input type="checkbox" name="recursive" value="true">Also rename other tags with the same name.\
                 <input type="submit" value="Cancel" class="btn btn-danger cancel" />\
@@ -118,7 +118,7 @@ function TagEditor()
         var $ui =  $(".rename_ui");
         $(".rename_ui .name").val(name);
         console.log(name);
-        $(".rename_ui form").attr('action', '/ajax/tageditor/' + id );
+        $(".rename_ui form").attr('action', '/api/tags/rename/' + id );
         $(".rename_ui form").attr('tag_id', id );
         $ui.css('position', 'absolute');
         $ui.css("left", _self.mouseX);
@@ -539,11 +539,14 @@ function TagEditor()
                 url: '/tags/create',
                 data: {name: name, type: type, parent_id: parentId},
                 success: function(e) {
-
-                    console.log(e.success);
+                    /**
+                     * @type {AjaxTagReponse} x
+                     */
+                    var x = e;
+                    x.
                     if(e.success)
                     {
-                        $(".tags").append('<li class="ui-droppable"><a class="tag has_menu tag_' + e.id + ' context type_folder ui-draggable" data-toggle="context" data-target="#contextMenu93" href="http://localhost/tags/' + e.id + '">' + e.name + '</a></li>');
+                        $(".tags").append('<li class="ui-droppable"><a class="tag has_menu tag_' + e.payload.id + ' context type_folder ui-draggable" data-toggle="context" data-target="#contextMenu93" href="http://localhost/tags/' + e.id + '">' + e.name + '</a></li>');
 
                     }
                 },

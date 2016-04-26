@@ -1,0 +1,76 @@
+/*
+Error: File to import not found or unreadable: compass/typography.
+        on line 6 of partials/_base.scss
+        from line 46 of main.scss
+
+1: /*	
+2: *	############################################################################
+3: *	
+4: *	KINGADMIN Admin Dashboard Style
+5: *	---------------------------------------------------------------------
+6: *
+7: *	Version		1.4
+8: *	Author		The Develovers
+9: *	Copyright	Copyright 2014-2015 The Develovers
+10: *	
+11: *	############################################################################
+
+Backtrace:
+partials/_base.scss:6
+main.scss:46
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/import_node.rb:67:in `rescue in import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/import_node.rb:45:in `import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/import_node.rb:28:in `imported_file'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/import_node.rb:37:in `css_import?'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:311:in `visit_import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:79:in `block in with_base'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:115:in `with_frame'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:79:in `with_base'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:158:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:326:in `block (2 levels) in visit_import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:326:in `map'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:326:in `block in visit_import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:88:in `block in with_import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:115:in `with_frame'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:88:in `with_import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:323:in `visit_import'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:79:in `block in with_base'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:115:in `with_frame'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/stack.rb:79:in `with_base'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:158:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:52:in `map'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:157:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/visitors/perform.rb:8:in `visit'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/root_node.rb:36:in `css_tree'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/engine.rb:378:in `_render_with_sourcemap'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/engine.rb:295:in `render_with_sourcemap'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/plugin/compiler.rb:490:in `update_stylesheet'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/plugin/compiler.rb:209:in `each'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/plugin.rb:82:in `update_stylesheets'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/exec/sass_scss.rb:361:in `watch_or_update'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/exec/sass_scss.rb:51:in `process_result'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/exec/base.rb:52:in `parse'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/lib/sass/exec/base.rb:19:in `parse!'
+C:/Bitnami/rubystack-2.0.0-33/ruby/lib/ruby/gems/2.0.0/gems/sass-3.4.20/bin/scss:13:in `<top (required)>'
+C:/Bitnami/rubystack-2.0.0-33/ruby/bin/scss:23:in `load'
+C:/Bitnami/rubystack-2.0.0-33/ruby/bin/scss:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: File to import not found or unreadable: compass/typography.\A         on line 6 of partials/_base.scss\A         from line 46 of main.scss\A \A 1: /*	\A 2: *	############################################################################\A 3: *	\A 4: *	KINGADMIN Admin Dashboard Style\A 5: *	---------------------------------------------------------------------\A 6: *\A 7: *	Version		1.4\A 8: *	Author		The Develovers\A 9: *	Copyright	Copyright 2014-2015 The Develovers\A 10: *	\A 11: *	############################################################################"; }

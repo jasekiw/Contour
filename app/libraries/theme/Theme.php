@@ -9,6 +9,9 @@
 namespace app\libraries\theme;
 
 
+use app\libraries\ajax\AjaxManager;
+use app\libraries\extra\themes\defaultTheme\DefaultTheme;
+
 class Theme
 {
 
@@ -26,26 +29,43 @@ class Theme
      * @param string $name The name of the script
      * @param string $src the location of the script to load relative to the public foler. do not include public. ex 'assets/js'
      * @param string $group The title of the page to enqueue this script to. the title tag is represented by $view->title
+     * @param array $attr add attributes like defer or async ex. "defer" => ""
      */
-    public static function enqueue_script( $name,  $src, $group = null  )
+    public static function enqueue_script( $name,  $src, $group = null, $attr = []  )
     {
         $src = asset($src);
-        $script = '<script type="text/javascript" class="' . $name . '_script" src="' . $src . "\" ></script>";
+        $attributeString = self::getAttributeString($attr);
+        $script = "<script type=\"text/javascript\" class=\"{$name}_script\" src=\"{$src}\" $attributeString ></script>";
 
         if(isset($group))
         {
             $group = strtoupper($group);
             if(!isset(self::$specific_enqueue_scripts[$group]))
-            {
                 self::$specific_enqueue_scripts[$group] = array();
-            }
             self::$specific_enqueue_scripts[$group][$name] = $script;
         }
         else{
 
-            self::$enqueue_scripts[$name] = $script;
+            self::$enqueue_scripts[$name] =  $script;
         }
 
+    }
+
+    /**
+     * @param string[] $attr attributes for a script or style.
+     * @return string combines them into a string for use in a script or style
+     */
+    private static function getAttributeString($attr)
+    {
+        $attributeString = "";
+        foreach($attr as $key => $value)
+        {
+            if(empty($value))
+                $attributeString .= " " . $key;
+            else
+                $attributeString .= " " . $key . '"' .$value . '"';
+        }
+        return $attributeString;
     }
 
     /**
@@ -61,24 +81,23 @@ class Theme
         return self::$menu;
     }
 
-
-
     /**
      *
      * @param string $name
      * @param string $value
      * @param null $group
+     * @param array $attr
      */
-    public static function enqueue_inline_script( $name,  $value, $group = null )
+    public static function enqueue_inline_script( $name,  $value, $group = null, $attr = [] )
     {
-        $script = '<script type="text/javascript" class="' . $name . '_script">' . $value . "</script>";
+        $attributeString = self::getAttributeString($attr);
+        $script = '<script type="text/javascript" class="' . $name . '_script" ' . $attributeString . ' >' . $value . "</script>";
         if(isset($group))
         {
             $group = strtoupper($group);
             if(!isset(self::$specific_enqueue_scripts[$group] ))
-            {
                 self::$specific_enqueue_scripts[$group] = array();
-            }
+
             self::$specific_enqueue_scripts[$group][$name] = $script;
         }
         else{
@@ -109,6 +128,7 @@ class Theme
 
 
     }
+
     public static function get_ajax_manager()
     {
         if(isset(self::$ajax_manager))
@@ -117,7 +137,7 @@ class Theme
         }
         else
         {
-            self::$ajax_manager = new \app\libraries\ajax\AjaxManager();
+            self::$ajax_manager = new AjaxManager();
             return  self::$ajax_manager;
         }
     }
@@ -144,9 +164,6 @@ class Theme
         }
 
     }
-
-
-
 
     public static function header($group = null)
     {
@@ -175,6 +192,7 @@ class Theme
         return $response;
 
     }
+
     public static function footer($group = null)
     {
         $response = "";
@@ -209,10 +227,12 @@ class Theme
     {
         array_push(self::$footertasks, $task);
     }
+
     public static function construct_theme()
     {
-        self::$theme = new \app\libraries\extra\themes\defaultTheme\DefaultTheme();
+        self::$theme = new DefaultTheme();
     }
+
     public static function get_theme_object()
     {
         return self::$theme;

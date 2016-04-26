@@ -81,9 +81,6 @@ $tabs =  $sheet->getNavTitles();
 @endsection
 
 @section('scripts')
-    <?php
-        echo DataBlockEditor::get();
-    ?>
     @include('excel.scripts')
 @endsection
 

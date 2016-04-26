@@ -81,7 +81,7 @@ class MenuItemController extends Controller {
 		$menuItem = new MenuItem($tag);
 		$view->title = "Editing: " . $menuItem->getName();
 		$view->menuItem = $menuItem;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**

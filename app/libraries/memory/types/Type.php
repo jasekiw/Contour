@@ -36,6 +36,57 @@ class Type extends TypeAbstract
     }
 
     /**
+     * Deletes The Object
+     * @return mixed
+     */
+    public function delete()
+    {
+        // TODO: Implement delete() method.
+    }
+
+    /**
+     * Saves the Type
+     * @return mixed
+     */
+    public function save()
+    {
+        // TODO: Implement save() method.
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->name = $this->name;
+        $std->category_id = $this->getCategoryId();
+        $std->category = $this->getCategory();
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        $std->id = $this->get_id();
+        return $std;
+    }
+
+    /**
+     * Gets the Category Id
+     * @return mixed
+     */
+    public function getCategoryId()
+    {
+        return $this->category->get_id();
+    }
+
+    /**
+     * @return TypeCategory
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
      * Gets the date at when the object was updated.
      * @return string
      */
@@ -51,40 +102,5 @@ class Type extends TypeAbstract
     public function created_at()
     {
         return $this->created_at;
-    }
-
-    /**
-     * Deletes The Object
-     * @return mixed
-     */
-    public function delete()
-    {
-        // TODO: Implement delete() method.
-    }
-
-    /**
-     * Gets the Category Id
-     * @return mixed
-     */
-    public function getCategoryId()
-    {
-        return $this->category->get_id();
-    }
-
-    /**
-     * Saves the Type
-     * @return mixed
-     */
-    public function save()
-    {
-        // TODO: Implement save() method.
-    }
-
-    /**
-     * @return TypeCategory
-     */
-    public function getCategory()
-    {
-        return $this->category;
     }
 }

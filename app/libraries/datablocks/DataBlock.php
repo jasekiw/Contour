@@ -176,40 +176,6 @@ class DataBlock extends DataBlockAbstract {
     }
 
     /**
-     * Gets the date at when the object was updated.
-     * @return String
-     */
-    public function updated_at()
-    {
-        if(isset($this->updated_at)) // cached
-            return $this->updated_at;
-        if(!isset($this->id))
-            return null;
-        $tag = Data_block::where('id', '=', $this->id)->first(['updated_at']);
-        /** Tag $tag **/
-        $updated_at = $tag->updated_at;
-        $this->updated_at = $updated_at;
-        return $updated_at;
-    }
-
-    /**
-     * Gets the date at when the object was created
-     * @return String
-     */
-    public function created_at()
-    {
-        if(isset($this->created_at)) // cached
-            return $this->created_at;
-        if(!isset($this->id))
-            return null;
-        $block = Data_block::where('id', '=', $this->id)->first(['created_at']);
-        /** Data_block $block */
-        $created_at = $block->created_at;
-        $this->created_at = $created_at;
-        return $created_at;
-    }
-
-    /**
      * Deletes the datablock
      * @return bool true if deleted, false if the datablock does not exist
      */
@@ -236,9 +202,61 @@ class DataBlock extends DataBlockAbstract {
         return true;
     }
 
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->id = $this->get_id();
+        $std->value = $this->getValue();
+        $std->tags = [];
+        foreach($this->getTags()->getAsArray() as $key => $tag)
+            $std->tags[$key] = $tag->toStdClass();
+
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        return $std;
+    }
+
+    /**
+     * Gets the date at when the object was updated.
+     * @return String
+     */
+    public function updated_at()
+    {
+        if(isset($this->updated_at)) // cached
+            return $this->updated_at;
+        if(!isset($this->id))
+            return null;
+        $tag = Data_block::where('id', '=', $this->id)->first(['updated_at']);
+        /** Tag $tag **/
+        $updated_at = $tag->updated_at;
+        $this->updated_at = $updated_at;
+        return $updated_at;
+    }
+
     /***************************
      * Private methods
      ***************************/
+
+    /**
+     * Gets the date at when the object was created
+     * @return String
+     */
+    public function created_at()
+    {
+        if(isset($this->created_at)) // cached
+            return $this->created_at;
+        if(!isset($this->id))
+            return null;
+        $block = Data_block::where('id', '=', $this->id)->first(['created_at']);
+        /** Data_block $block */
+        $created_at = $block->created_at;
+        $this->created_at = $created_at;
+        return $created_at;
+    }
 
     /**
      * Checks if the datablock has a duplicate

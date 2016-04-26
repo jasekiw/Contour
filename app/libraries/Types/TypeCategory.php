@@ -96,20 +96,24 @@ class TypeCategory extends TypeCategoryAbstract
     }
 
     /**
+     * Gets the typecategory by a Type_category row
+     * @param $row
+     * @return TypeCategory
+     */
+    public static function getByQueryRow($row)
+    {
+        $category = new TypeCategory();
+        $category->set_id($row->type_category_id);
+        $category->setName($row->type_category_name);
+        return $category;
+    }
+
+    /**
      * @param int $id
      */
     public function set_id($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Gets the ID
-     * @return int
-     */
-    public function get_id()
-    {
-        return $this->id;
     }
 
     /**
@@ -119,15 +123,6 @@ class TypeCategory extends TypeCategoryAbstract
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * Gets the name
-     * @return String
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -159,16 +154,45 @@ class TypeCategory extends TypeCategoryAbstract
     }
 
     /**
-     * Gets the typecategory by a Type_category row
-     * @param $row
-     * @return TypeCategory
+     * Deletes the TypeCategory
+     * @throws \Exception
      */
-    public static function getByQueryRow($row)
+    public function delete()
     {
-        $category = new TypeCategory();
-        $category->set_id($row->type_category_id);
-        $category->setName($row->type_category_name);
-        return $category;
+        Type_category::where('id', '=', $this->id)->delete();
+        $this->id = null;
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->id = $this->get_id();
+        $std->name = $this->getName();
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        return $std;
+    }
+
+    /**
+     * Gets the ID
+     * @return int
+     */
+    public function get_id()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Gets the name
+     * @return String
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -208,15 +232,5 @@ class TypeCategory extends TypeCategoryAbstract
             return $created_at;
         }
         return null;
-    }
-
-    /**
-     * Deletes the TypeCategory
-     * @throws \Exception
-     */
-    public function delete()
-    {
-        Type_category::where('id', '=', $this->id)->delete();
-        $this->id = null;
     }
 }

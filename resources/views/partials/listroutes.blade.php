@@ -7,6 +7,8 @@
  */
 
 ?>
+{{$title}}
+
 <table class="menuItemEditor">
         <thead>
             <th>Routes Available</th>

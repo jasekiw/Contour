@@ -13,7 +13,7 @@
 <!--<![endif]-->
     @include("includes.head")
 
-    <body class="dashboard @if(isset($class)) {!! $class !!} @endif">
+    <body class="dashboard @if(isset($class)) {!! $class !!} @endif @if(isset($responseAction)) {!! $responseAction !!} @endif">
         <!-- WRAPPER -->
         <div class="wrapper">
             @include("includes.topbar")

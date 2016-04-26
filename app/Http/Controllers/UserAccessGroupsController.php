@@ -34,7 +34,7 @@ class UserAccessGroupsController extends Controller
         $view->newTitle = "Create New User Access Group";
         /** @noinspection PhpUndefinedFieldInspection */
         $view->newLink = route('user_access_groups_create');
-        return $view;
+        return $this->render($view);
     }
 
     /**
@@ -52,7 +52,7 @@ class UserAccessGroupsController extends Controller
         $view = \View::make("user_access_groups.create");
         $view->title = "Create new user access Group";
         $view->menus = $menuIds;
-        return $view;
+        return $this->render($view);
     }
 
     /**
@@ -89,7 +89,7 @@ class UserAccessGroupsController extends Controller
         $view->title = "User Access Group " . $group->name;
         $view->group = $group;
         $view->menus = $menuIds;
-        return $view;
+        return $this->render($view);
     }
 
     /**

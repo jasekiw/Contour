@@ -13,3 +13,4 @@ app/docs.zip
 /public/xdebug-gui
 /public/uploads
 /public/tracereader
+/phpunit.phar

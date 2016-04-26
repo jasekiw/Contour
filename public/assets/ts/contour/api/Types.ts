@@ -1,0 +1,24 @@
+import {AjaxData, Ajax} from "../Ajax";
+import {PlainType} from "../data/type/PlainType";
+/**
+ * Created by Jason Gallavin on 4/21/2016.
+ */
+export class Types {
+
+    /**
+     *
+     * @param {Function( AjaxTagArrayReponse ) } functionToCall
+     */
+    public static getTagTypes(functionToCall : (e : AjaxTagArrayReponse) => void)
+    {
+        new Ajax().get("/api/tags/types",(e : AjaxTagArrayReponse) => {
+            functionToCall(e);
+        });
+    }
+}
+/**
+ *
+ */
+export interface AjaxTagArrayReponse  extends AjaxData{
+    payload : PlainType[];
+}

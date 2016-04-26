@@ -25,7 +25,7 @@ class ConfigController extends Controller {
 		$view = \View::make('config.config');
 		$view->title = "Configuration";
 
-		return $view;
+		return $this->render($view);
 	}
 
 

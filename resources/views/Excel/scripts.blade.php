@@ -8,5 +8,5 @@
 
 ?>
 <script type="text/javascript">
-    var main = new Main();
+
 </script>

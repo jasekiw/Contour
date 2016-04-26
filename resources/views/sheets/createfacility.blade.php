@@ -29,12 +29,12 @@ $tab =  $laborTemplate->getNavTitles()[0];
             {!! View::make('partials.excel.properties', ['propertiesView' => $tab->excelView->propertysView]) !!}
 
         </div>
-        <button class="btn btn-default floatright" onclick="javascript:main.newFacilityPage.toProperties()">next</button>
+        <button class="btn btn-default floatright" id="toProperties" >next</button>
     </div>
     <div class="step2">
         <h1 class="centered" >Add Properties</h1>
-        <button class="btn btn-default floatleft" onclick="javascript:main.newFacilityPage.backToStart()">back</button>
-        <button class="btn btn-default floatright" onclick="javascript:main.newFacilityPage.finish()">finish</button>
+        <button class="btn btn-default floatleft" id="backToStart" >back</button>
+        <button class="btn btn-default floatright" id="finish" >finish</button>
     </div>
 
 </div>

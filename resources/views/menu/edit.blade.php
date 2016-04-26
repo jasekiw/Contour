@@ -94,6 +94,6 @@ use app\libraries\theme\menu\item\MenuItem;
 
 @section('scripts')
   <script type="text/javascript">
-      var editor = new MenuEditor($(".menuEditor"));
+//      var editor = new MenuEditor($(".menuEditor"));
   </script>
 @endsection

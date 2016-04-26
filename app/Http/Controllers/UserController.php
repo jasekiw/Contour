@@ -36,7 +36,7 @@ class UserController extends Controller {
 		LinkGenerator::generateAlphabetLinks($view, 'users_index_letter');
 		LinkGenerator::setupLinksAtoZ($view, 'users_show', 'username', 'id', $letter, User::all());
 		$view->indexURL = route('users_index');
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -51,7 +51,7 @@ class UserController extends Controller {
 		$groups = User_Access_Group::all();
 		$view->title = "Create a new user";
 		$view->groups = $groups;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class UserController extends Controller {
 		$groups = User_Access_Group::all();
 		$view->groups = $groups;
 		$view->user = $user;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**

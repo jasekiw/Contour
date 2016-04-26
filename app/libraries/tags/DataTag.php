@@ -25,18 +25,18 @@ use TijsVerkoyen\CssToInlineStyles\Exception;
  * Class DataTag
  * @package app\libraries\tags
  */
-class DataTag extends DatabaseObject
+class DataTag extends DataTagAbstract
 {
     /**
      * @var string
      * @access private
      */
-    private $name = null;
+    protected $name = null;
     /**
      * @var Type $type
      * @access private
      */
-    private $type = null;
+    protected $type = null;
     /**
      * @var int
      */
@@ -354,7 +354,7 @@ class DataTag extends DatabaseObject
     {
         $tag = Tag::where("id", "=", $this->id)->first();
         $tag->name = $this->name;
-        $tag->type_id = $this->type->get_id();
+        $tag->type_id = $this->get_type()->get_id();
         $tag->parent_tag_id = $this->parent_id;
         $tag->sort_number = $this->sort_number;
         $tag->save();
@@ -850,5 +850,19 @@ class DataTag extends DatabaseObject
             $nice_name_row->value = $name;
             $nice_name_row->save();
         }
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->name = $this->get_name();
+        $std->id = $this->get_id();
+        $std->typeId = $this->type_id;
+        $std->parentId = $this->parent_id;
+        return $std;
     }
 }

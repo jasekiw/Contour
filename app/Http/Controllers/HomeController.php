@@ -54,7 +54,7 @@ class HomeController extends Controller {
 		/** @var Revision $row */
 		$view->recentReports = $this->reports;
 		$view->recentFacilities = $this->facilities;
-		return $view;
+		return $this->render($view);
 	}
 
 

@@ -82,4 +82,10 @@ abstract class DatabaseObject
     {
         return (string)$this->id;
     }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public abstract function toStdClass();
 }

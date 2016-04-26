@@ -51,14 +51,6 @@ class Type extends TypeAbstract
     }
 
     /**
-     * @param String $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Sets the category and id by id
      * @param TypeCategory $category
      */
@@ -67,19 +59,12 @@ class Type extends TypeAbstract
         $this->category = $category;
     }
 
-    public function setCategoryId($id)
+    /**
+     * @param String $name
+     */
+    public function setName($name)
     {
-        $this->category_id = $id;
-    }
-    public function getCategoryId()
-    {
-        if(!isset($this->id))
-            return null;
-        if(isset($this->category_id))
-            return $this->category_id;
-        $this->category_id =  \App\Models\TypeModel::where('id', '=', $this->id)->first()->type_category_id;
-        return $this->category_id;
-
+        $this->name = $name;
     }
 
     public function save()
@@ -101,31 +86,11 @@ class Type extends TypeAbstract
     }
 
     /**
-     * If the tag does not exist in the database then create a new one and set the id
-     */
-    private function createNew()
-    {
-        $type = new TypeModel();
-        $type->name = $this->getName();
-        $type->type_category_id = $this->getCategory()->get_id();
-        $type->save();
-        $this->id = $type->id;
-    }
-
-    /**
      * @return String
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return int
-     */
-    public function get_id()
-    {
-        return $this->id;
     }
 
     /**
@@ -137,6 +102,34 @@ class Type extends TypeAbstract
             return $this->category;
         $this->category = TypeCategory::GetByID($this->getCategoryId());
         return $this->category;
+    }
+
+    public function getCategoryId()
+    {
+        if(!isset($this->id))
+            return null;
+        if(isset($this->category_id))
+            return $this->category_id;
+        $this->category_id =  \App\Models\TypeModel::where('id', '=', $this->id)->first()->type_category_id;
+        return $this->category_id;
+
+    }
+
+    public function setCategoryId($id)
+    {
+        $this->category_id = $id;
+    }
+
+    /**
+     * If the tag does not exist in the database then create a new one and set the id
+     */
+    private function createNew()
+    {
+        $type = new TypeModel();
+        $type->name = $this->getName();
+        $type->type_category_id = $this->getCategory()->get_id();
+        $type->save();
+        $this->id = $type->id;
     }
 
     /**
@@ -175,5 +168,26 @@ class Type extends TypeAbstract
     {
         TypeModel::where('id', '=', $this->id)->delete();
         $this->id = null;
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->name = $this->name;
+        $std->category_id = $this->getCategoryId();
+        $std->id = $this->get_id();
+        return $std;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_id()
+    {
+        return $this->id;
     }
 }

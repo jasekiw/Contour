@@ -47,7 +47,7 @@ class SheetsController extends Controller
         $view->templates = $templates;
         $view->title = "Add New Sheet";
         $view->parentID = $id;
-        return $view;
+        return $this->render($view);
     }
     public function generateFacilityTemplate()
     {
@@ -74,7 +74,7 @@ class SheetsController extends Controller
      * @return \Illuminate\Contracts\View\View
      */
     public function createFacility($id) {
-        Theme::enqueue_script('data_block_editor', "assets/ts/Main/compiled.js");
+//        Theme::enqueue_script('data_block_editor', "assets/ts/Main/compiled.js");
         $view = View::make('sheets.createfacility');
         $excel = DataTags::get_by_string('excel', -1);
         $templateTag = $excel->findChild('templates');
@@ -83,7 +83,7 @@ class SheetsController extends Controller
         $view->laborTemplate = $excelView;
         $view->title = "Add New Facility";
         $view->parentID = $id;
-        return $view;
+        return $this->render($view);
     }
 
     /**
@@ -127,7 +127,7 @@ class SheetsController extends Controller
     public function edit($id)
     {
 
-        Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
+//        Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
 
         $view = \View::make("excel.editor"); // gets the editor view
 //        $timeTracker = new TimeTracker();
@@ -154,7 +154,7 @@ class SheetsController extends Controller
 //        $view->summaryTable = $compiler->summaryTable;
 //        $view->compositTables = $compiler->compositTables;
         $view->sheet = $excelView;
-        return $view;
+        return $this->render($view);
     }
 
     /**

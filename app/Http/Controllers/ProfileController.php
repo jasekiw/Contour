@@ -61,7 +61,7 @@ class ProfileController extends Controller {
 			array_push($history, $historyItem);
 		}
 		$view->history = $history;
-		return $view;
+		return $this->render($view);
 	}
 
 

@@ -16,7 +16,8 @@ class TestPluginController extends Controller
 
     public function index()
     {
-       $view =  view()->file('../views/index.php');
+        $view =  view()->file('../views/index.php');
+
         $view->title = "hello";
 
         return 'hello';

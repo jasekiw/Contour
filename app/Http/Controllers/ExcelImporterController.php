@@ -22,7 +22,7 @@ class ExcelImporterController extends Controller
      */
     public function index()
     {
-        Contour::getThemeManager()->enqueueScript('MainJavascript', 'assets/ts/main/compiled.js');
+//        Contour::getThemeManager()->enqueueScript('MainJavascript', 'assets/ts/main/compiled.js');
         $view = \View::make('excelimporter.index');
         $suiteManager = new TemplateSuiteManager();
         $suites = $suiteManager->getSuiteCollection()->getAll();
@@ -30,7 +30,7 @@ class ExcelImporterController extends Controller
         $view->title = "Excel Importer";
         /** @noinspection PhpUndefinedFieldInspection */
         $view->suites = $suites;
-        return $view;
+        return $this->render($view);
     }
     public function start()
     {

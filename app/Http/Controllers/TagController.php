@@ -28,7 +28,7 @@ class TagController extends Controller {
 		$view = \View::make('tags.index');
 		$view->title = "Tag Browser";
 		$view->tags = $topTags;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -102,7 +102,7 @@ class TagController extends Controller {
 		$view->subtitle = $tag->get_name();
 		$view->tags = $topTags;
 		$view->currently_viewing = $tag;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -193,5 +193,6 @@ class TagController extends Controller {
 			$answer->success = false;
 		return json_encode($answer);
 	}
+   
 
 }

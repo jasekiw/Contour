@@ -82,63 +82,6 @@ class FormulaParser {
     }
 	
     /**
-     * Get Formula
-     *
-     * @return string
-     */
-    public function getFormula() {
-    	return $this->_formula;
-    }
-    
-    /**
-     * Get Token
-     *
-     * @param 	int		$pId	Token id
-     * @return	string
-     * @throws  Exception
-     */
-    public function getToken($pId = 0) {
-    	if (isset($this->_tokens[$pId])) {
-    		return $this->_tokens[$pId];
-    	} else {
-    		throw new Exception("Token with id $pId does not exist.");
-    	}
-    }
-
-	/**
-	 * @param FormulaToken $token
-	 * @param int $pId
-	 * @return bool
-	 * @throws Exception
-     */
-	public function setToken($token, $pId = 0) {
-		if (isset($this->_tokens[$pId])) {
-			$this->_tokens[$pId] = $token;
-			return true;
-		} else {
-			throw new Exception("Token with id $pId does not exist.");
-		}
-	}
-    
-    /**
-     * Get Token count
-     *
-     * @return string
-     */
-    public function getTokenCount() {
-    	return count($this->_tokens);
-    }
-    
-    /**
-     * Get Tokens
-     *
-     * @return FormulaToken[]
-     */
-    public function getTokens() {
-    	return $this->_tokens;
-    }
-    
-    /**
      * Parse to tokens
      */
     private function _parseToTokens() {
@@ -476,7 +419,9 @@ class FormulaParser {
 					);
 					$value = "";
 				}
-				
+                /**
+                 *
+                 */
 				$tmp = array_pop($stack);
 				$tmp->setValue("");
 				$tmp->setTokenSubType(FormulaToken::TOKEN_SUBTYPE_STOP);
@@ -692,5 +637,62 @@ class FormulaParser {
         
         	array_push($this->_tokens, $token);
 		}
+    }
+    
+    /**
+     * Get Formula
+     *
+     * @return string
+     */
+    public function getFormula() {
+    	return $this->_formula;
+    }
+
+    /**
+     * Get Token
+     *
+     * @param 	int		$pId	Token id
+     * @return	string
+     * @throws  Exception
+     */
+    public function getToken($pId = 0) {
+    	if (isset($this->_tokens[$pId])) {
+    		return $this->_tokens[$pId];
+    	} else {
+    		throw new Exception("Token with id $pId does not exist.");
+    	}
+    }
+    
+	/**
+	 * @param FormulaToken $token
+	 * @param int $pId
+	 * @return bool
+	 * @throws Exception
+     */
+	public function setToken($token, $pId = 0) {
+		if (isset($this->_tokens[$pId])) {
+			$this->_tokens[$pId] = $token;
+			return true;
+		} else {
+			throw new Exception("Token with id $pId does not exist.");
+		}
+	}
+    
+    /**
+     * Get Token count
+     *
+     * @return string
+     */
+    public function getTokenCount() {
+    	return count($this->_tokens);
+    }
+    
+    /**
+     * Get Tokens
+     *
+     * @return FormulaToken[]
+     */
+    public function getTokens() {
+    	return $this->_tokens;
     }
 }

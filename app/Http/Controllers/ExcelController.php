@@ -104,7 +104,7 @@ class ExcelController extends Controller {
 	 */
 	public function edit($id)
 	{
-		Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
+//		Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
 		$datatag = DataTags::get_by_id($id);
 		$view = \View::make('excel.index');
 		$view->title = "Excel Editor";
@@ -121,7 +121,7 @@ class ExcelController extends Controller {
 		}
 		$view->backtoLink = '<a href="' . $url . '"><i class="fa fa-arrow-left back_arrow"></i>Back to Tag Browser</a>';
 		$view->sheet = $datatag;
-		return $view;
+		return $this->render($view);
 	}
 
 
@@ -141,7 +141,7 @@ class ExcelController extends Controller {
 		$view->backtoLink = '';
 		$view->sheet = $datatag;
 		$view->sheetId = $datatag->get_id();
-		return $view;
+		return $this->render($view);
 	}
 
 

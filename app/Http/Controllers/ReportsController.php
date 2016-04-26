@@ -35,7 +35,7 @@ class ReportsController extends Controller {
 		}
 		$view->title = 'Reports';
 		$view->reports = $reports;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -56,7 +56,7 @@ class ReportsController extends Controller {
 		$view->compositTags = $compiler->compositTags;
 		$view->summaryTable = $compiler->summaryTable;
 		$view->compositTables = $compiler->compositTables;
-		return $view;
+		return $this->render($view);
 	}
 
 	/**
@@ -77,7 +77,7 @@ class ReportsController extends Controller {
 		$view->compositTags = $compiler->compositTags;
 		$view->summaryTable = $compiler->summaryTable;
 		$view->compositTables = $compiler->compositTables;
-		return $view;
+		return $this->render($view);
 	}
 
 

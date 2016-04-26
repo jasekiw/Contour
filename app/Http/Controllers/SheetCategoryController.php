@@ -39,7 +39,7 @@ class SheetCategoryController extends Controller
         $view->items = $facilities;
 
 
-        return $view;
+        return $this->render($view);
     }
 
     /**
@@ -115,7 +115,7 @@ class SheetCategoryController extends Controller
         $view->title = $parent->get_name();
         $view->items = $categories;
         $view->tag = $parent;
-        return $view;
+        return $this->render($view);
     }
 
     /**

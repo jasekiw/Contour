@@ -8,6 +8,4 @@
 ?>
 
 <script type="text/javascript">
-    var main = new Main();
-    main.executeNewFacilityPage();
 </script>

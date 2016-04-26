@@ -80,6 +80,33 @@ class DataBlock extends DataBlockAbstract
     }
 
     /**
+     * Deletes The Object
+     * @return mixed
+     */
+    public function delete()
+    {
+        // TODO: Implement delete() method.
+    }
+
+    /**
+     * Returns a standard object encoding of this Type
+     * @return \stdClass
+     */
+    public function toStdClass()
+    {
+        $std = new \stdClass();
+        $std->id = $this->get_id();
+        $std->value = $this->getValue();
+        $std->tags = [];
+        foreach($this->getTags()->getAsArray() as $key => $tag)
+            $std->tags[$key] = $tag->toStdClass();
+
+        $std->updated_at = $this->updated_at();
+        $std->created_at = $this->created_at();
+        return $std;
+    }
+
+    /**
      * Gets the date at when the object was updated.
      * @return string
      */
@@ -95,14 +122,5 @@ class DataBlock extends DataBlockAbstract
     public function created_at()
     {
         return $this->created_at;
-    }
-
-    /**
-     * Deletes The Object
-     * @return mixed
-     */
-    public function delete()
-    {
-        // TODO: Implement delete() method.
     }
 }
