@@ -34,7 +34,7 @@ use app\libraries\theme\menu\item\MenuItem;
     </div>
     <div class="menuEditor" menu="{!! $menu->get_id() !!}">
 
-        {!! Form::open(['method' => 'PUT', 'url' => route('menu.update'), 'class' => 'resource_form'] )!!}
+        {!! Form::open(['method' => 'PUT', 'url' => route('menu.update', $menu->get_id() ), 'class' => 'resource_form'] )!!}
             <div class="inside">
                 <div class="row headerRow">
                     <div class="col-md-2">

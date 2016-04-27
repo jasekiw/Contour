@@ -6,11 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
+        "laravel/framework": "5.2.*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "venturecraft/revisionable": "1.*",
         "maatwebsite/excel": "~2.0.0",
-        "illuminate/html": "5.*",
+        "laravelcollective/html": "5.2.*",
         "doctrine/dbal": "^2.5",
         "barryvdh/laravel-async-queue": "0.4.x"
     },
@@ -18,7 +18,9 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1"
+        "phpspec/phpspec": "~2.1",
+        "symfony/dom-crawler": "~3.0",
+        "symfony/css-selector": "~3.0"
     },
     "autoload": {
         "classmap": [
@@ -50,7 +52,6 @@
             "php artisan clear-compiled"
         ],
         "post-update-cmd": [
-            "php artisan optimize",
             "php artisan clear-compiled",
             "php artisan ide-helper:generate",
             "php artisan optimize"

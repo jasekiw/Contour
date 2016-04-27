@@ -10,10 +10,13 @@ import {mouse} from "../components/MouseHandler";
 export class SheetEditor
 {
     public dataBlockEditor : DataBlockEditor;
+    /**
+     * Table element
+     */
     private sheet : JQuery;
     private currentText : string;
-    private addColumn : JQuery;
-    private addRow : JQuery;
+    private addColumnTagElement : JQuery;
+    private addRowTagElement : JQuery;
     private newTagDialog : NewTagDialog;
     constructor(dataBlockEditor : DataBlockEditor)
     {
@@ -29,7 +32,7 @@ export class SheetEditor
         $(".cell input").focusin((e) => {
             var currentElement = $(e.currentTarget);
             this.sheet =  currentElement.parents('.sheet_editor');
-            this.sheet.find('.sheet_row').each( (index :number, element : Element) => {
+            this.sheet.find('.sheet_row').each( (index : number, element : Element) => {
                 var $element = $(element);
                 $element.removeClass('current_row');
             });
@@ -49,14 +52,14 @@ export class SheetEditor
         var newColumnTagTemplate =  `<th class="new_column"><i class="fa fa-plus" aria-hidden="true"></i></th>`;
         headerRow.append($(newColumnTagTemplate));
 
-        this.addColumn = headerRow.find(".new_column i");
+        this.addColumnTagElement = headerRow.find(".new_column i");
         var body = this.sheet.find("tbody");
         var newRowTemplate = `<tr class="new_row"><td class="row_name"><i class="fa fa-plus" aria-hidden="true"></i></td></tr>`;
         body.append($(newRowTemplate));
-        this.addRow = body.find(".new_row i");
+        this.addRowTagElement = body.find(".new_row i");
 
-        this.addColumn.click(() => this.showNewTagDialog("column"));
-        this.addRow.click(() => this.showNewTagDialog("row"));
+        this.addColumnTagElement.click(() => this.showNewTagDialog("column"));
+        this.addRowTagElement.click(() => this.showNewTagDialog("row"));
         
     }
 
@@ -66,6 +69,16 @@ export class SheetEditor
     }
     private handleNewTag(tag : PlainTag)
     {
-        
+        if(tag.type == "column")
+        {
+            this.sheet.find("thead tr .new_column").before(`<th class="sheet_column" tag="` + tag.id + `">` + tag.name + `</th>`);
+        }
+        else
+        {
+            this.sheet.find("tbody .new_row").before(`
+            <tr class="sheet_row" tag="` + tag.id + `">
+                <td class="row_name" tag_id="` + tag.id + `">` + tag.name + `</td>
+            </tr>`);
+        }
     }
 }

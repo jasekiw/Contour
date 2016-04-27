@@ -6,11 +6,16 @@ export var template =
 `
 <div class="tag_editor create_ui" id="[id]">
     <h3 class="title">Create</h3>
-    <form method="POST" action="/tags/create">
+    <form class="form-inline" method="POST" action="/tags/create">
         <input type="hidden" name="parent_id" value="" />
-        <label>Name</label>
-        <input type="text" name="name" value="" />
-        <select name="type"></select>
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" name="name" value="" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="type"></select>
+        </div>
+        
         <input type="submit" value="Cancel" class="btn btn-danger cancel" />
         <input type="submit" value="Create" class="btn btn-primary submit" />
     </form>

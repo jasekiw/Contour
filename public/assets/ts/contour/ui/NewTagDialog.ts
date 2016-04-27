@@ -76,6 +76,9 @@ export class NewTagDialog {
         return this.id;
     }
 
+    /**
+     * grabs all tag types and puts them into the select menu
+     */
     private populateTypes() : void {
 
         Types.getTagTypes((e : AjaxTagArrayReponse) => {
@@ -87,9 +90,19 @@ export class NewTagDialog {
         });
     }
 
+    /**
+     * returns a string of select options of the givenh string
+     * @param {string} type
+     * @returns {string}
+     */
     private getTypeOption(type: string) {
         return  `<option value="` + type + `" >` + type + `</option>\r\n`;
     }
+
+    /**
+     * Called when the user submits the form. The Method onSubmit will be called with the tag data to be handled outside this class
+     * @param {JQueryEventObject} e
+     */
     private submit(e : JQueryEventObject) {
         e.preventDefault();
         var url = this.form.attr("action");
@@ -98,7 +111,6 @@ export class NewTagDialog {
         var type = this.form.find('[name="type"]').val();
         TagsApi.create(name,parentId, type, this.onSubmit);
         this.hide();
-        return false;
     }
     public hide() {
         this.element.hide();

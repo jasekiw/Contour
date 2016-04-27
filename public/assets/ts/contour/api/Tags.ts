@@ -13,9 +13,14 @@ export class TagsApi {
      * @param  funtionToCall The function to call to give the tag object to
      */
     public static create(name : string, parentId : number, type: string, funtionToCall : (e : PlainTag) => void = null) : void{
-        new Ajax().post("/api/tags/create", {
-            
-        }, (e : AjaxTagReponse) => {
+        var data =   {
+            name: name,
+            parent_id: parentId,
+            type: type
+        };
+        new Ajax().post("/api/tags/create",
+            data
+            , (e : AjaxTagReponse) => {
             if(e.success)
                 if(funtionToCall !== null)
                     funtionToCall(e.payload);

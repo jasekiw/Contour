@@ -3,4 +3,8 @@
  */
 export interface PlainTag {
     name : string;
+    id : number;
+    typeId : number;
+    type : string;
+    parentId : number;
 }

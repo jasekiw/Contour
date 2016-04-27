@@ -57,6 +57,9 @@ define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types"
         NewTagDialog.prototype.getId = function () {
             return this.id;
         };
+        /**
+         * grabs all tag types and puts them into the select menu
+         */
         NewTagDialog.prototype.populateTypes = function () {
             var _this = this;
             Types_1.Types.getTagTypes(function (e) {
@@ -67,9 +70,18 @@ define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types"
                 _this.form.find('select[name="type"]').html(selectOptions);
             });
         };
+        /**
+         * returns a string of select options of the givenh string
+         * @param {string} type
+         * @returns {string}
+         */
         NewTagDialog.prototype.getTypeOption = function (type) {
             return "<option value=\"" + type + "\" >" + type + "</option>\r\n";
         };
+        /**
+         * Called when the user submits the form. The Method onSubmit will be called with the tag data to be handled outside this class
+         * @param {JQueryEventObject} e
+         */
         NewTagDialog.prototype.submit = function (e) {
             e.preventDefault();
             var url = this.form.attr("action");
@@ -78,7 +90,6 @@ define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types"
             var type = this.form.find('[name="type"]').val();
             Tags_1.TagsApi.create(name, parentId, type, this.onSubmit);
             this.hide();
-            return false;
         };
         NewTagDialog.prototype.hide = function () {
             this.element.hide();

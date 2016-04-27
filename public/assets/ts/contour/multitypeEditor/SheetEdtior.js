@@ -37,19 +37,25 @@ define(["require", "exports", "../Ajax", "../ui/NewTagDialog", "../components/Mo
             var headerRow = this.sheet.find("thead > tr");
             var newColumnTagTemplate = "<th class=\"new_column\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></th>";
             headerRow.append($(newColumnTagTemplate));
-            this.addColumn = headerRow.find(".new_column i");
+            this.addColumnTagElement = headerRow.find(".new_column i");
             var body = this.sheet.find("tbody");
             var newRowTemplate = "<tr class=\"new_row\"><td class=\"row_name\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></td></tr>";
             body.append($(newRowTemplate));
-            this.addRow = body.find(".new_row i");
-            this.addColumn.click(function () { return _this.showNewTagDialog("column"); });
-            this.addRow.click(function () { return _this.showNewTagDialog("row"); });
+            this.addRowTagElement = body.find(".new_row i");
+            this.addColumnTagElement.click(function () { return _this.showNewTagDialog("column"); });
+            this.addRowTagElement.click(function () { return _this.showNewTagDialog("row"); });
         };
         SheetEditor.prototype.showNewTagDialog = function (type) {
             var _this = this;
             this.newTagDialog.show(function (e) { return _this.handleNewTag(e); }, parseInt(this.sheet.attr("sheet")), type, MouseHandler_1.mouse.x, MouseHandler_1.mouse.y);
         };
         SheetEditor.prototype.handleNewTag = function (tag) {
+            if (tag.type == "column") {
+                this.sheet.find("thead tr .new_column").before("<th class=\"sheet_column\" tag=\"" + tag.id + "\">" + tag.name + "</th>");
+            }
+            else {
+                this.sheet.find("tbody .new_row").before("\n            <tr class=\"sheet_row\" tag=\"" + tag.id + "\">\n                <td class=\"row_name\" tag_id=\"" + tag.id + "\">" + tag.name + "</td>\n            </tr>");
+            }
         };
         return SheetEditor;
     }());

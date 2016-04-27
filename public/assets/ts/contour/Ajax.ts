@@ -31,14 +31,13 @@ export class Ajax
      * @param data
      * @param functiontoCall
      */
-    public post(url :string , data  ,  functiontoCall : (e ) => void)
+    public post(url :string , data : any,  functiontoCall : (e ) => void)
     {
         $.ajax( {
-                type: "POST",
+                method: "POST",
                 url: url,
                 success: (e) =>
                 {
-                    e.success = true;
                     functiontoCall(e);
                 },
                 data: data,

@@ -1,5 +1,4 @@
 cloc.exe
-/app/libraries/tags/Collection/TagCollection.php
 /vendor
 /node_modules
 Homestead.yaml

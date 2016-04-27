@@ -862,6 +862,7 @@ class DataTag extends DataTagAbstract
         $std->name = $this->get_name();
         $std->id = $this->get_id();
         $std->typeId = $this->type_id;
+        $std->type = $this->get_type()->getName();
         $std->parentId = $this->parent_id;
         return $std;
     }

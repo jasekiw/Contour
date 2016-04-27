@@ -15,7 +15,12 @@ define(["require", "exports", "../Ajax"], function (require, exports, Ajax_1) {
          */
         TagsApi.create = function (name, parentId, type, funtionToCall) {
             if (funtionToCall === void 0) { funtionToCall = null; }
-            new Ajax_1.Ajax().post("/api/tags/create", {}, function (e) {
+            var data = {
+                name: name,
+                parent_id: parentId,
+                type: type
+            };
+            new Ajax_1.Ajax().post("/api/tags/create", data, function (e) {
                 if (e.success)
                     if (funtionToCall !== null)
                         funtionToCall(e.payload);

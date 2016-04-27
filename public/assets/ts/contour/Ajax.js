@@ -31,10 +31,9 @@ define(["require", "exports"], function (require, exports) {
          */
         Ajax.prototype.post = function (url, data, functiontoCall) {
             $.ajax({
-                type: "POST",
+                method: "POST",
                 url: url,
                 success: function (e) {
-                    e.success = true;
                     functiontoCall(e);
                 },
                 data: data,
