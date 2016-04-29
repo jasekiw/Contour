@@ -113,16 +113,16 @@ class UserController extends Controller {
 	 * @return Response
 	 */
 	public function update($id)
-	{	$userID = \Input::get("user");
-		$user = User::where('id', '=', $userID)->first();
+	{
+		$user = User::where('id', '=', $id)->first();
 		$newPassword = \Input::get('password');
 		if($newPassword !== null || strlen($newPassword) != 0)
-			$user->password = \Hash::make(\Input::get('password'));
+			$user->password = \Hash::make($newPassword);
 		$user->user_access_group_id = \Input::get('group');
 		$user->save();
 		  /** @var \Illuminate\Routing\Redirector $redirect */
         $redirect = redirect();
-        return $redirect->route('users_show', [$userID])->with("message", "Successfully Saved");
+        return $redirect->route('users_show', [$id])->with("message", "Successfully Saved");
 	}
 
 

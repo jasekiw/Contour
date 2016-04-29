@@ -45,7 +45,7 @@
             {!! Form::label('User Name') !!}
             {!! Form::input('text', 'username', $user->username) !!}
             {!! Form::label('Password') !!}
-            {!! Form::input('text', 'password', $user->password) !!}
+            {!! Form::input('password', 'password', '') !!}
             {!! Form::label('Email') !!}
             {!! Form::input('text', 'email', $user->email) !!}
         </div>
