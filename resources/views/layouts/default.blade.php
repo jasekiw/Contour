@@ -65,5 +65,6 @@
         </div>
         <!-- /wrapper -->
     @include("includes.footer")
+
     </body>
 </html>

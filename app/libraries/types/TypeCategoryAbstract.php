@@ -20,22 +20,6 @@ abstract class TypeCategoryAbstract extends DatabaseObject
     protected $name = null;
 
 
-    /**
-     * @param int $id
-     */
-    public function set_id($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * Gets the ID
-     * @return int
-     */
-    public function get_id()
-    {
-        return $this->id;
-    }
 
     /**
      * Gets the name

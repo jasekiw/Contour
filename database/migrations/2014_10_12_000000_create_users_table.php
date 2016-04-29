@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->string('activation_code')->unique();
+//            $table->string('activation_code')->unique(); // emails not setup yet
             $table->unsignedInteger('user_access_group_id');
             $table->string('password', 60);
             //$table->string('remember_token')->nullable();

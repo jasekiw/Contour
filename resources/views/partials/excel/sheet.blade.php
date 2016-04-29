@@ -18,14 +18,14 @@ $tag = $sheet->getParentTag();
         <tr>
             <th></th>
             @foreach($sheet->getColumnTags() as $column)
-                <th class="sheet_column" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
+                <th class="sheet_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
             @endforeach
         </tr>
         </thead>
         <tbody>
             @foreach($sheet->getRowTags() as $y => $row)
                 <tr class="sheet_row" tag="{!! $row->get_id() !!}">
-                    <td class="row_name" tag_id="{!! $row->get_id() !!}" >{!! $row->get_name() !!}</td>
+                    <td class="row_name tag" tag="{!! $row->get_id() !!}" >{!! $row->get_name() !!}</td>
                     @foreach($sheet->getColumnTags() as $x => $column)
                         <?php
                         $cell  = $sheet->getCell($x,$y);

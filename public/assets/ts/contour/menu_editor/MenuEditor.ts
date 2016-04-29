@@ -132,7 +132,7 @@ export class MenuEditor {
         });
        console.log("saving");
 
-        (new Ajax()).put("/menu/" + this.menuID, {links: linksToSave, isAjax: true}, (e) => {
+        (new Ajax()).put("/menu/" + this.menuID, {links: linksToSave, isAjax: true}, (e : {success: boolean, redirect: string}) => {
             if(e.success)
                 window.location.href = e.redirect;
         });

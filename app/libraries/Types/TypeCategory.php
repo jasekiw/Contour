@@ -108,13 +108,6 @@ class TypeCategory extends TypeCategoryAbstract
         return $category;
     }
 
-    /**
-     * @param int $id
-     */
-    public function set_id($id)
-    {
-        $this->id = $id;
-    }
 
     /**
      * Sets the name

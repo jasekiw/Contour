@@ -13,7 +13,9 @@ use app\libraries\theme\Theme;
 
 Theme::enqueue_style('main_style', 'assets/sass/style.css');
 Theme::enqueue_script('flash_message', 'theme/js/plugins/jquery-gritter/jquery.gritter.min.js');
-
+Theme::enqueue_script('context', 'theme/js/plugins/bootstrap-contextmenu/bootstrap-contextmenu.js');
+Theme::enqueue_script('jquery-ui', 'theme/js/jquery-ui/jquery-ui-1.10.4.custom.js');
+Theme::enqueue_script('full-height', 'assets/js/full-height/FullHeight.js');
 //Theme::enqueue_script('application', 'assets/ts/Main/Main.js');
 /**
  * Profile Page
@@ -43,7 +45,7 @@ Theme::enqueue_style('drop-zone', 'assets/css/mini_drop_zone/style.css', 'profil
  * Tag Browser
  */
 
-Theme::enqueue_script('context', 'theme/js/plugins/bootstrap-contextmenu/bootstrap-contextmenu.js', 'Tag Browser');
+
 
 
 //Theme::enqueue_script('loadexcel', 'assets/js/excel/ExcelTableBuilder.js', 'Excel Editor');
@@ -51,6 +53,6 @@ Theme::enqueue_script('context', 'theme/js/plugins/bootstrap-contextmenu/bootstr
 Theme::enqueue_script('progressBar', 'assets/js/plugins/bootstrap-progressbar/bootstrap-progressbar.min.js', 'Excel Editor');
 
 Theme::enqueue_script('tag_editor', 'assets/js/tag_editor/TagEditor.js', 'Tag Browser');
-Theme::enqueue_script('jquery-ui', 'theme/js/jquery-ui/jquery-ui-1.10.4.custom.js', 'Tag Browser');
+
 
 

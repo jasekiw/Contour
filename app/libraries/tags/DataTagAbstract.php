@@ -11,6 +11,7 @@ use app\libraries\database\DatabaseObject;
 use app\libraries\memory\datablocks\DataBlock;
 use app\libraries\memory\tags\TagCollection;
 use app\libraries\memory\types\Type;
+use app\libraries\types\TypeAbstract;
 use Exception;
 
 
@@ -84,9 +85,9 @@ abstract class DataTagAbstract extends DatabaseObject
     public abstract function get_type();
 
     /**
-     * @param Type $type
+     * @param TypeAbstract $type
      */
-    public abstract function set_type($type);
+    public abstract function set_type(TypeAbstract $type);
 
     /**
      * @return string

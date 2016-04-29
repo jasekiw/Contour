@@ -51,7 +51,7 @@ abstract class DatabaseObject
      * Sets the row ID of the Database Object
      * @param int $id
      */
-    public  function set_id($id)
+    public function set_id(int $id)
     {
         $this->id = $id;
     }

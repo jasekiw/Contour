@@ -1,35 +1,23 @@
 /**
  * Created by Jason Gallavin on 4/21/2016.
  */
-import {template as NewTagTemplate, style} from "./templates/NewTagDialogTemplate";
+import {content} from "./templates/NewTagDialogTemplate";
 import {Types, AjaxTagArrayReponse} from "../api/Types";
-import {PlainType} from "../data/type/PlainType";
 import {TagsApi} from "../api/Tags";
-import {PlainTag} from "../data/datatag/PlainTag";
+import {PlainTag} from "../data/datatag/DataTag";
+import {PlainType} from "../data/type/DataType";
+import {DialogBox} from "./Dialog";
+
+
 /**
  * The dialog used to create a new tag
  */
-export class NewTagDialog {
+export class NewTagDialog extends DialogBox {
     
-    private id : string;
-    private element : JQuery;
-    private form : JQuery;
-    private onSubmit : (PlainTag) => void;
-    constructor() {
-        this.id =  "createTag_" + (new Date().getTime().toString());
-        var template = NewTagTemplate.replace("[id]", () : string => { return this.getId() } );
-        $("body").append(template);
-        $("body").append(style);
-        this.element = $("#" + this.id);
-        this.form = this.element.find("form");
-        this.form.find('[type="submit"]').click( (e) => this.submit(e));
-        $('.create_ui form .cancel').click( (e) =>
-        {
-            e.preventDefault();
-            this.hide();
-        });
 
-}
+    constructor() {
+        super("Create", "Create", content,"/tags/create");
+    }
 
     /**
      *
@@ -41,8 +29,7 @@ export class NewTagDialog {
      */
     public show(onSubmit : (tag :PlainTag) => void, parentId: number, types : string = "all",x : number, y: number)
     {
-        this.onSubmit = onSubmit;
-
+        super._show(onSubmit, x, y);
         this.form.find('input[name="parent_id"]').val( parentId );
         this.form.find('input[name="name"]').val("");
         if(types == "all")
@@ -52,29 +39,10 @@ export class NewTagDialog {
             this.form.find('select[name="type"]').hide();
             this.form.find('select[name="type"]').html(this.getTypeOption(types))
         }
-        var middleX = $(window).width() / 2;
-        var middleY = $(window).height() / 2;
-        this.element.css("right",'');
-        this.element.css("left",'');
-        this.element.css("top",'');
-        this.element.css("bottom",'');
-        this.element.css('position', 'absolute');
-        if(x > middleX)
-            this.element.css("right",$(window).width() - x);
-        else
-            this.element.css("left",x);
-        if(y > middleY)
-            this.element.css("bottom", $(window).height() - y);
-        else
-            this.element.css("top",  y);
-
         this.element.show();
     }
 
-    public getId()
-    {
-        return this.id;
-    }
+   
 
     /**
      * grabs all tag types and puts them into the select menu
@@ -103,7 +71,7 @@ export class NewTagDialog {
      * Called when the user submits the form. The Method onSubmit will be called with the tag data to be handled outside this class
      * @param {JQueryEventObject} e
      */
-    private submit(e : JQueryEventObject) {
+    protected submit(e : JQueryEventObject) {
         e.preventDefault();
         var url = this.form.attr("action");
         var name =this.form.find('[name="name"]').val();

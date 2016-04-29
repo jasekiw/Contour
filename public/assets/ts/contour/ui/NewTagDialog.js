@@ -1,22 +1,17 @@
-define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types", "../api/Tags"], function (require, exports, NewTagDialogTemplate_1, Types_1, Tags_1) {
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types", "../api/Tags", "./Dialog"], function (require, exports, NewTagDialogTemplate_1, Types_1, Tags_1, Dialog_1) {
     "use strict";
     /**
      * The dialog used to create a new tag
      */
-    var NewTagDialog = (function () {
+    var NewTagDialog = (function (_super) {
+        __extends(NewTagDialog, _super);
         function NewTagDialog() {
-            var _this = this;
-            this.id = "createTag_" + (new Date().getTime().toString());
-            var template = NewTagDialogTemplate_1.template.replace("[id]", function () { return _this.getId(); });
-            $("body").append(template);
-            $("body").append(NewTagDialogTemplate_1.style);
-            this.element = $("#" + this.id);
-            this.form = this.element.find("form");
-            this.form.find('[type="submit"]').click(function (e) { return _this.submit(e); });
-            $('.create_ui form .cancel').click(function (e) {
-                e.preventDefault();
-                _this.hide();
-            });
+            _super.call(this, "Create", "Create", NewTagDialogTemplate_1.content, "/tags/create");
         }
         /**
          *
@@ -28,7 +23,7 @@ define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types"
          */
         NewTagDialog.prototype.show = function (onSubmit, parentId, types, x, y) {
             if (types === void 0) { types = "all"; }
-            this.onSubmit = onSubmit;
+            _super.prototype._show.call(this, onSubmit, x, y);
             this.form.find('input[name="parent_id"]').val(parentId);
             this.form.find('input[name="name"]').val("");
             if (types == "all")
@@ -37,25 +32,7 @@ define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types"
                 this.form.find('select[name="type"]').hide();
                 this.form.find('select[name="type"]').html(this.getTypeOption(types));
             }
-            var middleX = $(window).width() / 2;
-            var middleY = $(window).height() / 2;
-            this.element.css("right", '');
-            this.element.css("left", '');
-            this.element.css("top", '');
-            this.element.css("bottom", '');
-            this.element.css('position', 'absolute');
-            if (x > middleX)
-                this.element.css("right", $(window).width() - x);
-            else
-                this.element.css("left", x);
-            if (y > middleY)
-                this.element.css("bottom", $(window).height() - y);
-            else
-                this.element.css("top", y);
             this.element.show();
-        };
-        NewTagDialog.prototype.getId = function () {
-            return this.id;
         };
         /**
          * grabs all tag types and puts them into the select menu
@@ -95,7 +72,7 @@ define(["require", "exports", "./templates/NewTagDialogTemplate", "../api/Types"
             this.element.hide();
         };
         return NewTagDialog;
-    }());
+    }(Dialog_1.DialogBox));
     exports.NewTagDialog = NewTagDialog;
 });
 //# sourceMappingURL=NewTagDialog.js.map

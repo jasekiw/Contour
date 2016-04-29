@@ -28,17 +28,6 @@ abstract class TypeAbstract extends DatabaseObject
     protected $category = null;
 
 
-
-
-    /**
-     * Sets the ID of the Type Object
-     * @param int $id
-     */
-    public function set_id($id)
-    {
-        $this->id = $id;
-    }
-
     /**
      * Gets the Category Id
      * @return mixed
@@ -62,7 +51,7 @@ abstract class TypeAbstract extends DatabaseObject
     /**
      * @param String $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }

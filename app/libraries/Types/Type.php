@@ -8,8 +8,6 @@
 
 namespace app\libraries\types;
 
-
-use app\libraries\database\DatabaseObject;
 use App\Models\TypeModel;
 
 class Type extends TypeAbstract
@@ -22,7 +20,7 @@ class Type extends TypeAbstract
     /**
      * @param String $name
      */
-    function __construct($name = null)
+    function __construct(string $name = null)
     {
         $this->name = $name;
     }
@@ -31,16 +29,16 @@ class Type extends TypeAbstract
      * Sets the ID of the Type Object
      * @param int $id
      */
-    public function set_id($id)
+    public function set_id(int $id)
     {
         $this->id = $id;
     }
 
     /**
      * Sets the Instance by the row ID
-     * @param $id
+     * @param int $id
      */
-    public function setByID($id)
+    public function setByID(int $id)
     {
         $typemodel = TypeModel::where('id', '=', $id)->first();
         if(!isset($typemodel))
@@ -62,7 +60,7 @@ class Type extends TypeAbstract
     /**
      * @param String $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -110,7 +108,7 @@ class Type extends TypeAbstract
             return null;
         if(isset($this->category_id))
             return $this->category_id;
-        $this->category_id =  \App\Models\TypeModel::where('id', '=', $this->id)->first()->type_category_id;
+        $this->category_id =  TypeModel::where('id', '=', $this->id)->first()->type_category_id;
         return $this->category_id;
 
     }

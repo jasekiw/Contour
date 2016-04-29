@@ -1,5 +1,5 @@
 import {AjaxData, Ajax} from "../Ajax";
-import {PlainType} from "../data/type/PlainType";
+import {PlainType} from "../data/type/DataType";
 /**
  * Created by Jason Gallavin on 4/21/2016.
  */

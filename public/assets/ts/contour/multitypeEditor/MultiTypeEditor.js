@@ -1,12 +1,18 @@
-define(["require", "exports", "./DataBlockEditor", "./SheetEdtior"], function (require, exports, DataBlockEditor_1, SheetEdtior_1) {
+define(["require", "exports", "./DataBlockEditor", "./SheetEditor", "../ui/templates/TagContextMenu", "../components/TagContextMenuHandler"], function (require, exports, DataBlockEditor_1, SheetEditor_1, TagContextMenu_1, TagContextMenuHandler_1) {
     "use strict";
     /**
      * Created by Jason Gallavin on 12/22/2015.
      */
     var MultiTypeEditor = (function () {
         function MultiTypeEditor() {
+            var _this = this;
+            this.sheetEditors = [];
+            this.tagContextMenuHandler = new TagContextMenuHandler_1.TagContextMenuHandler(".tag");
+            $("body").append(TagContextMenu_1.template);
             this.dataBlockEditor = new DataBlockEditor_1.DataBlockEditor();
-            this.sheetEditor = new SheetEdtior_1.SheetEditor(this.dataBlockEditor);
+            $(".sheet_editor").each(function (index, element) {
+                _this.sheetEditors.push(new SheetEditor_1.SheetEditor(_this.dataBlockEditor, element));
+            });
         }
         return MultiTypeEditor;
     }());

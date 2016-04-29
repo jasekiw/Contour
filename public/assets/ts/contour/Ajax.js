@@ -7,7 +7,7 @@ define(["require", "exports"], function (require, exports) {
         function Ajax() {
         }
         /**
-         *
+         * submits a get request to the url and expects a json repsonse back
          * @param url
          * @param functiontoCall
          */
@@ -20,11 +20,13 @@ define(["require", "exports"], function (require, exports) {
                 },
                 dataType: 'json'
             }).fail(function (e) {
+                console.log("call failed");
+                console.log(e);
                 functiontoCall(e);
             });
         };
         /**
-         *
+         * submits a post request to the url and expects a json repsonse back
          * @param url
          * @param data
          * @param functiontoCall
@@ -34,17 +36,22 @@ define(["require", "exports"], function (require, exports) {
                 method: "POST",
                 url: url,
                 success: function (e) {
+                    if (!e.success) {
+                        console.log("call failed");
+                        console.log(e);
+                    }
                     functiontoCall(e);
                 },
                 data: data,
                 dataType: 'json'
             }).fail(function (e) {
-                e.success = false;
+                console.log("call failed");
+                console.log(e);
                 functiontoCall(e);
             });
         };
         /**
-         *
+         * submits a PUT request to the url and expects a json repsonse back
          * @param url
          * @param data
          * @param functiontoCall
@@ -54,13 +61,15 @@ define(["require", "exports"], function (require, exports) {
                 type: "PUT",
                 url: url,
                 success: function (e) {
-                    e.success = true;
+                    if (!e.success) {
+                        console.log("call failed");
+                        console.log(e);
+                    }
                     functiontoCall(e);
                 },
                 data: data,
                 dataType: 'json'
             }).fail(function (e) {
-                e.success = false;
                 functiontoCall(e);
             });
         };

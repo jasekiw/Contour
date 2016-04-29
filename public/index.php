@@ -9,6 +9,15 @@
 
 ini_set('display_errors',1);
 error_reporting(E_ALL);
+
+if(version_compare(phpversion(), '7.0.0', '<')===true)
+{
+    echo '
+    <div style="text-align:center; position:relative; top:44%; transform: translateY(-50%)">
+        <h4 style="color: #bababa; font-family: -webkit-pictograph; font-size: 29px; font-weight: 400;">This application requires php 7 to run.</h4>
+    </div>';
+    exit;
+}
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

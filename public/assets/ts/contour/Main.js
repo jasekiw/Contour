@@ -2,6 +2,9 @@ define(["require", "exports", "excelImport/ExcelImporterPage", "newfacility/NewF
     "use strict";
     var Main = (function () {
         function Main() {
+            $("body").on("contextmenu", function (e) {
+                return e.ctrlKey;
+            });
             this.classes = $('body').attr('class');
             if (this.contains('SheetsController@edit'))
                 this.executemultiTypeEdtior();

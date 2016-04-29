@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * @author Jason Gallavin
  * Date: 7/15/2015
@@ -10,14 +11,13 @@ namespace app\libraries\tags;
 use app\libraries\database\Query;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\datablocks\staticform\DataBlocks;
-use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
+use app\libraries\types\TypeAbstract;
 use app\libraries\types\Types;
 use App\Models\Tag;
-use app\libraries\database\DatabaseObject;
 use app\libraries\types\Type;
 use App\Models\Tag_meta;
-use DB;
+use App\Models\Tags_reference;
 use PDO;
 use TijsVerkoyen\CssToInlineStyles\Exception;
 
@@ -74,9 +74,8 @@ class DataTag extends DataTagAbstract
      * @param integer $sort_number
      * @throws Exception
      */
-    public function __construct($name = null, $parent_id = null, $type = null, $sort_number = null)
+    public function __construct(string $name = null, int $parent_id = null, Type $type = null, int $sort_number = null)
     {
-
         if($parent_id === -1) //fixes unsigned references
             $parent_id = 0;
         if(isset($name))
@@ -197,9 +196,9 @@ class DataTag extends DataTagAbstract
     }
 
     /**
-     * @param Type $type
+     * @param TypeAbstract $type
      */
-    public function set_type($type)
+    public function set_type(TypeAbstract $type)
     {
         if(isset($type))
         {
@@ -210,7 +209,7 @@ class DataTag extends DataTagAbstract
             $this->type = null;
     }
 
-    public function getTypeId()
+    public function getTypeId() : int
     {
         if(isset($this->type_id))
             return $this->type_id;
@@ -221,23 +220,26 @@ class DataTag extends DataTagAbstract
 
     /**
      * @param int $id
+     * @return void
      */
     public function set_type_id($id)
     {
         $this->type_id = $id;
         $this->type = null;
+        return;
     }
 
     /**
      * @return integer
      */
-    public function get_sort_number()
+    public function get_sort_number() : int
     {
         return $this->sort_number;
     }
 
     /**
      * @param integer $number
+     * @return void
      */
     public function set_sort_number($number)
     {
@@ -253,7 +255,7 @@ class DataTag extends DataTagAbstract
      * @returns bool
      *
      */
-    public function create()
+    public function create() : bool
     {
 
         if (!isset($this->name))
@@ -296,7 +298,7 @@ class DataTag extends DataTagAbstract
      * Checks to see if this tag has children
      * @return bool Returns true if this tag has children
      */
-    public function has_children()
+    public function has_children() : bool
     {
         if(!isset($this->id))
             return false;
@@ -306,22 +308,14 @@ class DataTag extends DataTagAbstract
            return false;
     }
 
-    /**
-     * Sets the sql table id
-     * @param $id
-     */
-    public function set_id($id)
-    {
-        $this->id = $id;
 
-    }
 
     /**
      * Saves the Tag to the database only if it exists
      * @return bool
      * @throws Exception
      */
-    public function save()
+    public function save() : bool
     {
         if(!isset($this->name))
             throw new Exception("The tag has to have a name before it can be saved.");
@@ -341,6 +335,9 @@ class DataTag extends DataTagAbstract
         return true;
     }
 
+    /**
+     * sets parent id to root if there is no parent Id set
+     */
     private function check_parent_id()
     {
         if($this->parent_id == -1 || !isset($this->parent_id))
@@ -490,6 +487,18 @@ class DataTag extends DataTagAbstract
         $this->id = null;
     }
 
+
+    /**
+     * Deletes the tag and all associated datablocks
+     */
+    public function fullDelete()
+    {
+        Tag::where("id", "=", $this->id)->delete();
+        Tag_meta::where('tag_id', '=',$this->id )->delete();
+        Tags_reference::where("tag_id", "=",$this->id )->delete();
+        $this->id = null;
+    }
+
     /**
      * Deletes this tag and all children
      */
@@ -544,7 +553,7 @@ class DataTag extends DataTagAbstract
             return $this->parent_id;
         else
         {
-            $sql = "SELECT parent_id FROM tags WHERE id = $this->id";
+            $sql = "SELECT parent_tag_id FROM tags WHERE id = $this->id";
             $parent_id = Query::getPDO()->query($sql)->fetchColumn(0);
             $this->parent_id = $parent_id;
             return $this->parent_id;

@@ -14,6 +14,11 @@ class Main {
     private classes : string;
     constructor()
     {
+
+        
+        $("body").on("contextmenu", (e : JQueryEventObject) => {
+            return e.ctrlKey;
+        });
        this.classes = $('body').attr('class');
         if(this.contains('SheetsController@edit'))
             this.executemultiTypeEdtior();

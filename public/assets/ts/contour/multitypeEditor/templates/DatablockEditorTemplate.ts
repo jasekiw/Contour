@@ -16,7 +16,6 @@ export var template =
         </div>
         <div class="bottom_section">
             <div class="calculated">
-
             </div>
             <div class="options">
                 <input type="submit" value="Save" class="submit" />

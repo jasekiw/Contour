@@ -1,4 +1,5 @@
 import {Ajax} from "../Ajax";
+import {PlainDataBlock as DataBlock} from "../data/datablock/DataBlock";
 /**
  * Created by Jason on 12/22/2015.
  */
@@ -23,7 +24,7 @@ export class DataBlockPopulator
         }
         console.log("tags to send");
         console.log({tags: Array(this.rows[this.rowIndex].id, this.columns[this.columnIndex].id) });
-        (new Ajax).post("/api/datablocks/get_by_tags", {tags: Array(this.rows[this.rowIndex].id, this.columns[this.columnIndex].id) }, (e) => functionToCall(e) );
+        (new Ajax).post("/api/datablocks/get_by_tags", {tags: Array(this.rows[this.rowIndex].id, this.columns[this.columnIndex].id) }, (e) => functionToCall(<{datablock: DataBlock, success: boolean}>e) );
 
         this.columnIndex++;
         if(this.columnIndex >= this.columns.length)

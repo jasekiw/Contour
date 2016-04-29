@@ -5,4 +5,6 @@
  * Date: 12/9/2015
  * Time: 12:00 AM
  */
-phpinfo();
+//phpinfo();
+
+ phpinfo();

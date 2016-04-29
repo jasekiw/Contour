@@ -2,8 +2,7 @@
  * Created by Jason Gallavin on 4/21/2016.
  */
 
-export var template =
-`
+export var template = `
 <div class="tag_editor create_ui" id="[id]">
     <h3 class="title">Create</h3>
     <form class="form-inline" method="POST" action="/tags/create">
@@ -16,14 +15,24 @@ export var template =
             <select class="form-control" name="type"></select>
         </div>
         
-        <input type="submit" value="Cancel" class="btn btn-danger cancel" />
+        <button class="btn btn-danger cancel">Cancel</button>
         <input type="submit" value="Create" class="btn btn-primary submit" />
     </form>
 </div>
 `;
 
-export var style =
-`
+export var content = `
+        <input type="hidden" name="parent_id" value="" />
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" name="name" value="" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="type"></select>
+        </div>
+`;
+
+export var style = `
     <style type="text/css">
     .tag_editor {
         border-radius: 5px;

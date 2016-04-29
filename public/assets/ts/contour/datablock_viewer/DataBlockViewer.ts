@@ -1,5 +1,6 @@
 import {DataBlockPopulator} from "./DataBlockPopulator";
 import {Ajax} from "../Ajax";
+import {PlainDataBlock as DataBlock} from "../data/datablock/DataBlock";
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */

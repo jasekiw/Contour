@@ -34,7 +34,12 @@ class TagController extends Controller
     /**
      * creates a new tag
      * POST api/tags/create
+     * {
+     *  name : string,
+     *  parent_id : integer,
+     *  type : string
      *
+     * }
      * @return Response
      */
     public function create()
@@ -57,6 +62,54 @@ class TagController extends Controller
                 $tag->create();
                 $reponse->setPayload($tag->toStdClass());
                 $reponse->success();
+            }
+        }
+        return $reponse->send();
+    }
+
+    public function delete() {
+        $reponse = new AjaxResponse();
+        $reponse->fail("unkown id");
+        $id = intval(Input::get("id"));
+
+        if(isset($id) )
+        {
+            $dataTag = DataTags::get_by_id($id);
+            if(isset($dataTag))
+            {
+                $dataTag->fullDelete();
+                $reponse->success();
+            }
+        }
+        return $reponse->send();
+    }
+
+
+    /**
+     * POST /api/tags/rename
+     * {
+     * id : number,
+     * newName : string
+     * }
+     * @return string
+     * @throws \TijsVerkoyen\CssToInlineStyles\Exception
+     */
+    public function rename() {
+        $reponse = new AjaxResponse();
+        $reponse->fail("failed");
+
+        $newName = Input::get("newName");
+        $id = intval(Input::get("id"));
+
+        if(isset($newName) && isset($id) )
+        {
+            $dataTag = DataTags::get_by_id($id);
+            if(isset($dataTag))
+            {
+                $dataTag->set_name(DataTags::validate_name($newName));
+                $dataTag->save();
+                $reponse->success();
+                $reponse->setPayload($dataTag->toStdClass());
             }
         }
         return $reponse->send();
@@ -244,13 +297,4 @@ class TagController extends Controller
 
     }
 
-    public function rename($id)
-    {
-        $newName = Input::get('name');
-        $datatag = DataTags::get_by_id($id);
-        $datatag->set_name($newName);
-        $datatag->save();
-        return $datatag->get_name();
-
-    }
 }

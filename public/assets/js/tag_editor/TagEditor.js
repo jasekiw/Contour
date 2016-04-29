@@ -531,6 +531,7 @@ function TagEditor()
      * Creates a new tag
      * @param name
      * @param type
+     * @param parentId
      */
     var createTag = function(name, type, parentId)
     {
@@ -543,7 +544,7 @@ function TagEditor()
                      * @type {AjaxTagReponse} x
                      */
                     var x = e;
-                    x.
+
                     if(e.success)
                     {
                         $(".tags").append('<li class="ui-droppable"><a class="tag has_menu tag_' + e.payload.id + ' context type_folder ui-draggable" data-toggle="context" data-target="#contextMenu93" href="http://localhost/tags/' + e.id + '">' + e.name + '</a></li>');

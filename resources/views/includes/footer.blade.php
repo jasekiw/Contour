@@ -37,9 +37,9 @@
         {!!  \app\libraries\theme\Theme::footer($title) !!}
         {!! \app\libraries\contour\Contour::getThemeManager()->footer() !!}
 
-        <script type="text/javascript" src="/assets/ts/require.js" data-main="/assets/ts/contour/Main.js"></script>
-                @yield('scripts')
 
+                @yield('scripts')
+        <script type="text/javascript" src="/assets/ts/require.js" data-main="/assets/ts/contour/Main.js"></script>
         @if( Session::has('message') || Session::has('message_title'))
 
             <script type="text/javascript">
@@ -51,5 +51,7 @@
                 });
             </script>
         @endif
-
+    <script type="text/javascript">
+        new FullHeight(".footer", $);
+    </script>
 

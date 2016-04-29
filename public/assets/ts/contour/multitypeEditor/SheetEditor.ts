@@ -1,8 +1,10 @@
 import {DataBlockEditor} from "./DataBlockEditor";
 import {Ajax} from "../Ajax";
 import {NewTagDialog} from "../ui/NewTagDialog";
-import {PlainTag} from "../data/datatag/PlainTag";
 import {mouse} from "../components/MouseHandler";
+import {PlainTag} from "../data/datatag/DataTag";
+import {cellTemplate} from "../ui/templates/Cell";
+
 /**
  * Created by Jason on 1/12/2016.
  */
@@ -18,18 +20,39 @@ export class SheetEditor
     private addColumnTagElement : JQuery;
     private addRowTagElement : JQuery;
     private newTagDialog : NewTagDialog;
-    constructor(dataBlockEditor : DataBlockEditor)
+    constructor(dataBlockEditor : DataBlockEditor, element : Element)
     {
         this.newTagDialog = new NewTagDialog();
-        this.sheet = $('.sheet_editor').first();
+        this.sheet = $(element);
         this.dataBlockEditor = dataBlockEditor;
-        $(".cell input").dblclick((e) => {
+        this.sheet.find(".tag").on("remove", (e : JQueryEventObject) => {
+            var target = $(e.target);
+            if(target.hasClass("sheet_column"))
+            {
+                var previousElements = target.prevAll(".tag");
+                var targetIndex = target.prevAll(".tag").length;
+
+                this.sheet.find("tbody > .sheet_row").each((rowIndex, row) => {
+                    $(row).find(".cell").each( ( cellIndex, cell) => {
+                        if(cellIndex == targetIndex)
+                            $(cell).remove();
+                    });
+                });
+            }
+            else {
+                target.parent().remove();
+            }
+
+
+
+        });
+        this.sheet.on("dblclick", ".cell input",(e) => {
             e.preventDefault();
             var thisElement = $(e.currentTarget);
-            var excelSheet : number = parseInt($(".excel_editor").attr("sheet"));
+            var excelSheet : number = parseInt(this.sheet.attr("sheet"));
             this.dataBlockEditor.open(thisElement, excelSheet, thisElement.val());
         });
-        $(".cell input").focusin((e) => {
+        this.sheet.on("focusin", ".cell input", (e) => {
             var currentElement = $(e.currentTarget);
             this.sheet =  currentElement.parents('.sheet_editor');
             this.sheet.find('.sheet_row').each( (index : number, element : Element) => {
@@ -40,9 +63,22 @@ export class SheetEditor
             console.log(currentElement.parents('.sheet_row'));
             this.currentText = $(e.currentTarget).val();
         });
-        $(".cell input").focusout((e) => {
+        this.sheet.on("focusout", ".cell input",(e) => {
+            console.log("unfocusing");
             if($(e.currentTarget).val() != this.currentText)
-                (new Ajax).post("/api/datablocks/save/" + $(e.currentTarget).attr("datablock"),{value: $(e.currentTarget).val()}, () => {} );
+            {
+                var datablockId : number = parseInt($(e.currentTarget).attr("datablock"));
+                if(isNaN(datablockId)) // if there is no datablock id for this datablock (not created yet)
+                {
+
+                }
+                else
+                {
+                    (new Ajax).post("/api/datablocks/save/" + datablockId,{value: $(e.currentTarget).val()}, () => {} );
+                }
+
+            }
+
         });
         this.setupSheetControls();
 
@@ -67,18 +103,33 @@ export class SheetEditor
     {
         this.newTagDialog.show((e : PlainTag) => this.handleNewTag(e), parseInt(this.sheet.attr("sheet")) ,type,mouse.x, mouse.y );
     }
+
+    /**
+     * Handles the creation of a new tag
+     * @param tag
+     */
     private handleNewTag(tag : PlainTag)
     {
         if(tag.type == "column")
         {
-            this.sheet.find("thead tr .new_column").before(`<th class="sheet_column" tag="` + tag.id + `">` + tag.name + `</th>`);
+            //append the tag column
+            this.sheet.find("thead tr .new_column").before(`<th class="sheet_column tag" tag="` + tag.id + `">` + tag.name + `</th>`);
+            // append a new cell for the new column for each row
+            this.sheet.find("tbody .sheet_row").each((index, element) => {
+                $(element).append(cellTemplate);
+            });
         }
         else
         {
             this.sheet.find("tbody .new_row").before(`
             <tr class="sheet_row" tag="` + tag.id + `">
-                <td class="row_name" tag_id="` + tag.id + `">` + tag.name + `</td>
+                <td class="row_name tag" tag_id="` + tag.id + `">` + tag.name + `</td>
             </tr>`);
+            var numColumns : number = this.sheet.find(".sheet_column").length;
+            let toAdd :string = "";
+            for(let i = 0; i < numColumns; i++)
+                toAdd += cellTemplate;
+            this.sheet.find("tbody .sheet_row").last().append(toAdd);
         }
     }
 }

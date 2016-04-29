@@ -70,7 +70,7 @@ export class DataBlockEditor
             this.exit();
         });
         this.calculateButton.on("click", (e) => {
-            (new Ajax()).post("/api/getValue", {datablock: this.dataBlockFormula.val(), datablockid: this.cell.attr("datablock")}, (response) => {
+            (new Ajax()).post("/api/getValue", {datablock: this.dataBlockFormula.val(), datablockid: this.cell.attr("datablock")}, (response : {result : string}) => {
                 this.calculationOutputContainer.html(response.result);
             });
         });
