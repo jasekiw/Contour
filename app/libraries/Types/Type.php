@@ -13,8 +13,6 @@ use App\Models\TypeModel;
 class Type extends TypeAbstract
 {
 
-
-
     private $category_id = null;
 
     /**
