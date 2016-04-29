@@ -1,6 +1,7 @@
 // var elixir = require('laravel-elixir');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var ts = require('gulp-typescript');
 var sourcemaps = require("gulp-sourcemaps");
 gulp.task('sass', function () {
     return gulp.src('./public/assets/sass/**/*.scss')
@@ -13,6 +14,18 @@ gulp.task('sass', function () {
 gulp.task('watch', function () {
     gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
 });
+
+
+
+gulp.task('compile-typescript-front-end', function () {
+    var tsProject = ts.createProject('./public/assets/ts/contour/tsconfig.json', { sourceMap: true });
+    var tsResult = tsProject.src() // instead of gulp.src(...)
+        .pipe(sourcemaps.init())
+        .pipe(ts(tsProject));
+    return tsResult.js.pipe(sourcemaps.write())
+        .pipe(gulp.dest('./public/assets/ts/contour/'));
+});
+gulp.task('build', ['compile-typescript-front-end', 'sass']);
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
