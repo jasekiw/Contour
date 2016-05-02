@@ -133,7 +133,7 @@ class AsyncHandler
         {
             $handler->handle(\Input::get("data"));
         }
-        catch(\Exception $e)
+        catch(\Throwable $e)
         {
             $job->error = true;
             $handler->log($e->getMessage());

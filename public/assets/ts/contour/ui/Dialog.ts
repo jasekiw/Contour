@@ -2,26 +2,19 @@
  * Created by Jason Gallavin on 4/28/2016.
  */
 import {template, style} from "./templates/DialogTemplate";
-export abstract class DialogBox {
-    private template :string;
-    private id : string;
-    protected element : JQuery;
+import {UIElement} from "./UIElement";
+export abstract class DialogBox extends UIElement{
+    
     protected form : JQuery;
     protected onSubmit : ( response :{}) => void;
     private visible = false;
     constructor(title : string, submitText : string, content: string, action : string) {
-        this.id =  "dialog__" + (new Date().getTime().toString());
-        this.template = template;
-        this.insertTemplate("id", this.id );
+        super("dialog", style + template);
         this.insertTemplate("title", title );
         this.insertTemplate("submitText", submitText);
         this.insertTemplate("content", content);
         this.insertTemplate("action", action);
-        var $body = $("body");
-        $body.append(style);
-        $body.append(this.template);
-        this.element = $("#" + this.id);
-        
+        this.insertElement();
         this.element.draggable({
             containment: [10,10,
                 $("body").width() - this.element.width() - 30,
@@ -86,11 +79,7 @@ export abstract class DialogBox {
     {
         return this.id;
     }
-
-    protected insertTemplate(template : string, value : string)
-    {
-        this.template = this.template.replace("{" + template + "}", value);
-    }
+    
     protected abstract submit(e : JQueryEventObject);
 
     public hide() {

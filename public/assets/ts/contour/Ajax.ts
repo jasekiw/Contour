@@ -10,7 +10,7 @@ export class Ajax
      */
     public get(url :string , functiontoCall : (e : {} ) => void)
     {
-        $.ajax( {
+        $.ajax({
                 type: "GET",
                 url: url,
                 success: (e) =>

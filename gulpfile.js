@@ -11,20 +11,23 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('./public/assets/sass/'));
 });
 
-gulp.task('watch', function () {
-    gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
-});
-
-
-
 gulp.task('compile-typescript-front-end', function () {
-    var tsProject = ts.createProject('./public/assets/ts/contour/tsconfig.json', { sourceMap: true });
+    var tsProject = ts.createProject('./public/assets/ts/contour/tsconfig.json');
     var tsResult = tsProject.src() // instead of gulp.src(...)
         .pipe(sourcemaps.init())
         .pipe(ts(tsProject));
     return tsResult.js.pipe(sourcemaps.write())
         .pipe(gulp.dest('./public/assets/ts/contour/'));
 });
+
+gulp.task('watch', function () {
+    gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
+    gulp.watch("./public/assets/ts/contour/**/*.ts", ['compile-typescript-front-end'])
+});
+
+
+
+
 gulp.task('build', ['compile-typescript-front-end', 'sass']);
 /*
  |--------------------------------------------------------------------------

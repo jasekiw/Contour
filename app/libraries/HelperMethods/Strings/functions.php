@@ -35,35 +35,14 @@ function strContainsLetters($haystack)
 function regex_match($pattern, $string)
 {
 
-    try
-    {
+    try {
         preg_match($pattern, $string, $matches, PREG_OFFSET_CAPTURE);
         if(isset($matches[1]))
-        {
-            $match = $matches[1];
-            if(isset($match[0]))
-            {
-                return $match[0];
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-    catch(\Exception $e)
-    {
+            return isset($matches[1][0]) ? $matches[1][0] : null;
         return null;
     }
-
-}
-function regex_replace($pattern, $string)
-{
+    catch(\Throwable $e) {
+        return null;
+    }
 
 }

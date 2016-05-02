@@ -25,27 +25,7 @@ export class SheetEditor
         this.newTagDialog = new NewTagDialog();
         this.sheet = $(element);
         this.dataBlockEditor = dataBlockEditor;
-        this.sheet.find(".tag").on("remove", (e : JQueryEventObject) => {
-            var target = $(e.target);
-            if(target.hasClass("sheet_column"))
-            {
-                var previousElements = target.prevAll(".tag");
-                var targetIndex = target.prevAll(".tag").length;
-
-                this.sheet.find("tbody > .sheet_row").each((rowIndex, row) => {
-                    $(row).find(".cell").each( ( cellIndex, cell) => {
-                        if(cellIndex == targetIndex)
-                            $(cell).remove();
-                    });
-                });
-            }
-            else {
-                target.parent().remove();
-            }
-
-
-
-        });
+        this.sheet.find(".tag").on("remove", (e : JQueryEventObject) => this.handleRemovedTag(e));
         this.sheet.on("dblclick", ".cell input",(e) => {
             e.preventDefault();
             var thisElement = $(e.currentTarget);
@@ -112,8 +92,11 @@ export class SheetEditor
     {
         if(tag.type == "column")
         {
+            var newTag = $(`<th class="sheet_column tag" tag="` + tag.id + `">` + tag.name + `</th>`);
+
             //append the tag column
-            this.sheet.find("thead tr .new_column").before(`<th class="sheet_column tag" tag="` + tag.id + `">` + tag.name + `</th>`);
+            this.sheet.find("thead tr .new_column").before(newTag);
+            newTag.on("remove", (e) => this.handleRemovedTag(e));
             // append a new cell for the new column for each row
             this.sheet.find("tbody .sheet_row").each((index, element) => {
                 $(element).append(cellTemplate);
@@ -121,15 +104,52 @@ export class SheetEditor
         }
         else
         {
-            this.sheet.find("tbody .new_row").before(`
+            var newTag = $(`<td class="row_name tag" tag="` + tag.id + `">` + tag.name + `</td>`);
+            var newWrapper = $(`
             <tr class="sheet_row" tag="` + tag.id + `">
-                <td class="row_name tag" tag_id="` + tag.id + `">` + tag.name + `</td>
-            </tr>`);
+                
+            </tr>`).append(newTag);
+
+            this.sheet.find("tbody .new_row").before(newWrapper);
+            newTag.on("remove", (e) => this.handleRemovedTag(e));
             var numColumns : number = this.sheet.find(".sheet_column").length;
             let toAdd :string = "";
             for(let i = 0; i < numColumns; i++)
                 toAdd += cellTemplate;
             this.sheet.find("tbody .sheet_row").last().append(toAdd);
         }
+    }
+    private handleRemovedTag(e : JQueryEventObject) {
+        var target = $(e.target);
+        target.off("remove");
+        console.log("removing...");
+        if(target.hasClass("sheet_column"))
+           this.handleRemovedColumnTag(target);
+        else
+            this.handleRemovedRowTag(target);
+    }
+
+    /**
+     * Handles the removal of a column tag.
+     * @param target The tag being removed
+     */
+    private handleRemovedColumnTag(target : JQuery) {
+        var previousElements = target.prevAll(".tag");
+        var targetIndex = target.prevAll(".tag").length;
+
+        this.sheet.find("tbody > .sheet_row").each((rowIndex, row) => {
+            $(row).find(".cell").each( ( cellIndex, cell) => {
+                if(cellIndex == targetIndex)
+                    $(cell).remove();
+            });
+        });
+    }
+
+    /**
+     * Handles the removal of a row tag.
+     * @param target The tag being removed
+     */
+    private handleRemovedRowTag(target : JQuery) {
+        target.parent().remove();
     }
 }

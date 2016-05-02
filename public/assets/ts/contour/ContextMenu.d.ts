@@ -17,7 +17,7 @@ interface JQuery {
  */
 interface ContextMenuOptions {
     /**
-     * @var jquery selector of the context menu
+     * jquery selector of the context menu
      */
     target? : string;
     before? : (e : JQueryEventObject, context: JQuery) => void;
