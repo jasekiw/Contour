@@ -104,20 +104,17 @@ export class SheetEditor
         }
         else
         {
-            var newTag = $(`<td class="row_name tag" tag="` + tag.id + `">` + tag.name + `</td>`);
-            var newWrapper = $(`
-            <tr class="sheet_row" tag="` + tag.id + `">
-                
-            </tr>`).append(newTag);
-
+            let newTag = $(`<td class="row_name tag" tag="` + tag.id + `">` + tag.name + `</td>`);
+            let newWrapper = $(`<tr class="sheet_row" tag="` + tag.id + `"></tr>`).append(newTag);
             this.sheet.find("tbody .new_row").before(newWrapper);
             newTag.on("remove", (e) => this.handleRemovedTag(e));
-            var numColumns : number = this.sheet.find(".sheet_column").length;
-            let toAdd :string = "";
+            let numColumns : number = this.sheet.find(".sheet_column").length;
+            let toAdd : string = "";
             for(let i = 0; i < numColumns; i++)
                 toAdd += cellTemplate;
             this.sheet.find("tbody .sheet_row").last().append(toAdd);
         }
+        
     }
     private handleRemovedTag(e : JQueryEventObject) {
         var target = $(e.target);
