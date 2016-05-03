@@ -14,8 +14,6 @@ class Main {
     private classes : string;
     constructor()
     {
-
-        
         $("body").on("contextmenu", (e : JQueryEventObject) => {
             return e.ctrlKey;
         });

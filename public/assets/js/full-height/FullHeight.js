@@ -1,7 +1,8 @@
 /**
  * @author Jason Gallavin
- * @date 3/8/2016
- * @version 0.8
+ * @updated 05/03/2016
+ * @created 3/8/2016
+ * @version 0.9
  */
 
 /**
@@ -48,4 +49,6 @@ function FullHeight(footerSelector, jQ)
         $(window).on("resize", adjustFooterToScreen );
     });
 }
+
+
 //var resizer = new FullHeight("#socket", jQuery); // example

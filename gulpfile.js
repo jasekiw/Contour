@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var ts = require('gulp-typescript');
 var sourcemaps = require("gulp-sourcemaps");
+var gulpTypings = require("gulp-typings");
 gulp.task('sass', function () {
     return gulp.src('./public/assets/sass/**/*.scss')
         .pipe(sourcemaps.init())
@@ -20,6 +21,11 @@ gulp.task('compile-typescript-front-end', function () {
         .pipe(gulp.dest('./public/assets/ts/contour/'));
 });
 
+gulp.task("installTypings",function(){
+    return gulp.src("./public/assets/ts/typings.json")
+        .pipe(gulpTypings()); //will install all typingsfiles in pipeline.
+});
+
 gulp.task('watch', function () {
     gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
     gulp.watch("./public/assets/ts/contour/**/*.ts", ['compile-typescript-front-end'])
@@ -28,7 +34,7 @@ gulp.task('watch', function () {
 
 
 
-gulp.task('build', ['compile-typescript-front-end', 'sass']);
+gulp.task('build', ['sass', 'installTypings', 'compile-typescript-front-end']);
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
