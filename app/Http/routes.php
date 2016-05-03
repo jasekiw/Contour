@@ -52,7 +52,7 @@ Route::get('sandbox',array('as' => 'sandbox','middleware' => 'auth', 'uses' => '
 //Route::get( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'get_ajax','middleware' => 'auth', 'uses' => 'AjaxController@get'))->where('id', '(.*)');
 //Route::post( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'post_ajax','middleware' => 'auth', 'uses' => 'AjaxController@post'))->where('id', '(.*)');
 
-Route::get('clean',array('as' => 'cleanup.clean','middleware' => 'auth', 'uses' => 'DataBaseCleanupController@cleanDeletedTags'));
+Route::get('clean',array('as' => 'cleanup.clean','middleware' => 'auth', 'uses' => 'DataBaseCleanupController@fixBroken'));
 /**
  * Excel Handlers
  */
@@ -105,9 +105,11 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
     /**
      *  Datablocks subsection
      */
-        Route::post('api/datablocks/get_by_tags',['as' => 'api_datablocks_get_by_tags','middleware' => 'auth', 'uses' => 'api\ApiDataBlockController@getByTagIds']);
+        Route::post('api/datablocks/get_by_tags',['as' => 'api_datablocks_get_by_tags','middleware' => 'auth', 'uses' => 'api\DataBlockController@getByTagIds']);
         Route::post('api/getValue',['as' => 'api_getValue','middleware' => 'auth', 'uses' => 'DataBlockTranslatorController@getValue']);
-        Route::post('api/datablocks/save/{id}',['as' => 'api_datablocks_save','middleware' => 'auth', 'uses' => 'api\ApiDataBlockController@save']);
+        Route::post('api/datablocks/save/',['as' => 'api.datablocks.save','middleware' => 'auth', 'uses' => 'api\DataBlockController@save']);
+        Route::post('api/datablocks/save/{id}',['as' => 'api.datablocks.save.alt','middleware' => 'auth', 'uses' => 'api\DataBlockController@save']);
+        Route::post('api/datablocks/create/',['as' => 'api.datablocks.create','middleware' => 'auth', 'uses' => 'api\DataBlockController@create']);
 /**
  * END API ROUTES
  */

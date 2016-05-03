@@ -5,9 +5,10 @@ import {DataBlockViewer} from "./DataBlockViewer";
 export class Viewer
 {
     public dataBlockviewer : DataBlockViewer;
+
     constructor()
     {
-        var sheet : number =  parseInt($(".excel_viewer_container").attr("sheet"));
+        var sheet : number = parseInt($(".excel_viewer_container").attr("sheet"));
         this.dataBlockviewer = new DataBlockViewer(sheet);
     }
 }

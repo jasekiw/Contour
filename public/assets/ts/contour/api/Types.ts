@@ -3,7 +3,8 @@ import {PlainType} from "../data/type/DataType";
 /**
  * Created by Jason Gallavin on 4/21/2016.
  */
-export class Types {
+export class Types
+{
 
     /**
      *
@@ -11,7 +12,8 @@ export class Types {
      */
     public static getTagTypes(functionToCall : (e : AjaxTagArrayReponse) => void)
     {
-        new Ajax().get("/api/tags/types",(e : AjaxTagArrayReponse) => {
+        new Ajax().get("/api/tags/types", (e : AjaxTagArrayReponse) =>
+        {
             functionToCall(e);
         });
     }
@@ -19,6 +21,7 @@ export class Types {
 /**
  *
  */
-export interface AjaxTagArrayReponse  extends AjaxData{
+export interface AjaxTagArrayReponse extends AjaxData
+{
     payload : PlainType[];
 }

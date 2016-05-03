@@ -14,22 +14,23 @@ export class DataBlockViewer
     private rows : DataTag[];
     private populator : DataBlockPopulator;
     private currentRow : number = 0;
+
     constructor(id : number)
     {
         this.excelViewerContainer = $(".excel_viewer_container");
         this.columns = [];
         this.rows = [];
-        (new Ajax()).get("/api/tags/get_children_recursive/" + id, (e : {success: boolean, tags : DataTag[]}) =>
+        (new Ajax()).get("/api/tags/get_children_recursive/" + id, (e : {success : boolean, tags : DataTag[]}) =>
         {
-            if(!e.success)
+            if (!e.success)
                 console.log("error has occurred when getting children");
-            else
-            {
-                e.tags.forEach((tag : DataTag, index : number) =>{
-                     console.log(tag);
-                    if(tag.type == "row")
+            else {
+                e.tags.forEach((tag : DataTag, index : number) =>
+                {
+                    console.log(tag);
+                    if (tag.type == "row")
                         this.rows.push(tag);
-                    else if(tag.type == "column")
+                    else if (tag.type == "column")
                         this.columns.push(tag);
 
                 });
@@ -55,22 +56,22 @@ export class DataBlockViewer
         this.populateTableDataBlocks();
 
     }
+
     private populateTableDataBlocks() : void
     {
         this.populator = new DataBlockPopulator(this.rows, this.columns);
         this.populator.getNextDataBlock((e) => this.addDataBlock(e));
     }
-    private addDataBlock(e : {datablock : DataBlock, success: boolean}) : void
+
+    private addDataBlock(e : {datablock : DataBlock, success : boolean}) : void
     {
-        if(e.success)
-        {
-            if(e.datablock == null)
+        if (e.success) {
+            if (e.datablock == null)
                 return;
             console.log(e.datablock);
             this.body.find('tr').eq(this.currentRow).append('<td class="cell">' + e.datablock.value + '</td>');
         }
-        else
-        {
+        else {
             this.body.find('tr').eq(this.currentRow).append('<td class="cell">' + '</td>');
         }
         this.currentRow = this.populator.rowIndex; // gets the row index before it advances

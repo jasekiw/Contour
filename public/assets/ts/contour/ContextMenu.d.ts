@@ -1,7 +1,8 @@
 /**
  * Created by Jason on 4/27/2016.
  */
-interface JQuery {
+interface JQuery
+{
     /**
      * Initializes a context menu
      */
@@ -15,12 +16,13 @@ interface JQuery {
 /**
  * Context menu options
  */
-interface ContextMenuOptions {
+interface ContextMenuOptions
+{
     /**
      * jquery selector of the context menu
      */
     target? : string;
-    before? : (e : JQueryEventObject, context: JQuery) => void;
+    before? : (e : JQueryEventObject, context : JQuery) => void;
     onItem? : (context : JQuery, e : JQueryEventObject) => void;
     scopes? : string;
 }
@@ -41,17 +43,17 @@ interface ContextMenuOptions {
  Sample Context menu HTML
 
  <div id="contextMenu1">
-     <ul class="dropdown-menu" role="menu">
-         <li>
-            <a class="context_menu_item" tabindex="-1" href="http://localhost/excel/edit/1">open as Excel</a>
-         </li>
-         <li>
-            <a class="context_menu_item" tabindex="-1" href="javascript: editor.rename(1)">rename</a>
-         </li>
-         <li>
-            <a class="context_menu_item" tabindex="-1" href="javascript: editor.delete(1)">delete</a>
-         </li>
-     </ul>
+ <ul class="dropdown-menu" role="menu">
+ <li>
+ <a class="context_menu_item" tabindex="-1" href="http://localhost/excel/edit/1">open as Excel</a>
+ </li>
+ <li>
+ <a class="context_menu_item" tabindex="-1" href="javascript: editor.rename(1)">rename</a>
+ </li>
+ <li>
+ <a class="context_menu_item" tabindex="-1" href="javascript: editor.delete(1)">delete</a>
+ </li>
+ </ul>
  </div>
 
 
@@ -70,7 +72,7 @@ interface ContextMenuOptions {
             });
         });
 
- 
+
 
  using with dynamically added elements
 

@@ -8,22 +8,25 @@ export class Ajax
      * @param url
      * @param functiontoCall
      */
-    public get(url :string , functiontoCall : (e : {} ) => void)
+    public get(url : string, functiontoCall? : (e : {}) => void)
     {
         $.ajax({
-                type: "GET",
-                url: url,
+                type:    "GET",
+                url:     url,
                 success: (e) =>
-                {
-                    functiontoCall(e);
-                },
+                         {
+                             if (functiontoCall !== undefined)
+                                 functiontoCall(e);
+                         },
 
                 dataType: 'json'
             }
-        ).fail((e) => {
+        ).fail((e) =>
+        {
             console.log("call failed");
             console.log(e);
-            functiontoCall(e);
+            if (functiontoCall !== undefined)
+                functiontoCall(e);
         });
     }
 
@@ -33,28 +36,30 @@ export class Ajax
      * @param data
      * @param functiontoCall
      */
-    public post(url : string , data : any,  functiontoCall : (e : {} ) => void)
+    public post(url : string, data : any, functiontoCall? : (e : {}) => void)
     {
-        $.ajax( {
-                method: "POST",
-                url: url,
-                success: (e) =>
-                {
-                    if(!e.success)
-                    {
-                        console.log("call failed");
-                        console.log(e);
-                    }
-                    functiontoCall(e);
-                },
-                data: data,
+        $.ajax({
+                method:   "POST",
+                url:      url,
+                success:  (e) =>
+                          {
+                              if (!e.success) {
+                                  console.log("call failed");
+                                  console.log(e);
+                              }
+                              if (functiontoCall !== undefined)
+                                  functiontoCall(e);
+                          },
+                data:     data,
                 dataType: 'json'
             }
-        ).fail((e ) => {
+        ).fail((e) =>
+        {
 
             console.log("call failed");
             console.log(e);
-            functiontoCall(e);
+            if (functiontoCall !== undefined)
+                functiontoCall(e);
         });
     }
 
@@ -64,34 +69,34 @@ export class Ajax
      * @param data
      * @param functiontoCall
      */
-    public put(url :string , data ,  functiontoCall : (e : {} ) => void)
+    public put(url : string, data, functiontoCall? : (e : {}) => void)
     {
-        $.ajax( {
-                type: "PUT",
-                url: url,
-                success: (e) =>
-                {
-                    if(!e.success)
-                    {
-                        console.log("call failed");
-                        console.log(e);
-                    }
-
-                    functiontoCall(e);
-                },
-                data: data,
+        $.ajax({
+                type:     "PUT",
+                url:      url,
+                success:  (e) =>
+                          {
+                              if (!e.success) {
+                                  console.log("call failed");
+                                  console.log(e);
+                              }
+                              if (functiontoCall !== undefined)
+                                  functiontoCall(e);
+                          },
+                data:     data,
                 dataType: 'json'
             }
-        ).fail((e ) => {
-
-            functiontoCall(e);
+        ).fail((e) =>
+        {
+            if (functiontoCall !== undefined)
+                functiontoCall(e);
         });
     }
 }
 
-export interface AjaxData {
+export interface AjaxData
+{
     success : boolean;
     message : string;
     payload : any;
-
 }

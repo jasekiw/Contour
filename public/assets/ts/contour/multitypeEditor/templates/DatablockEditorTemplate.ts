@@ -2,7 +2,7 @@
  * Created by Jason Gallavin on 4/21/2016.
  */
 export var template =
-`
+    `
 <div class="panel panel-default" id="DatablockEditor">
     <div class="panel-heading">
         <h3 class="panel-title">Edit Block</h3>

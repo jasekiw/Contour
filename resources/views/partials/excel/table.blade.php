@@ -23,7 +23,7 @@ $tag = $table->getParentTag();
         <tr>
 
             @foreach($table->getheaders() as $column)
-                <th class="table_column" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
+                <th class="table_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
             @endforeach
         </tr>
         </thead>

@@ -3,10 +3,11 @@
  */
 class DataTag
 {
-    public id :number;
+    public id : number;
     public name : string;
     public sort_number : number;
-    public type: string;
+    public type : string;
+
     constructor()
     {
 

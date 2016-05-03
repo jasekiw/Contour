@@ -8,15 +8,15 @@ import {PlainTag} from "../data/datatag/DataTag";
 import {PlainType} from "../data/type/DataType";
 import {DialogBox} from "./Dialog";
 
-
 /**
  * The dialog used to create a new tag
  */
-export class NewTagDialog extends DialogBox {
-    
+export class NewTagDialog extends DialogBox
+{
 
-    constructor() {
-        super("Create", "Create", content,"/tags/create");
+    constructor()
+    {
+        super("Create", "Create", content, "/tags/create");
     }
 
     /**
@@ -27,31 +27,31 @@ export class NewTagDialog extends DialogBox {
      * @param x
      * @param y
      */
-    public show(onSubmit : (tag :PlainTag) => void, parentId: number, types : string = "all",x : number, y: number)
+    public show(onSubmit : (tag : PlainTag) => void, parentId : number, types : string = "all", x : number, y : number)
     {
         super._show(onSubmit, x, y);
-        this.form.find('input[name="parent_id"]').val( parentId );
+        this.form.find('input[name="parent_id"]').val(parentId);
         this.form.find('input[name="name"]').val("");
-        if(types == "all")
+        if (types == "all")
             this.populateTypes();
-        else
-        {
+        else {
             this.form.find('select[name="type"]').hide();
             this.form.find('select[name="type"]').html(this.getTypeOption(types))
         }
         this.element.show();
     }
 
-   
-
     /**
      * grabs all tag types and puts them into the select menu
      */
-    private populateTypes() : void {
+    private populateTypes() : void
+    {
 
-        Types.getTagTypes((e : AjaxTagArrayReponse) => {
+        Types.getTagTypes((e : AjaxTagArrayReponse) =>
+        {
             var selectOptions : string = "";
-            e.payload.forEach((type : PlainType) => {
+            e.payload.forEach((type : PlainType) =>
+            {
                 selectOptions += `<option value="` + type.name + `" >` + type.name + `</option>\r\n`;
             });
             this.form.find('select[name="type"]').html(selectOptions);
@@ -63,24 +63,28 @@ export class NewTagDialog extends DialogBox {
      * @param {string} type
      * @returns {string}
      */
-    private getTypeOption(type: string) {
-        return  `<option value="` + type + `" >` + type + `</option>\r\n`;
+    private getTypeOption(type : string)
+    {
+        return `<option value="` + type + `" >` + type + `</option>\r\n`;
     }
 
     /**
      * Called when the user submits the form. The Method onSubmit will be called with the tag data to be handled outside this class
      * @param {JQueryEventObject} e
      */
-    protected submit(e : JQueryEventObject) {
+    protected submit(e : JQueryEventObject)
+    {
         e.preventDefault();
         var url = this.form.attr("action");
-        var name =this.form.find('[name="name"]').val();
+        var name = this.form.find('[name="name"]').val();
         var parentId = parseInt(this.form.find('[name="parent_id"]').val());
         var type = this.form.find('[name="type"]').val();
-        TagsApi.create(name,parentId, type, this.onSubmit);
+        TagsApi.create(name, parentId, type, this.onSubmit);
         this.hide();
     }
-    public hide() {
+
+    public hide()
+    {
         this.element.hide();
     }
 

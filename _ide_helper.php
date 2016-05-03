@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.2.31 on 2016-04-27.
+ * Generated for Laravel 5.2.31 on 2016-05-03.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -5724,18 +5724,6 @@ namespace {
     class Input extends \Illuminate\Support\Facades\Input{
         
         /**
-         * Retrieve an input item from the request.
-         *
-         * @param string $key
-         * @param string|array|null $default
-         * @return string|array 
-         * @static 
-         */
-        public static function input($key = null, $default = null){
-            return \Illuminate\Http\Request::input($key, $default);
-        }
-        
-        /**
          * Create a new Illuminate HTTP request from server variables.
          *
          * @return static 
@@ -5950,6 +5938,18 @@ namespace {
          */
         public static function all(){
             return \Illuminate\Http\Request::all();
+        }
+        
+        /**
+         * Retrieve an input item from the request.
+         *
+         * @param string $key
+         * @param string|array|null $default
+         * @return string|array 
+         * @static 
+         */
+        public static function input($key = null, $default = null){
+            return \Illuminate\Http\Request::input($key, $default);
         }
         
         /**
@@ -7564,19 +7564,6 @@ namespace {
     class Log extends \Illuminate\Support\Facades\Log{
         
         /**
-         * Log a message to the logs.
-         *
-         * @param string $level
-         * @param string $message
-         * @param array $context
-         * @return void 
-         * @static 
-         */
-        public static function log($level, $message, $context = array()){
-            \Illuminate\Log\Writer::log($level, $message, $context);
-        }
-        
-        /**
          * Adds a log record at the DEBUG level.
          *
          * @param string $message The log message
@@ -7670,6 +7657,19 @@ namespace {
          */
         public static function emergency($message, $context = array()){
             return \Monolog\Logger::emergency($message, $context);
+        }
+        
+        /**
+         * Log a message to the logs.
+         *
+         * @param string $level
+         * @param string $message
+         * @param array $context
+         * @return void 
+         * @static 
+         */
+        public static function log($level, $message, $context = array()){
+            \Illuminate\Log\Writer::log($level, $message, $context);
         }
         
         /**

@@ -53,7 +53,7 @@ class DataBlocks
      * instantiates a datablock by id
      * @param int $id
      * @param boolean $showTrashed
-     * @return DataBlock
+     * @return DataBlock | null
      */
     public static function getByID($id, $showTrashed = false)
     {

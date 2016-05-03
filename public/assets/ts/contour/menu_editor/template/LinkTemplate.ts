@@ -2,7 +2,7 @@
  * Created by Jason Gallavin on 4/21/2016.
  */
 export var template =
-`
+    `
 <div class="row menuLink">
         <div class="col-md-2 grabber">
             <i class="fa fa-bars "></i>

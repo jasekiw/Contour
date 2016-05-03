@@ -3,7 +3,8 @@ import {Ajax} from "../Ajax";
  * Created by Jason Gallavin on 12/22/2015.
  */
 
-export class DataTagInterfacer {
+export class DataTagInterfacer
+{
 
     public static getChildren(id : number, functiontoCall : (e : string) => void) : void
     {

@@ -16,7 +16,8 @@ var template = `
 </div>
 `;
 
-export class TagContextMenuHandler extends UIElement {
+export class TagContextMenuHandler extends UIElement
+{
 
     private renameDialog : RenameTagDialog;
     private deleteDialog : DeleteTagDialog;
@@ -28,11 +29,12 @@ export class TagContextMenuHandler extends UIElement {
         this.renameDialog = new RenameTagDialog();
         this.deleteDialog = new DeleteTagDialog();
         $("body").contextmenu({
-            target : "#" + this.id,
-            before: (e, context) => {
-                return !e.ctrlKey;
+            target: "#" + this.id,
+            before: (e, context) =>
+                    {
+                        return !e.ctrlKey;
 
-            },
+                    },
             onItem: (context, e) => this.handleTagContextMenu(context, e),
             scopes: selector
         });
@@ -43,27 +45,26 @@ export class TagContextMenuHandler extends UIElement {
      * @param context
      * @param e
      */
-    protected handleTagContextMenu(context : JQuery, e : JQueryEventObject) {
+    protected handleTagContextMenu(context : JQuery, e : JQueryEventObject)
+    {
         var menuItem = $(e.target);
         var action = menuItem.attr("href");
 
-        if(action == "rename")
-        {
+        if (action == "rename") {
             this.renameDialog.show((e) =>
             {
                 context.text(e.name);
             }, parseInt(context.attr("tag")));
         }
-        else if(action == "delete")
-        {
+        else if (action == "delete") {
             this.deleteDialog.show((e : AjaxData) =>
             {
-                if(e.success)
+                if (e.success)
                     context.remove();
                 else
                     alert(e.message)
 
-            },parseInt(context.attr("tag")));
+            }, parseInt(context.attr("tag")));
         }
     }
 

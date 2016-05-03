@@ -4,15 +4,15 @@ import {Ajax} from "../Ajax";
  */
 export class DataBlockInterfacer
 {
-    public static getById(id: number, functiontoCall : ()=> void ) : void
+    public static getById(id : number, functiontoCall : ()=> void) : void
     {
         (new Ajax).get('/ajaxdatablocks/' + id, functiontoCall);
     }
-    public static getMultipleByTags(tags :string[], functiontoCall : () => void ) :void
+
+    public static getMultipleByTags(tags : string[], functiontoCall : () => void) : void
     {
         var object = {tags: tags};
         (new Ajax).post('/ajaxdatablocks/get_multiple_by_tags', object, functiontoCall);
     }
-
 
 }
