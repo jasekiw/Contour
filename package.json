@@ -9,7 +9,6 @@
   "dependencies": {
     "bootstrap-sass": "^3.0.0",
     "gulp-typescript": "^2.13.0",
-    "laravel-elixir": "^4.0.0"
   },
   "name": "contour",
   "description": "A laravel based cms",
