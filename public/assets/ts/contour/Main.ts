@@ -17,7 +17,15 @@ class Main
     {
         $("body").on("contextmenu", (e : JQueryEventObject) =>
         {
-            return e.ctrlKey;
+            if(e.ctrlKey)
+                return true;
+            else
+            {
+                var tag = e.target.tagName.toUpperCase();
+                if(tag == "P" || tag.indexOf("H") > -1 ||tag == "SPAN")
+                    return true;
+            }
+            return false;
         });
         this.classes = $('body').attr('class');
         if (this.contains('SheetsController@edit'))

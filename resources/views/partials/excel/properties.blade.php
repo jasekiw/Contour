@@ -19,7 +19,7 @@
         @foreach($propertiesView->getProperyTags() as $key => $tag)
             <?php $cell = $propertiesView->getPropertyValue($key); ?>
             <tr class="property" tag="{!! $tag->get_id() !!}">
-                <td class="tag">
+                <td class="tag" tag="{!! $tag->get_id() !!}">
                     {!! $tag->get_name() !!}
                 </td>
                 <td class="datablock">

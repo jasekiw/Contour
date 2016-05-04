@@ -12,8 +12,8 @@
     "laravel-elixir": "^4.0.0"
   },
   "name": "contour",
-  "description": "## Synopsis",
-  "version": "0.1.0",
+  "description": "A laravel based cms",
+  "version": "0.1.5",
   "main": "gulpfile.js",
   "directories": {
     "test": "tests"

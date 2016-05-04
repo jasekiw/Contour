@@ -11,15 +11,7 @@ $editorGray: #8198A3;
 {
     font-size:20px;
 }
-.sheet_editor {
-    .sheet_column {
-        color: $editorGray;
-        text-align: center;
-
-    }
-    th {
-        padding-bottom: 10px;
-    }
+.editor {
     .new_column {
         i {
             @include newIcon()
@@ -36,6 +28,18 @@ $editorGray: #8198A3;
         }
 
     }
+}
+
+.sheet_editor {
+    .sheet_column {
+        color: $editorGray;
+        text-align: center;
+
+    }
+    th {
+        padding-bottom: 10px;
+    }
+
     .sheet_row {
 
         .row_name {
