@@ -17,20 +17,20 @@ use App\Models\Type_category;
  */
 class TypeCategory extends TypeCategoryAbstract
 {
-
-
+    
     private static $cachedCategories = [];
-
+    
     /**
      * @param int $id
+     *
      * @return TypeCategory
      */
     public static function GetByID($id)
     {
-        if(isset(self::$cachedCategories[$id]))
+        if (isset(self::$cachedCategories[$id]))
             return self::$cachedCategories[$id];
         $category = Type_category::where('id', '=', $id)->first();
-        if(!isset($category))
+        if (!isset($category))
             return null;
         $typecategory = new TypeCategory();
         $typecategory->name = $category->name;
@@ -38,16 +38,16 @@ class TypeCategory extends TypeCategoryAbstract
         self::$cachedCategories[$id] = $typecategory;
         return $typecategory;
     }
-
+    
     /**
      * @param String $name
+     *
      * @return TypeCategory
      */
     public static function getByName($name)
     {
         $category = Type_category::where('name', '=', $name)->first();
-        if(isset($category))
-        {
+        if (isset($category)) {
             $typecategory = new TypeCategory();
             $typecategory->name = $category->name;
             $typecategory->id = $category->id;
@@ -55,7 +55,7 @@ class TypeCategory extends TypeCategoryAbstract
         }
         return null;
     }
-
+    
     /**
      * Gets the TypeCategory with the name of tag
      * @return TypeCategory
@@ -63,8 +63,7 @@ class TypeCategory extends TypeCategoryAbstract
     public static function getTagCategory()
     {
         $category = Type_category::where('name', '=', "tag")->first();
-        if(!isset($category))
-        {
+        if (!isset($category)) {
             $category = new Type_category();
             $category->name = "tag";
             $category->save();
@@ -74,17 +73,16 @@ class TypeCategory extends TypeCategoryAbstract
         $typecategory->id = $category->id;
         return $typecategory;
     }
-
+    
     /**
      * Gets the TypeCategory with the name of DataBlock
      * @return TypeCategory
      */
     public static function getDataBlockCategory()
     {
-
+        
         $category = Type_category::where('name', '=', "datablock")->first();
-        if(!isset($category))
-        {
+        if (!isset($category)) {
             $category = new Type_category();
             $category->name = "datablock";
             $category->save();
@@ -94,10 +92,12 @@ class TypeCategory extends TypeCategoryAbstract
         $typecategory->id = $category->id;
         return $typecategory;
     }
-
+    
     /**
      * Gets the typecategory by a Type_category row
+     *
      * @param $row
+     *
      * @return TypeCategory
      */
     public static function getByQueryRow($row)
@@ -107,30 +107,28 @@ class TypeCategory extends TypeCategoryAbstract
         $category->setName($row->type_category_name);
         return $category;
     }
-
-
+    
     /**
      * Sets the name
+     *
      * @param $name
      */
     public function setName($name)
     {
         $this->name = $name;
     }
-
+    
     /**
      *  Saves the TypeCategory to the Database
      * @return bool sucessfull
      */
     public function save()
     {
-        if($this->name == null)
+        if ($this->name == null)
             return false;
-        if(isset($this->id))
-        {
+        if (isset($this->id)) {
             $typemodel = Type_category::where('id', '=', $this->id)->first();
-            if(isset($typemodel))
-            {
+            if (isset($typemodel)) {
                 $typemodel->id = $this->id;
                 $typemodel->name = $this->name;
                 $typemodel->save();
@@ -138,14 +136,14 @@ class TypeCategory extends TypeCategoryAbstract
             }
             return false;
         }
-
+        
         $typemodel = new Type_category();
         $typemodel->id = $this->id;
         $typemodel->name = $this->name;
         $typemodel->save();
         return true;
     }
-
+    
     /**
      * Deletes the TypeCategory
      * @throws \Exception
@@ -155,7 +153,7 @@ class TypeCategory extends TypeCategoryAbstract
         Type_category::where('id', '=', $this->id)->delete();
         $this->id = null;
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass
@@ -169,7 +167,7 @@ class TypeCategory extends TypeCategoryAbstract
         $std->created_at = $this->created_at();
         return $std;
     }
-
+    
     /**
      * Gets the ID
      * @return int
@@ -178,7 +176,7 @@ class TypeCategory extends TypeCategoryAbstract
     {
         return $this->id;
     }
-
+    
     /**
      * Gets the name
      * @return String
@@ -187,17 +185,16 @@ class TypeCategory extends TypeCategoryAbstract
     {
         return $this->name;
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return String
      */
     public function updated_at()
     {
-        if(isset($this->updated_at)) // cached
+        if (isset($this->updated_at)) // cached
             return $this->updated_at;
-        if(isset($this->id))
-        {
+        if (isset($this->id)) {
             $typeCategory = Type_category::where('id', '=', $this->id)->first();
             /**
              * \Tag $tag
@@ -208,17 +205,16 @@ class TypeCategory extends TypeCategoryAbstract
         }
         return null;
     }
-
+    
     /**
      * Gets the date at when the object was created
      * @return String
      */
     public function created_at()
     {
-        if(isset($this->created_at)) // cached
+        if (isset($this->created_at)) // cached
             return $this->created_at;
-        if(isset($this->id))
-        {
+        if (isset($this->id)) {
             $typeCategory = Type_category::where('id', '=', $this->id)->first();
             $created_at = $typeCategory->created_at;
             $this->created_at = $created_at;

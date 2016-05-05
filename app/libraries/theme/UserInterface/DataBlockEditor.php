@@ -8,13 +8,13 @@
 
 namespace app\libraries\theme\userInterface;
 
-
 /**
  * Class DataBlockEditor
  * @package app\libraries\theme\UserInterface
  */
 class DataBlockEditor
 {
+    
     /**
      * Gets the datablock editor's html
      * @return string
@@ -24,5 +24,5 @@ class DataBlockEditor
         $view = \View::make('datablocks.editor');
         return $view->render();
     }
-
+    
 }
