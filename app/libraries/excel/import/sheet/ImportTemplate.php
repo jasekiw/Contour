@@ -12,6 +12,7 @@ use app\libraries\tags\DataTag;
 
 class ImportTemplate
 {
+    
     /**
      * Sheet mode needs
      */
@@ -19,12 +20,11 @@ class ImportTemplate
     const IMPORT_MODE_TABLE = 2;
     private $name = null;
     private $importRules = null;
-    /**
-     * @var \Closure
-     */
+    /** @var \Closure   */
     private $getParentFunction;
     private $getParentObject;
     private $mode;
+    
     /**
      * @param String $name tha name of the sheet that this import template will use
      */
@@ -33,19 +33,16 @@ class ImportTemplate
         $this->name = $name;
         $this->importRules = new ImportRulesCollection();
     }
-
-
-
+    
     /**
      * Gets the sheet name for this import template
      * @return string The name of the Import Sheet
      */
-    public  function getSheet()
+    public function getSheet()
     {
         return $this->name;
     }
-
-
+    
     /**
      * @return ImportRulesCollection
      */
@@ -53,43 +50,38 @@ class ImportTemplate
     {
         return $this->importRules;
     }
-
+    
     /**
      * @return DataTag
      */
     public function getParentTag()
     {
         $function = $this->getParentFunction;
-        if(isset($this->getParentObject))
-        {
+        if (isset($this->getParentObject)) {
             $method = $this->getParentFunction;
             return $this->getParentObject->$method();
-        }
-        else
-        {
+        } else {
             return $function();
         }
-
     }
-
+    
     /**
      * Sets the function to get the parent.
+     *
      * @param \Closure | \Object | mixed $closureOrObject
-     * @param null | string $method
+     * @param null | string              $method
      */
     public function setGetParentFunction($closureOrObject, $method = null)
     {
         $this->getParentObject = null;
         $this->getParentFunction = null;
-        if($method != null)
-        {
+        if ($method != null) {
             $this->getParentObject = $closureOrObject;
             $this->getParentFunction = $method;
-        }
-        else
+        } else
             $this->getParentFunction = $closureOrObject;
     }
-
+    
     /**
      * @return bool
      */

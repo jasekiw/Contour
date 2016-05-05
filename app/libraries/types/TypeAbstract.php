@@ -8,7 +8,6 @@
 
 namespace app\libraries\types;
 
-
 use app\libraries\database\DatabaseObject;
 
 /**
@@ -17,29 +16,25 @@ use app\libraries\database\DatabaseObject;
  */
 abstract class TypeAbstract extends DatabaseObject
 {
-    /**
-     * @var string $name
-     */
+    
+    /** @var string $name   */
     protected $name = null;
-
-    /**
-     * @var TypeCategory $category
-     */
+    
+    /** @var TypeCategory $category   */
     protected $category = null;
-
-
+    
     /**
      * Gets the Category Id
      * @return mixed
      */
     public abstract function getCategoryId();
-
+    
     /**
      * Saves the Type
      * @return mixed
      */
     public abstract function save();
-
+    
     /**
      * @return String
      */
@@ -47,7 +42,7 @@ abstract class TypeAbstract extends DatabaseObject
     {
         return $this->name;
     }
-
+    
     /**
      * @param String $name
      */
@@ -55,7 +50,7 @@ abstract class TypeAbstract extends DatabaseObject
     {
         $this->name = $name;
     }
-
+    
     /**
      * @return int
      */
@@ -63,20 +58,20 @@ abstract class TypeAbstract extends DatabaseObject
     {
         return $this->id;
     }
-
+    
     /**
      * @return TypeCategory
      */
     public abstract function getCategory();
-
+    
     /**
      * Sets the category and id by id
+     *
      * @param TypeCategory $category
      */
     public function setCategory($category)
     {
         $this->category = $category;
     }
-
-
+    
 }

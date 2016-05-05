@@ -8,11 +8,11 @@
 
 namespace app\libraries\memory\tags;
 
-
 class ChangedDataTagsManager
 {
+    
     private static $changed_tags = [];
-
+    
     /**
      * @param DataTag $tag
      */
@@ -20,7 +20,7 @@ class ChangedDataTagsManager
     {
         self::$changed_tags[$tag->get_id()] = $tag;
     }
-
+    
     /**
      * @param DataTag $tag
      */
@@ -28,7 +28,7 @@ class ChangedDataTagsManager
     {
         unset(self::$changed_tags[$tag->get_id()]);
     }
-
+    
     /**
      * @return array
      */
@@ -36,5 +36,5 @@ class ChangedDataTagsManager
     {
         return self::$changed_tags;
     }
-
+    
 }

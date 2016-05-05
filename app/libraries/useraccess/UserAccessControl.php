@@ -7,17 +7,21 @@
  */
 
 namespace app\libraries\useraccess;
+
 use Auth;
+
 class UserAccessControl
 {
-
+    
     /**
      * Checks if the user is admin
      * @return bool
      */
     public static function isAdmin()
     {
-        $groupID = Auth::user()->user_access_group_id;
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $groupID = $user->user_access_group_id;
         return $groupID == 1;
     }
 }

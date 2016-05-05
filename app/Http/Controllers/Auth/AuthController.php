@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
  */
 class AuthController extends Controller
 {
+
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -38,23 +39,6 @@ class AuthController extends Controller
     {
         $this->middleware('guest', ['except' => 'getLogout']);
         parent::__construct();
-
-
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
     }
 
     /**
@@ -67,7 +51,6 @@ class AuthController extends Controller
     {
         //
         return \View::make("auth.login");
-
     }
 
     /**
@@ -80,10 +63,11 @@ class AuthController extends Controller
     {
         //
 
-
         $rules = array(
-            'username'    => 'required|alphaNum', //
-            'password' => 'required|alphaNum|min:3' // password can only be alphanumeric and has to be greater than 3 characters
+            'username' => 'required|alphaNum',
+            //
+            'password' => 'required|alphaNum|min:3'
+            // password can only be alphanumeric and has to be greater than 3 characters
         );
 
         // run the validation rules on the inputs from the form
@@ -92,38 +76,34 @@ class AuthController extends Controller
         // if the validator fails, redirect back to the form
         if ($validator->fails()) {
             return \Redirect::to('login')
-                ->withErrors($validator) // send back all errors to the login form
+                ->withErrors($validator)// send back all errors to the login form
                 ->withInput(\Input::except('password')); // send back the input (not the password) so that we can repopulate the form
         } else {
 
             // create our user data for the authentication
             $userdata = array(
-                'username'     => \Input::get('username'),
-                'password'  => \Input::get('password')
+                'username' => \Input::get('username'),
+                'password' => \Input::get('password')
             );
 
             // attempt to do the login
             if (\Auth::attempt($userdata)) {
-                $row= User_Meta::where('user_id', '=', \Auth::user()->id)->where('key', '=', 'last_logged_in')->first();
+                $row = User_Meta::where('user_id', '=', \Auth::user()->id)->where('key', '=', 'last_logged_in')->first();
                 $last_logged_in = UserMeta::get('last_logged_in');
 
-                if($last_logged_in == '')
-                {
+                if ($last_logged_in == '') {
                     $date = new \DateTime();
                     $row = new User_Meta();
                     $row->user_id = \Auth::user()->id;
                     $row->key = 'last_logged_in';
                     $row->value = $date->format('Y-m-d h:i:s');
                     $row->save();
-                }
-                else
-                {
+                } else {
                     $date = new \DateTime();
                     $row->user_id = \Auth::user()->id;
                     $row->key = 'last_logged_in';
                     $row->value = $date->format('Y-m-d h:i:s');
                     $row->save();
-
                 }
 
                 // validation successful!
@@ -136,9 +116,7 @@ class AuthController extends Controller
 
                 // validation not successful, send back to form
                 return \Redirect::to('login')->with('message', "login attempt failed!");
-
             }
-
         }
     }
 
@@ -177,10 +155,26 @@ class AuthController extends Controller
     {
         //
     }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|confirmed|min:6',
+        ]);
+    }
+
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return User
      */
     protected function create(array $data)

@@ -12,29 +12,22 @@ use app\libraries\excel\import\sheet\ImportRule;
 
 class ImportCell
 {
-
-    /**
-     * @var string
-     */
+    
+    /** @var string   */
     public $value = "";
-    /**
-     * @var int
-     */
+    /** @var int   */
     public $column = 0;
-    /**
-     * @var int
-     */
+    /** @var int   */
     public $row = 0;
-    /**
-     * @var ImportRule
-     */
+    /** @var ImportRule   */
     public $rule = null;
-
+    
     /**
      * ImportCell constructor.
-     * @param string $value
-     * @param int $column
-     * @param int $row
+     *
+     * @param string     $value
+     * @param int        $column
+     * @param int        $row
      * @param ImportRule $rule
      */
     public function __construct($value, $column, $row, $rule)

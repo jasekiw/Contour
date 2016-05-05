@@ -7,6 +7,7 @@
  */
 
 namespace app\libraries\memory;
+
 use app\libraries\database\DatabaseObject;
 
 /**
@@ -15,6 +16,7 @@ use app\libraries\database\DatabaseObject;
  */
 class ChangedDataManager
 {
+    
     const TYPE_TAGS = "tags";
     const TYPE_TAGS_REFERENCE = "tags_reference";
     const TYPE_TYPES = "types";
@@ -25,40 +27,40 @@ class ChangedDataManager
     private static $types = [];
     private static $type_categories = [];
     private static $data_blocks = [];
-
+    
     /**
      * @param ChangedProperty $changedProperty
      */
     public static function addToChanged($changedProperty)
     {
         $arrayName = $changedProperty->table;
-        if( !isset(self::$$arrayName[$changedProperty->sourceObject->get_id()]) )
+        if (!isset(self::$$arrayName[$changedProperty->sourceObject->get_id()]))
             self::$$arrayName[$changedProperty->sourceObject->get_id()] = [];
         self::$$arrayName[$changedProperty->sourceObject->get_id()][$changedProperty->databaseProperty] = $changedProperty;
-
     }
-
-
+    
     /**
      * @param ChangedProperty $changedProperty
      */
     public static function removeFromChanged($changedProperty)
     {
         $arrayName = $changedProperty->table;
-        if( isset(self::$$arrayName[$changedProperty->sourceObject->get_id()]) )
+        if (isset(self::$$arrayName[$changedProperty->sourceObject->get_id()]))
             unset(self::$$arrayName[$changedProperty->sourceObject->get_id()][$changedProperty->databaseProperty]);
     }
+    
     /**
      * Removes all changes from being saved.
+     *
      * @param DataBaseObject $object
-     * @param string $type
+     * @param string         $type
      */
     public static function removeObjectFromChanged($object, $type)
     {
-        if( isset(self::$$type[$object->get_id()]) )
+        if (isset(self::$$type[$object->get_id()]))
             unset(self::$$type[$object->get_id()]);
     }
-
+    
     /**
      *  Gets the changed data for the specified table.
      *
@@ -68,6 +70,7 @@ class ChangedDataManager
      * ChangedDataManager::TYPE_TYPES |
      * ChangedDataManager::TYPE_TYPE_CATEGORIES |
      * ChangedDataManager::TYPE_DATA_BLOCKS]
+     *
      * @return ChangedProperty[][]
      */
     public static function getChangedData($type)

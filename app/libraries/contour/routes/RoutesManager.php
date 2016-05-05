@@ -14,9 +14,10 @@ namespace app\libraries\contour\routes;
  */
 class RoutesManager
 {
+    
     private $routesCollection = null;
     private $routes;
-
+    
     /**
      * Instantiates the class
      */
@@ -25,9 +26,10 @@ class RoutesManager
         $this->routes = [];
         $this->routesCollection = new RoutesCollection();
     }
-
+    
     /**
      * Routes a url GET to a class file and function
+     *
      * @param $url
      * @param $name
      * @param $object
@@ -38,9 +40,10 @@ class RoutesManager
     {
         //TODO: add route logic
     }
-
+    
     /**
      * Routes a url POST to a class file and function
+     *
      * @param $url
      * @param $name
      * @param $object
@@ -51,47 +54,42 @@ class RoutesManager
     {
         //TODO: add route logic
     }
-
+    
     public function hasPostUrl($url)
     {
-
     }
+    
     public function hasGetUrl($url)
     {
-
     }
-
+    
     public function callRoutePost($id)
     {
-
     }
-
+    
     public function callRouteGet($id)
     {
-
     }
+    
+   
     public function printRoutes()
     {
-        $pluginfiles = scandir (app_path('plugins'));
-        if(isset($pluginfiles[0]) && $pluginfiles[0] = '.')
+        $pluginfiles = scandir(app_path('plugins'));
+        if (isset($pluginfiles[0]) && $pluginfiles[0] = '.')
             unset($pluginfiles[0]);
-        if(isset($pluginfiles[1]) && $pluginfiles[1] = '...')
+        if (isset($pluginfiles[1]) && $pluginfiles[1] = '...')
             unset($pluginfiles[1]);
         $pluginsDirectories = [];
-        foreach($pluginfiles as $pluginFile)
-        {
-            if(is_dir(app_path('plugins') . DIRECTORY_SEPARATOR . $pluginFile))
+        foreach ($pluginfiles as $pluginFile) {
+            if (is_dir(app_path('plugins') . DIRECTORY_SEPARATOR . $pluginFile))
                 array_push($pluginsDirectories, app_path('plugins') . DIRECTORY_SEPARATOR . $pluginFile);
         }
-        foreach($pluginsDirectories as $pluginsDirectory)
-        {
-            if(file_exists($pluginsDirectory . DIRECTORY_SEPARATOR . 'routes.php'))
+        foreach ($pluginsDirectories as $pluginsDirectory) {
+            if (file_exists($pluginsDirectory . DIRECTORY_SEPARATOR . 'routes.php'))
                 require $pluginsDirectory . DIRECTORY_SEPARATOR . 'routes.php';
         }
-
-
     }
-
+    
     /**
      * This is a helper method to generate a resource route names correctly
      *
@@ -101,21 +99,22 @@ class RoutesManager
      *
      *      'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('usergroups')
      *
-    *   ] );
+     *   ] );
      * @param $name
+     *
      * @return array
      */
     public function getResourceRoutesForNameHelper($name)
     {
         return [
-            'index' => $name . ".index",
-            'create' => $name . ".create",
-            'store' => $name . ".store",
-            'show' => $name . ".show",
-            'edit' => $name . ".edit",
-            'update' => $name . ".update",
+            'index'   => $name . ".index",
+            'create'  => $name . ".create",
+            'store'   => $name . ".store",
+            'show'    => $name . ".show",
+            'edit'    => $name . ".edit",
+            'update'  => $name . ".update",
             'destroy' => $name . ".destroy",
         ];
     }
-
+    
 }

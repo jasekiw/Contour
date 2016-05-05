@@ -8,7 +8,6 @@
 
 namespace app\libraries\memory\types;
 
-
 use app\libraries\types\TypeCategoryAbstract;
 
 /**
@@ -17,9 +16,10 @@ use app\libraries\types\TypeCategoryAbstract;
  */
 class TypeCategory extends TypeCategoryAbstract
 {
-
+    
     /**
      * TypeCategory constructor.
+     *
      * @param null $id
      * @param null $name
      * @param null $updated_at
@@ -32,16 +32,15 @@ class TypeCategory extends TypeCategoryAbstract
         $this->updated_at = $updated_at;
         $this->created_at = $created_at;
     }
-
+    
     /**
      * Deletes The Object
      * @return mixed
      */
     public function delete()
     {
-
     }
-
+    
     /**
      *  Saves the TypeCategory to the Database
      * @return bool sucessfull
@@ -50,7 +49,7 @@ class TypeCategory extends TypeCategoryAbstract
     {
         // TODO: Implement save() method.
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass
@@ -64,7 +63,7 @@ class TypeCategory extends TypeCategoryAbstract
         $std->created_at = $this->created_at();
         return $std;
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return string
@@ -73,7 +72,7 @@ class TypeCategory extends TypeCategoryAbstract
     {
         return $this->updated_at;
     }
-
+    
     /**
      * Gets the date at when the object was created
      * @return string

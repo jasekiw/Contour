@@ -8,18 +8,20 @@ namespace app\libraries\async;
  */
 interface Async
 {
-
+    
     /**
      * Returns the name of the job
      * @return string
      */
     public static function getName();
-
+    
     /**
      * The method that handles the job
+     *
      * @param null $data
+     *
      * @return mixed
      */
     public function handle($data);
-
+    
 }

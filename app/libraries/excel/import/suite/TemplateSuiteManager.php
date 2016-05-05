@@ -7,9 +7,9 @@
  */
 
 namespace app\libraries\excel\import\suite;
+
 use app\libraries\excel\import\suite\templates\LaborRateTemplateSuite;
 use app\libraries\excel\import\suite\templates\MainBudgetTemplateSuite;
-
 
 /**
  * Class TemplateSuiteManager
@@ -17,9 +17,9 @@ use app\libraries\excel\import\suite\templates\MainBudgetTemplateSuite;
  */
 class TemplateSuiteManager
 {
-
+    
     private $templateSuitesCollection;
-
+    
     /**
      * Inserts Suites
      * TemplateSuiteManager constructor.
@@ -27,10 +27,10 @@ class TemplateSuiteManager
     public function __construct()
     {
         $this->templateSuitesCollection = new ImportTemplateSuiteCollection();
-        $this->templateSuitesCollection->add(( new LaborRateTemplateSuite() )->construct());
-        $this->templateSuitesCollection->add(( new MainBudgetTemplateSuite() )->construct());
+        $this->templateSuitesCollection->add((new LaborRateTemplateSuite())->construct());
+        $this->templateSuitesCollection->add((new MainBudgetTemplateSuite())->construct());
     }
-
+    
     /**
      * @return ImportTemplateSuiteCollection
      */

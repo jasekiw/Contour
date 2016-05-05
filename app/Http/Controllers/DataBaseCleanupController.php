@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 
 class DataBaseCleanupController extends Controller
 {
+
     public function cleanDeletedTags()
     {
         $nl = "<br />";
@@ -42,7 +43,6 @@ class DataBaseCleanupController extends Controller
                 $query .= "tag_id = " . $row['tag_id'] . "";
 
             Query::getPDO()->exec($query);
-
         }
     }
 
@@ -70,6 +70,5 @@ class DataBaseCleanupController extends Controller
         }
         echo "deleted " . $affected . " broken references";
     }
-
 
 }

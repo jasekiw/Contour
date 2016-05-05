@@ -7,6 +7,7 @@
  */
 
 namespace app\libraries\excel;
+
 use app\libraries\excel\Area;
 
 /**
@@ -15,6 +16,7 @@ use app\libraries\excel\Area;
  */
 class Point
 {
+    
     /**
      * @var int
      * @access private
@@ -25,33 +27,37 @@ class Point
      * @access private
      */
     private $y = null;
-
-
+    
     /**
      * Constructs a Point from the coords
+     *
      * @param int $x
      * @param int $y
      */
-    public function __construct($x, $y){
+    public function __construct($x, $y)
+    {
         $this->x = $x;
         $this->y = $y;
     }
-
+    
     /**
      * Gets the x location of the point
      * @return int
      */
-    public function getX() {
+    public function getX()
+    {
         return $this->x;
     }
+    
     /**
      * Gets the y location of the point
      * @return int
      */
-    public function getY(){
+    public function getY()
+    {
         return $this->y;
     }
-
+    
     /**
      * @return Area
      */

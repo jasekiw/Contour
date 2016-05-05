@@ -19,62 +19,56 @@ use app\libraries\types\Types;
  */
 class MenuItem extends DatabaseObject
 {
-
-    /**
-     * @var DataTag $tag
-     */
+    
+    /** @var DataTag $tag   */
     private $tag = null;
-    /**
-     * @var string
-     */
+    /** @var string   */
     private $name = null;
-    /**
-     * @var string
-     */
+    /** @var string   */
     private $link = null;
-    /**
-     * @var string
-     */
+    /** @var string   */
     private $icon = null;
-
-
+    
     /**
      * Cconstructs a MenuItem with the following arguments. The use of arugments is null but use all if used.
+     *
      * @param DataTag $menuItemTag
      */
     public function __construct($menuItemTag)
     {
-            $this->tag = $menuItemTag;
-            $this->id = $menuItemTag->get_id();
-            $this->name = $menuItemTag->getNiceName();
-            $this->link = $menuItemTag->getMetaValue("link");
-            $this->icon = $menuItemTag->getMetaValue("icon");
+        $this->tag = $menuItemTag;
+        $this->id = $menuItemTag->get_id();
+        $this->name = $menuItemTag->getNiceName();
+        $this->link = $menuItemTag->getMetaValue("link");
+        $this->icon = $menuItemTag->getMetaValue("icon");
     }
-
+    
     /**
      * Creates a new MenuItem with the following arguments. The use of arugments is null but use all if used.
+     *
      * @param DataTag $menu
-     * @param String $name
-     * @param String $link
-     * @param null $sort_number
-     * @param String $icon
+     * @param String  $name
+     * @param String  $link
+     * @param null    $sort_number
+     * @param String  $icon
+     *
      * @return MenuItem
      */
-    public static function make($menu, $name , $link , $sort_number = null,  $icon = null)
+    public static function make($menu, $name, $link, $sort_number = null, $icon = null)
     {
-
-        $menutype = Types::get_type_by_name("menu_item",TypeCategory::getTagCategory() );
-        if(!isset($menutype))
+        
+        $menutype = Types::get_type_by_name("menu_item", TypeCategory::getTagCategory());
+        if (!isset($menutype))
             $menutype = Types::create_type_tag("menu_item");
-        $property_type = Types::get_type_by_name("property",TypeCategory::getTagCategory() );
-        if(!isset($property_type))
+        $property_type = Types::get_type_by_name("property", TypeCategory::getTagCategory());
+        if (!isset($property_type))
             $property_type = Types::create_type_tag("property");
-        if(!isset($sort_number))
+        if (!isset($sort_number))
             $sort_number = 0;
-        if(!isset($icon))
+        if (!isset($icon))
             $icon = "";
-
-        $menuItemTag = new DataTag($name,$menu->get_id(), $menutype, $sort_number);
+        
+        $menuItemTag = new DataTag($name, $menu->get_id(), $menutype, $sort_number);
         $menuItemTag->create();
         $menuItemTag->setNiceName($name);
         $menuItemTag->setMetaValue("link", $link);
@@ -82,7 +76,7 @@ class MenuItem extends DatabaseObject
         $menuItem = new MenuItem($menuItemTag);
         return $menuItem;
     }
-
+    
     /**
      * Gets the Tag Name of the menu
      * @return string
@@ -91,18 +85,18 @@ class MenuItem extends DatabaseObject
     {
         return $this->tag->get_name();
     }
-
+    
     /**
      * Gets the href of the link. allows routes to be used
      * @return String
      */
     public function get_href()
     {
-        if(\Route::has($this->link))
+        if (\Route::has($this->link))
             return route($this->link);
         return $this->link;
     }
-
+    
     /**
      * Returns null if an icon is not used
      * @return String
@@ -111,9 +105,10 @@ class MenuItem extends DatabaseObject
     {
         return $this->icon;
     }
-
+    
     /**
      * sets the icon html to be used
+     *
      * @param $value
      */
     public function set_icon($value)
@@ -121,15 +116,16 @@ class MenuItem extends DatabaseObject
         $this->icon = $value;
         $this->tag->setMetaValue("icon", $value);
     }
-
+    
     public function set_sort_number($number)
     {
         $this->tag->set_sort_number($number);
         $this->tag->save();
     }
-
+    
     /**
      * Sets the href of the menu link
+     *
      * @param $value
      */
     public function set_href($value)
@@ -137,7 +133,7 @@ class MenuItem extends DatabaseObject
         $this->link = $value;
         $this->tag->setMetaValue("link", $value);
     }
-
+    
     /**
      * @return int
      */
@@ -145,13 +141,13 @@ class MenuItem extends DatabaseObject
     {
         return $this->tag->get_sort_number();
     }
-
+    
     public function save()
     {
-        if(isset($this->id))
-           $this->tag->save();
+        if (isset($this->id))
+            $this->tag->save();
     }
-
+    
     /**
      * Gets the menu ID
      * @return int
@@ -160,12 +156,12 @@ class MenuItem extends DatabaseObject
     {
         return $this->tag->get_parent()->get_parent_id();
     }
-
+    
     public function delete()
     {
         $this->tag->delete();
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass
@@ -179,7 +175,7 @@ class MenuItem extends DatabaseObject
         $std->created_at = $this->created_at();
         return $std;
     }
-
+    
     /**
      * Gets the Name or Label of the menu Item
      * @return String
@@ -188,19 +184,20 @@ class MenuItem extends DatabaseObject
     {
         return $this->name;
     }
-
+    
     /**
      * sets the name or label of the menu link
+     *
      * @param $value
      */
     public function set_name($value)
     {
         $this->name = $value;
-        $this->tag->set_name($value );
+        $this->tag->set_name($value);
         $this->tag->setNiceName($value);
         $this->tag->save();
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return string
@@ -209,7 +206,7 @@ class MenuItem extends DatabaseObject
     {
         return $this->tag->updated_at();
     }
-
+    
     /**
      * Gets the date at when the object was created
      * @return string

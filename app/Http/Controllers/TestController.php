@@ -13,6 +13,7 @@ use App\Http\Requests;
  */
 class TestController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -21,14 +22,13 @@ class TestController extends Controller
 
     public function index()
     {
-        ini_set('memory_limit','512M');
+        ini_set('memory_limit', '512M');
         Contour::getConfigManager()->turnOnErrorReporting();
         Contour::getConfigManager()->setTimeLimit(60);
 
         $start = microtime(true);
         MemoryDataManager::initialize();
         $manager = MemoryDataManager::getInstance();
-
 
         $tag = $manager->dataTagManager->get_by_id(1475);
         $tag2 = $manager->dataTagManager->get_by_id(1487);
@@ -39,11 +39,9 @@ class TestController extends Controller
         $kilobytes = $bytes / 1024;
         $megabytes = intval($kilobytes / 1024);
         echo "final memory usage: " . $megabytes . " MB<br />";
-        echo "time spent: " . number_format ($stop - $start, 3) . " Seconds<br />";
-        echo xdebug_peak_memory_usage() / 1024/1024;
+        echo "time spent: " . number_format($stop - $start, 3) . " Seconds<br />";
+        echo xdebug_peak_memory_usage() / 1024 / 1024;
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -58,7 +56,7 @@ class TestController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -69,7 +67,7 @@ class TestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -80,7 +78,7 @@ class TestController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -91,8 +89,8 @@ class TestController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -103,7 +101,7 @@ class TestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

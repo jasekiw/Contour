@@ -8,27 +8,26 @@
 
 namespace app\libraries\database;
 
-
 use DB;
 use PDO;
+
 /**
  * Class Query
  * @package app\libraries\database
  */
 class Query
 {
-    /**
-     * @var PDO
-     */
+    
+    /** @var PDO   */
     private static $PDO;
-
+    
     /**
      * Gets the Default PDO Object
      * @return PDO
      */
     public static function getPDO()
     {
-        if(self::$PDO === null)
+        if (self::$PDO === null)
             self::$PDO = DB::connection()->getPdo();
         return self::$PDO;
     }

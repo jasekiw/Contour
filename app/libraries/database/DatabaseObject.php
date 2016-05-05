@@ -13,12 +13,12 @@ namespace app\libraries\database;
  * Class DatabaseObject
  * @package app\libraries\database
  * @abstract
- * @access public
+ * @access  public
  *
  */
 abstract class DatabaseObject
 {
-
+    
     /**
      * The Database row ID
      * @var int
@@ -37,7 +37,7 @@ abstract class DatabaseObject
      * @access protected
      */
     protected $created_at = null;
-
+    
     /**
      * Gets the row ID of the current Database Object
      * @return int
@@ -46,34 +46,35 @@ abstract class DatabaseObject
     {
         return $this->id;
     }
-
+    
     /**
      * Sets the row ID of the Database Object
+     *
      * @param int $id
      */
     public function set_id(int $id)
     {
         $this->id = $id;
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return string
      */
     public abstract function updated_at();
-
+    
     /**
      * Gets the date at when the object was created
      * @return string
      */
     public abstract function created_at();
-
+    
     /**
      * Deletes The Object
      * @return mixed
      */
     public abstract function delete();
-
+    
     /**
      * Returns the ID as a string for a unique Identifier
      * @return string
@@ -82,7 +83,7 @@ abstract class DatabaseObject
     {
         return (string)$this->id;
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass

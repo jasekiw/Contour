@@ -21,6 +21,7 @@ use stdClass;
  */
 class TagController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -51,11 +52,9 @@ class TagController extends Controller
         $parent_id = Input::get("parent_id");
         $type = Input::get("type");
 
-        if($name !== null && $parent_id !== null && $type !== null)
-        {
+        if ($name !== null && $parent_id !== null && $type !== null) {
             $parent_id = intval($parent_id);
-            if(Types::exists($type))
-            {
+            if (Types::exists($type)) {
                 $type = Types::get_type_by_name($type, TypeCategory::getTagCategory());
 
                 $tag = new DataTag($name, $parent_id, $type);
@@ -67,23 +66,21 @@ class TagController extends Controller
         return $reponse->send();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $reponse = new AjaxResponse();
         $reponse->fail("unkown id");
         $id = intval(Input::get("id"));
 
-        if(isset($id) )
-        {
+        if (isset($id)) {
             $dataTag = DataTags::get_by_id($id);
-            if(isset($dataTag))
-            {
+            if (isset($dataTag)) {
                 $dataTag->fullDelete();
                 $reponse->success();
             }
         }
         return $reponse->send();
     }
-
 
     /**
      * POST /api/tags/rename
@@ -94,18 +91,17 @@ class TagController extends Controller
      * @return string
      * @throws \TijsVerkoyen\CssToInlineStyles\Exception
      */
-    public function rename() {
+    public function rename()
+    {
         $reponse = new AjaxResponse();
         $reponse->fail("failed");
 
         $newName = Input::get("newName");
         $id = intval(Input::get("id"));
 
-        if(isset($newName) && isset($id) )
-        {
+        if (isset($newName) && isset($id)) {
             $dataTag = DataTags::get_by_id($id);
-            if(isset($dataTag))
-            {
+            if (isset($dataTag)) {
                 $dataTag->set_name(DataTags::validate_name($newName));
                 $dataTag->save();
                 $reponse->success();
@@ -118,7 +114,7 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -129,29 +125,29 @@ class TagController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         //
     }
+
     public function types()
     {
         $reponse = new AjaxResponse();
         $types = Types::get_all_tag_types();
         $stdTypes = [];
-        foreach($types as $key => $type)
+        foreach ($types as $key => $type)
             $stdTypes[$key] = $type->toStdClass();
         $reponse->setPayload($stdTypes);
         return $reponse->send();
-
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -162,8 +158,8 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -183,16 +179,13 @@ class TagController extends Controller
         $answer = new stdClass();
         $answer->success = false; // default
         $id = Input::get("id");
-        if($id !== null)
-        {
+        if ($id !== null) {
             $id = intval($id);
             $tag = DataTags::get_by_id($id);
-            if($tag !== null)
-            {
+            if ($tag !== null) {
                 $tag->delete_recursive();
                 $answer->success = true;
             }
-
         }
         //$answer->id = $id;
         return json_encode($answer);
@@ -205,19 +198,16 @@ class TagController extends Controller
     {
         $sources = Input::get("source");
         $reponse = new AjaxResponse();
-        $targetId = intval( Input::get("target") );
+        $targetId = intval(Input::get("target"));
         $target = DataTags::get_by_id($targetId);
-        if(isset($target))
-        {
-            foreach($sources as $source)
-            {
+        if (isset($target)) {
+            foreach ($sources as $source) {
                 $current = DataTags::get_by_id(intval($source));
-                if($current->get_id() != $target)
+                if ($current->get_id() != $target)
                     $current->set_parent_id($target->get_id());
                 $current->save();
             }
-        }
-        else
+        } else
             $reponse->fail("cannot find target");
         return $reponse->send();
     }
@@ -231,13 +221,11 @@ class TagController extends Controller
         $id = \Input::get("tag");
         $thetag = DataTags::get_by_id($id);
         $array = $thetag->getParentTrace();
-        foreach($array as $index => $tag)
-        {
+        foreach ($array as $index => $tag) {
             $array[$index] = $tag->get_name();
         }
         return json_encode($array);
     }
-
 
     /**
      * GET /api/tags/get_children/id
@@ -249,25 +237,24 @@ class TagController extends Controller
     {
         $answer = new \stdClass();
         $parent = DataTags::get_by_id($id);
-        if(!isset($parent)) {
+        if (!isset($parent)) {
             $answer->success = false;
             return json_encode($answer);
         }
 
         $children = $parent->get_children()->getAsArray();
-        foreach($children as $index => $child)
-        {
-            $children[$index] = array( "id" => $child->get_id(),
-                "name" =>  $child->get_name(),
+        foreach ($children as $index => $child) {
+            $children[$index] = array(
+                "id" => $child->get_id(),
+                "name" => $child->get_name(),
                 "sort_number" => $child->get_sort_number(),
-                "type" => $child->get_type()->getName() );
+                "type" => $child->get_type()->getName()
+            );
         }
         $answer->tags = $children;
         $answer->success = true;
         return json_encode($answer);
-
     }
-
 
     /**
      * GET /api/tags/get_children_recursive/id
@@ -278,23 +265,22 @@ class TagController extends Controller
     {
         $answer = new \stdClass();
         $parent = DataTags::get_by_id($id);
-        if(!isset($parent)) {
+        if (!isset($parent)) {
             $answer->success = false;
             return json_encode($answer);
         }
         $children = $parent->get_children_recursive()->getAsArray();
-        foreach($children as $index => $child)
-        {
-            $children[$index] = array(
+        foreach ($children as $index => $child) {
+            $children[$index] = [
                 "id" => $child->get_id(),
-                "name" =>  $child->get_name(),
+                "name" => $child->get_name(),
                 "sort_number" => $child->get_sort_number(),
-                "type" => $child->get_type()->getName() );
+                "type" => $child->get_type()->getName()
+            ];
         }
         $answer->tags = $children;
         $answer->success = true;
         return json_encode($answer);
-
     }
 
 }

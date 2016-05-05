@@ -24,88 +24,80 @@
 
 namespace app\libraries\datablocks\formula;
 
-
 /**
  * Class Token
  * @package app\libraries\datablocks\formula
  */
-class Token {
+class Token
+{
+    
     /* Token types */
-    const TOKEN_TYPE_NOOP					= 'Noop';
-    const TOKEN_TYPE_OPERAND				= 'Operand';
-    const TOKEN_TYPE_FUNCTION				= 'Function';
-    const TOKEN_TYPE_IDENTIFIER				= 'Identifier';
-    const TOKEN_TYPE_SUBEXPRESSION			= 'Subexpression';
-    const TOKEN_TYPE_ARGUMENT				= 'Argument';
-    const TOKEN_TYPE_OPERATORPREFIX			= 'OperatorPrefix';
-    const TOKEN_TYPE_OPERATORINFIX			= 'OperatorInfix';
-    const TOKEN_TYPE_OPERATORPOSTFIX		= 'OperatorPostfix';
-    const TOKEN_TYPE_WHITESPACE				= 'Whitespace';
-    const TOKEN_TYPE_UNKNOWN				= 'Unknown';
-
-
-
-
-
-
+    const TOKEN_TYPE_NOOP = 'Noop';
+    const TOKEN_TYPE_OPERAND = 'Operand';
+    const TOKEN_TYPE_FUNCTION = 'Function';
+    const TOKEN_TYPE_IDENTIFIER = 'Identifier';
+    const TOKEN_TYPE_SUBEXPRESSION = 'Subexpression';
+    const TOKEN_TYPE_ARGUMENT = 'Argument';
+    const TOKEN_TYPE_OPERATORPREFIX = 'OperatorPrefix';
+    const TOKEN_TYPE_OPERATORINFIX = 'OperatorInfix';
+    const TOKEN_TYPE_OPERATORPOSTFIX = 'OperatorPostfix';
+    const TOKEN_TYPE_WHITESPACE = 'Whitespace';
+    const TOKEN_TYPE_UNKNOWN = 'Unknown';
+    
     /* Token subtypes */
-    const TOKEN_SUBTYPE_NOTHING				= 'Nothing';
-    const TOKEN_SUBTYPE_START				= 'Start';
-    const TOKEN_SUBTYPE_STOP				= 'Stop';
-    const TOKEN_SUBTYPE_TEXT				= 'Text';
-    const TOKEN_SUBTYPE_NUMBER				= 'Number';
-    const TOKEN_SUBTYPE_LOGICAL				= 'Logical';
-    const TOKEN_SUBTYPE_ERROR				= 'Error';
-    const TOKEN_SUBTYPE_RANGE				= 'Range';
-    const TOKEN_SUBTYPE_MATH				= 'Math';
-    const TOKEN_SUBTYPE_CONCATENATION		= 'Concatenation';
-    const TOKEN_SUBTYPE_INTERSECTION		= 'Intersection';
-    const TOKEN_SUBTYPE_UNION				= 'Union';
-
-    const TOKEN_SUBTYPE_IDENTIFIER_SEPERATOR    = "IdentifierSeperator";
-    const TOKEN_SUBTYPE_IDENTIFIER_CHARACTER    = "IdentifierCharacter";
-    const TOKEN_SUBTYPE_IDENTIFIER_COMMA   = "IdentifierComma";
-
-
-
-
-
+    const TOKEN_SUBTYPE_NOTHING = 'Nothing';
+    const TOKEN_SUBTYPE_START = 'Start';
+    const TOKEN_SUBTYPE_STOP = 'Stop';
+    const TOKEN_SUBTYPE_TEXT = 'Text';
+    const TOKEN_SUBTYPE_NUMBER = 'Number';
+    const TOKEN_SUBTYPE_LOGICAL = 'Logical';
+    const TOKEN_SUBTYPE_ERROR = 'Error';
+    const TOKEN_SUBTYPE_RANGE = 'Range';
+    const TOKEN_SUBTYPE_MATH = 'Math';
+    const TOKEN_SUBTYPE_CONCATENATION = 'Concatenation';
+    const TOKEN_SUBTYPE_INTERSECTION = 'Intersection';
+    const TOKEN_SUBTYPE_UNION = 'Union';
+    
+    const TOKEN_SUBTYPE_IDENTIFIER_SEPERATOR = "IdentifierSeperator";
+    const TOKEN_SUBTYPE_IDENTIFIER_CHARACTER = "IdentifierCharacter";
+    const TOKEN_SUBTYPE_IDENTIFIER_COMMA = "IdentifierComma";
+    
     /**
      * Value
      *
      * @var string
      */
     private $_value;
-
+    
     /**
      * Token Type (represented by TOKEN_TYPE_*)
      *
      * @var string
      */
     private $_tokenType;
-
+    
     /**
      * Token SubType (represented by TOKEN_SUBTYPE_*)
      *
      * @var string
      */
     private $_tokenSubType;
-
+    
     /**
      * Create a new Token
      *
-     * @param string	$pValue
-     * @param string	$pTokenType 	Token type (represented by TOKEN_TYPE_*)
-     * @param string	$pTokenSubType 	Token Subtype (represented by TOKEN_SUBTYPE_*)
+     * @param string $pValue
+     * @param string $pTokenType    Token type (represented by TOKEN_TYPE_*)
+     * @param string $pTokenSubType Token Subtype (represented by TOKEN_SUBTYPE_*)
      */
     public function __construct($pValue, $pTokenType = Token::TOKEN_TYPE_UNKNOWN, $pTokenSubType = Token::TOKEN_SUBTYPE_NOTHING)
     {
         // Initialise values
-        $this->_value				= $pValue;
-        $this->_tokenType			= $pTokenType;
-        $this->_tokenSubType 		= $pTokenSubType;
+        $this->_value = $pValue;
+        $this->_tokenType = $pTokenType;
+        $this->_tokenSubType = $pTokenSubType;
     }
-
+    
     /**
      * @return string
      */
@@ -113,58 +105,64 @@ class Token {
     {
         return $this->_value;
     }
-
+    
     /**
      * Get Value
      *
      * @return string
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->_value;
     }
-
+    
     /**
      * Set Value
      *
-     * @param string	$value
+     * @param string $value
      */
-    public function setValue($value) {
+    public function setValue($value)
+    {
         $this->_value = $value;
     }
-
+    
     /**
      * Get Token Type (represented by TOKEN_TYPE_*)
      *
      * @return string
      */
-    public function getTokenType() {
+    public function getTokenType()
+    {
         return $this->_tokenType;
     }
-
+    
     /**
      * Set Token Type
      *
-     * @param string	$value
+     * @param string $value
      */
-    public function setTokenType($value = Token::TOKEN_TYPE_UNKNOWN) {
+    public function setTokenType($value = Token::TOKEN_TYPE_UNKNOWN)
+    {
         $this->_tokenType = $value;
     }
-
+    
     /**
      * Get Token SubType (represented by TOKEN_SUBTYPE_*)
      *
      * @return string
      */
-    public function getTokenSubType() {
+    public function getTokenSubType()
+    {
         return $this->_tokenSubType;
     }
-
+    
     /**
      * Set Token SubType
      *
-     * @param string	$value
+     * @param string $value
      */
-    public function setTokenSubType($value = Token::TOKEN_SUBTYPE_NOTHING) {
+    public function setTokenSubType($value = Token::TOKEN_SUBTYPE_NOTHING)
+    {
         $this->_tokenSubType = $value;
     }
 }

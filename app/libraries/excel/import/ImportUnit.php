@@ -7,22 +7,22 @@
  */
 
 namespace app\libraries\excel\import;
+
 use app\libraries\tags\collection\TagCollection;
 
-class ImportUnit {
-
-
+class ImportUnit
+{
+    
     private $value = null;
     private $x = null;
     private $y = null;
     private $tags = null;
-
-
+    
     /**
      * @param TagCollection $tags
-     * @param integer $X
-     * @param integer $Y
-     * @param string $value
+     * @param integer       $X
+     * @param integer       $Y
+     * @param string        $value
      */
     function __construct($tags, $X, $Y, $value)
     {
@@ -31,7 +31,7 @@ class ImportUnit {
         $this->x = $X;
         $this->y = $Y;
     }
-
+    
     /**
      * @return int
      */
@@ -39,7 +39,7 @@ class ImportUnit {
     {
         return $this->x;
     }
-
+    
     /**
      * @return int
      */
@@ -47,7 +47,7 @@ class ImportUnit {
     {
         return $this->y;
     }
-
+    
     /**
      * @return TagCollection
      */
@@ -55,7 +55,7 @@ class ImportUnit {
     {
         return $this->tags;
     }
-
+    
     /**
      * @return string
      */
@@ -63,6 +63,5 @@ class ImportUnit {
     {
         return $this->value;
     }
-
-
+    
 }

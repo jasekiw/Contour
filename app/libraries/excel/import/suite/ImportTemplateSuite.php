@@ -18,27 +18,18 @@ use app\libraries\tags\DataTag;
  */
 class ImportTemplateSuite
 {
-    /**
-     * @var DataTag
-     */
+    
+    /** @var DataTag   */
     private $baseTag;
-    /**
-     * @var string
-     */
+    /** @var string   */
     private $name = "";
-    /**
-     * @var TemplateCollection
-     */
+    /** @var TemplateCollection   */
     private $templateCollection;
-    /**
-     * @var \Closure
-     */
+    /** @var \Closure   */
     private $preImportMethod;
-    /**
-     * @var mixed
-     */
+    /** @var mixed   */
     private $preImportObject;
-
+    
     /**
      * @return string
      */
@@ -46,16 +37,17 @@ class ImportTemplateSuite
     {
         return $this->name;
     }
-
+    
     /**
      * Sets the name for the import suite
+     *
      * @param $name
      */
     public function setName($name)
     {
         $this->name = $name;
     }
-
+    
     /**
      * @return TemplateCollection
      */
@@ -63,7 +55,7 @@ class ImportTemplateSuite
     {
         return $this->templateCollection;
     }
-
+    
     /**
      * @param TemplateCollection $templateCollection
      */
@@ -71,39 +63,35 @@ class ImportTemplateSuite
     {
         $this->templateCollection = $templateCollection;
     }
-
+    
     /**
      * @param \Closure | mixed $closureOrObject
-     * @param null | string $method
+     * @param null | string    $method
      */
     public function setPreImportMethod($closureOrObject, $method = null)
     {
-        if($method !== null)
-        {
+        if ($method !== null) {
             $this->preImportObject = $closureOrObject;
             $this->preImportMethod = $method;
-        }
-        else
+        } else
             $this->preImportMethod = $closureOrObject;
     }
-
+    
     /**
      * @return \stdClass
      */
     public function runPreImportTasks()
     {
-        if(!isset($this->preImportMethod))
+        if (!isset($this->preImportMethod))
             return new \stdClass();
-
-        if(isset($this->preImportObject))
-        {
+        
+        if (isset($this->preImportObject)) {
             $method = $this->preImportMethod;
             return $this->preImportObject->$method($this->getbaseTag());
-        }
-        else
+        } else
             return $this->preImportMethod->call(new \stdClass());
     }
-
+    
     /**
      * @return DataTag
      */
@@ -111,22 +99,20 @@ class ImportTemplateSuite
     {
         return $this->baseTag;
     }
-
+    
     /**
      * @param $baseTag
      */
     public function setBaseTag($baseTag)
     {
         $this->baseTag = $baseTag;
-        foreach($this->templateCollection->getAll() as $template)
-        {
-            if(!$template->parentFunctionSet())
-            {
-                $template->setGetParentFunction(function() use(&$baseTag){
+        foreach ($this->templateCollection->getAll() as $template) {
+            if (!$template->parentFunctionSet()) {
+                $template->setGetParentFunction(function () use (&$baseTag) {
                     return $baseTag;
                 });
             }
         }
     }
-
+    
 }

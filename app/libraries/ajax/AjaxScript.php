@@ -8,11 +8,12 @@
 
 namespace app\libraries\ajax;
 
-
 abstract class AjaxScript
 {
-
+    
     public abstract function get($parameters);
+    
     public abstract function post($parameters);
+    
     public abstract function get_id();
 }

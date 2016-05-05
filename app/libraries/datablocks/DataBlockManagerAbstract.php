@@ -8,7 +8,6 @@
 
 namespace app\libraries\datablocks;
 
-
 use app\libraries\tags\DataTagAbstract;
 use app\libraries\types\TypeAbstract;
 use App\Models\Data_block;
@@ -19,32 +18,37 @@ use App\Models\Data_block;
  */
 abstract class DataBlockManagerAbstract
 {
-
+    
     /**
      * @param $id
+     *
      * @return mixed
      */
     public abstract function getByID($id);
+    
     /**
      * @param TypeAbstract $type
+     *
      * @return DataBlock[]
      */
     public abstract function getByType($type);
-
-
+    
     /**
      *  returns a Datablock if found. else returns null
+     *
      * @param DataTagAbstract[] $dataTags
+     *
      * @return DataBlock
      */
     public abstract function getByTagsArray($dataTags);
-
-
+    
     /**
      * This function is used to reduce the queries needed to just get the value of a datablock
+     *
      * @param DataTagAbstract[] $dataTags
+     *
      * @return Data_block
      */
     public abstract function getValueByTagsArray($dataTags);
-
+    
 }

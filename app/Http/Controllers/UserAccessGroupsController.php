@@ -15,6 +15,7 @@ use App\Http\Requests;
  */
 class UserAccessGroupsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -46,7 +47,7 @@ class UserAccessGroupsController extends Controller
     {
         $menues = Contour::getThemeManager()->getMenuManager()->getMenus();
         $menuIds = [];
-        foreach($menues as $menu)
+        foreach ($menues as $menu)
             $menuIds[$menu->get_id()] = $menu->getName();
 
         $view = \View::make("user_access_groups.create");
@@ -58,7 +59,7 @@ class UserAccessGroupsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -75,14 +76,14 @@ class UserAccessGroupsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $menues = Contour::getThemeManager()->getMenuManager()->getMenus();
         $menuIds = [];
-        foreach($menues as $menu)
+        foreach ($menues as $menu)
             $menuIds[$menu->get_id()] = $menu->getName();
         $group = User_Access_Group::where('id', '=', $id)->first();
         $view = \View::make('user_access_groups.show');
@@ -95,7 +96,7 @@ class UserAccessGroupsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -106,8 +107,8 @@ class UserAccessGroupsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -115,7 +116,7 @@ class UserAccessGroupsController extends Controller
         $groupId = \Input::get("group");
         $group = User_Access_Group::where('id', '=', $groupId)->first();
         $name = \Input::get("name");
-        if($name != null && strlen($name) != 0)
+        if ($name != null && strlen($name) != 0)
             $group->name = $name;
         $group->menu_id = \Input::get("menu");
         $group->save();
@@ -127,7 +128,7 @@ class UserAccessGroupsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

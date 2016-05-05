@@ -8,7 +8,6 @@
 
 namespace app\libraries\excel\import\suite\templates;
 
-
 use app\libraries\excel\import\suite\SuiteTemplateAbstract;
 use app\libraries\excel\Point;
 use app\libraries\excel\Area;
@@ -25,7 +24,7 @@ use app\libraries\types\Types;
  */
 class LaborRateTemplateSuite extends SuiteTemplateAbstract
 {
-
+    
     /**
      * @return ImportTemplateSuite
      */
@@ -42,20 +41,19 @@ class LaborRateTemplateSuite extends SuiteTemplateAbstract
         $specialRows = new Area(new Point(4, 48), new Point(4, 56));
         $mainSheet->getRules()->add(ImportRule::createTagHeaderRule($headerRow, Types::get_type_table_header()));
 //        $mainSheet->getRules()->add(ImportRule::createTagHeaderRule((new Point(13,2))->toArea(), Types::get_type_property()));
-        $mainSheet->getRules()->add(ImportRule::createOneDimensionalCellRule(new Area(new Point(4,3), new Point(12, 47) ), $headerRow, ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y  ));
-      
-
+        $mainSheet->getRules()->add(ImportRule::createOneDimensionalCellRule(new Area(new Point(4, 3), new Point(12, 47)), $headerRow, ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y));
+        
         $mainSheet->getRules()->add(ImportRule::createTagHeaderRule($specialRows, Types::get_type_row()));
-        $mainSheet->getRules()->add(ImportRule::createTwoDimensionalCellRule(new Area(new Point(10, 48), new Point(12, 56) )));
+        $mainSheet->getRules()->add(ImportRule::createTwoDimensionalCellRule(new Area(new Point(10, 48), new Point(12, 56))));
         /**
          * created tag per minute cost total to tag the total of per minute cost. if this doesnt exist at (13,55) then add it
          */
-        $mainSheet->getRules()->add(ImportRule::createPropertyCellRule(new Point(13,56), new Point(13,55)));
-
-        $mainSheet->getRules()->add(ImportRule::createPropertyCellRule(new Point(13,3), new Point(13,2)));
+        $mainSheet->getRules()->add(ImportRule::createPropertyCellRule(new Point(13, 56), new Point(13, 55)));
+        
+        $mainSheet->getRules()->add(ImportRule::createPropertyCellRule(new Point(13, 3), new Point(13, 2)));
         $template_sheets->add($mainSheet);
         $suite->setTemplateCollection($template_sheets);
         return $suite;
     }
-
+    
 }

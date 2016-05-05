@@ -13,7 +13,7 @@
 ?>
 <div class="editor">
 
-<table class="properties_editor">
+<table class="properties_editor" parent="{!! $propertiesView->getParentTag()->get_id() !!}">
     <tbody>
 
         @foreach($propertiesView->getProperyTags() as $key => $tag)

@@ -20,82 +20,85 @@ use App\Models\Tags_reference;
  * Class DataBlock. Used to hold values and manage tags.
  * @package app\libraries\datablocks
  */
-class DataBlock extends DataBlockAbstract {
+class DataBlock extends DataBlockAbstract
+{
     
-
     /**
      * @param TagCollection $tags The tags that the datablock reference
-     * @param Type $type The type to pass to the datablock
-     * @param string $created_at
-     * @param string $updated_at
+     * @param Type          $type The type to pass to the datablock
+     * @param string        $created_at
+     * @param string        $updated_at
      */
     public function __construct($tags = null, $type = null, $created_at = null, $updated_at = null, $sort_number = null)
     {
-        if(isset($type))
+        if (isset($type))
             $this->type = $type;
-        if(isset($tags))
+        if (isset($tags))
             $this->tags = $tags;
-        if(isset($created_at))
+        if (isset($created_at))
             $this->created_at = $created_at;
-        if(isset($updated_at))
+        if (isset($updated_at))
             $this->updated_at = $updated_at;
-        if(isset($sort_number))
+        if (isset($sort_number))
             $this->sort_number = $sort_number;
     }
-
+    
     /**
      * Sets the type of the datablock
+     *
      * @param Type $type
      */
     public function set_type($type)
     {
-       $this->type = $type;
+        $this->type = $type;
     }
-
+    
     /**
      * Sets the tags by Tag Collection
+     *
      * @param TagCollection $tags
      */
     public function set_tags($tags)
     {
         $this->tags = $tags;
     }
-
+    
     /**
      * @return Type|null
      */
     public function get_type()
     {
-        if(!isset($this->id))
+        if (!isset($this->id))
             return null;
-        if(isset($this->type))
+        if (isset($this->type))
             return $this->type;
         $block = Data_block::where('id', '=', $this->id)->first(['type_id']);
-        if(!isset($block))
+        if (!isset($block))
             return null;
         $this->type = Types::get_by_id($block->type_id);
         return $this->type;
     }
-
+    
     /**
      * Sets the value of the datablock. It can only be a string
+     *
      * @param string $value
      */
     public function set_value($value)
     {
         $this->value = $value;
     }
-
+    
     /**
      * Gets the proccessed value of the datablock
      * @return string
      */
     public function getProccessedValue($useMemory = false)
     {
-        $converter = new DataBlockValueConvertor($this,$useMemory );
+        $converter = new DataBlockValueConvertor($this, $useMemory);
         return $converter->getProcessedValue($this->getValue(), $this->getTags()->getRowsAsArray()[0]->get_parent_id());
     }
-
+    
     /**
      * Gets the value of the DataBlock
      * @return string
@@ -104,7 +107,7 @@ class DataBlock extends DataBlockAbstract {
     {
         return $this->value;
     }
-
+    
     /**
      * Gets the collection of tags that are used to identify the datablock
      * @return TagCollection
@@ -113,14 +116,14 @@ class DataBlock extends DataBlockAbstract {
     {
         return $this->tags;
     }
-
+    
     /**
      *Creates a datablock in the datablock with the same properties
      * @return bool Returns true if succesful
      */
     public function create()
     {
-        if(isset($this->id) )
+        if (isset($this->id))
             return false;
         $datablock = new Data_block();
         $datablock->value = $this->value;
@@ -128,7 +131,7 @@ class DataBlock extends DataBlockAbstract {
         $datablock->sort_number = $this->sort_number;
         $datablock->save();
         $this->id = $datablock->id;
-        foreach($this->tags->getAsArray() as $datatag) {
+        foreach ($this->tags->getAsArray() as $datatag) {
             $reference = new Tags_reference();
             $reference->data_block_id = $this->get_id();
             $reference->tag_id = $datatag->get_id();
@@ -136,14 +139,14 @@ class DataBlock extends DataBlockAbstract {
         }
         return true;
     }
-
+    
     /**
      * Saves the datablock to the database if it already exists
      * @return bool
      */
     public function save()
     {
-        if(!isset($this->id) )
+        if (!isset($this->id))
             return false;
         /** @var Data_block $datablock */
         $datablock = Data_block::where("id", "=", $this->id)->first();
@@ -152,56 +155,51 @@ class DataBlock extends DataBlockAbstract {
         $datablock->sort_number = $this->sort_number;
         $datablock->save();
         $this->id = $datablock->id;
-        foreach($this->tags->getAsArray() as $datatag)
-        {
+        foreach ($this->tags->getAsArray() as $datatag) {
             /**  @var Tags_reference $reference */
             $reference = Tags_reference::where('data_block_id', '=', $this->get_id())->where('tag_id', '=', $datatag->get_id())->first();
-            if(!isset($reference))
-            {
-
+            if (!isset($reference)) {
+                
                 $reference = new Tags_reference();
                 $reference->data_block_id = $this->get_id();
                 $reference->tag_id = $datatag->get_id();
                 $reference->save();
-            }
-            else
-            {
+            } else {
                 $reference->data_block_id = $this->get_id();
                 $reference->tag_id = $datatag->get_id();
                 $reference->save();
             }
-
         }
         return true;
     }
-
+    
     /**
      * Deletes the datablock
      * @return bool true if deleted, false if the datablock does not exist
      */
     public function deleteTagsAndDatablock()
     {
-        if(!isset($this->id))
+        if (!isset($this->id))
             return false;
         $this->delete();
-        foreach($this->tags->getAsArray() as $tag)
+        foreach ($this->tags->getAsArray() as $tag)
             $tag->delete();
         return true;
     }
-
+    
     /**
      * Deletes the datablock
      * @return bool true if delete successful, false if the datablock has not been created
      */
     public function delete()
     {
-        if(!isset($this->id))
+        if (!isset($this->id))
             return false;
         Tags_reference::where('data_block_id', '=', $this->get_id())->delete();
         Data_block::where('id', '=', $this->get_id())->delete();
         return true;
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass
@@ -212,23 +210,23 @@ class DataBlock extends DataBlockAbstract {
         $std->id = $this->get_id();
         $std->value = $this->getValue();
         $std->tags = [];
-        foreach($this->getTags()->getAsArray() as $key => $tag)
+        foreach ($this->getTags()->getAsArray() as $key => $tag)
             $std->tags[$key] = $tag->toStdClass();
-
+        
         $std->updated_at = $this->updated_at();
         $std->created_at = $this->created_at();
         return $std;
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return String
      */
     public function updated_at()
     {
-        if(isset($this->updated_at)) // cached
+        if (isset($this->updated_at)) // cached
             return $this->updated_at;
-        if(!isset($this->id))
+        if (!isset($this->id))
             return null;
         $tag = Data_block::where('id', '=', $this->id)->first(['updated_at']);
         /** Tag $tag **/
@@ -236,20 +234,20 @@ class DataBlock extends DataBlockAbstract {
         $this->updated_at = $updated_at;
         return $updated_at;
     }
-
+    
     /***************************
      * Private methods
      ***************************/
-
+    
     /**
      * Gets the date at when the object was created
      * @return String
      */
     public function created_at()
     {
-        if(isset($this->created_at)) // cached
+        if (isset($this->created_at)) // cached
             return $this->created_at;
-        if(!isset($this->id))
+        if (!isset($this->id))
             return null;
         $block = Data_block::where('id', '=', $this->id)->first(['created_at']);
         /** Data_block $block */
@@ -257,20 +255,21 @@ class DataBlock extends DataBlockAbstract {
         $this->created_at = $created_at;
         return $created_at;
     }
-
+    
     /**
      * Checks if the datablock has a duplicate
+     *
      * @param $tags
+     *
      * @return int|false
      */
     private function check_db_for_duplicate($tags)
     {
         $s_tags = serialize($tags);
         $datablock = Data_block::where("tags", "=", $s_tags)->first();
-        if(isset($datablock))
+        if (isset($datablock))
             return $datablock->id;
         else
             return false;
-
     }
 }

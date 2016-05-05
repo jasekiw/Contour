@@ -20,7 +20,6 @@ use App\Http\Controllers\Controller;
 class DataBlockController extends Controller
 {
 
-
     /**
      * POST /api/datablocks/save
      *{
@@ -34,18 +33,16 @@ class DataBlockController extends Controller
     {
         $response = new AjaxResponse();
         $response->fail("unkown failure");
-        if(!isset($id))
+        if (!isset($id))
             $id = Input::get('id');
         $value = Input::get("value");
         $datablock = DataBlocks::getByID($id);
-        if(isset($datablock))
-        {
+        if (isset($datablock)) {
             $datablock->set_value($value);
             $datablock->save();
             $response->success("saved sucessfully");
             $response->setPayload($datablock->toStdClass());
-        }
-        else
+        } else
             $response->fail("datablock does not exist");
 
         return $response->send();
@@ -61,38 +58,31 @@ class DataBlockController extends Controller
 
         if (!$response->reliesOnMany(["tagIds" => $tagIds, "value" => $value, "type" => $typeName]))
             return $response->send();
-        if (!is_array($tagIds))
-        {
+        if (!is_array($tagIds)) {
             $response->fail("tagIds is not an array.");
             return $response->send();
         }
         $dataTags = [];
-        foreach ($tagIds as $id)
-        {
+        foreach ($tagIds as $id) {
             $dataTag = DataTags::get_by_id($id);
-            if(!isset($dataTag))
-            {
+            if (!isset($dataTag)) {
                 $response->fail("datatag id " . $id . " is not found");
                 return $response->send();
-            }
-            else
+            } else
                 array_push($dataTags, $dataTag);
         }
         $type = Types::get_type_by_name($typeName, TypeCategory::getDataBlockCategory());
-        if(!isset($type))
-        {
+        if (!isset($type)) {
             $response->fail("tag name was not found");
             return $response->send();
         }
 
-        $datablock = new DataBlock(new TagCollection($dataTags),$type);
+        $datablock = new DataBlock(new TagCollection($dataTags), $type);
         $datablock->set_value($value);
         $datablock->create();
         $response->setPayload($datablock->toStdClass());
         $response->success("succesfully created");
         return $response->send();
-
-
     }
 
     /**
@@ -104,23 +94,18 @@ class DataBlockController extends Controller
         $ids = \Input::get("tags");
         /** @var DataTag[] $tags */
         $tags = array();
-        foreach($ids as $index => $id)
+        foreach ($ids as $index => $id)
             $tags[$index] = DataTags::get_by_id($id);
-
-
 
         $datablock = DataBlocks::getByTagsArray($tags);
         $stdDataBlock = new \stdClass();
-        if(isset($datablock))
-        {
+        if (isset($datablock)) {
             $stdDataBlock->id = $datablock->get_id();
             $parser = new Parser(DataManager::getInstance());
             $context = $datablock->getTags()->getRowsAsArray()[0]->get_parent_id();
             $stdDataBlock->value = $parser->parse($datablock->getValue(), $context);
-           // $stdDataBlock->value = $datablock->getProccessedValue();
-        }
-        else
-        {
+            // $stdDataBlock->value = $datablock->getProccessedValue();
+        } else {
             $stdDataBlock->id = -1;
             $stdDataBlock->value = "";
         }

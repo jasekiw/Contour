@@ -31,7 +31,7 @@ $editorGray: #8198A3;
 }
 
 .sheet_editor {
-    .sheet_column {
+    .tag_column {
         color: $editorGray;
         text-align: center;
 
@@ -40,7 +40,7 @@ $editorGray: #8198A3;
         padding-bottom: 10px;
     }
 
-    .sheet_row {
+    .tag_row {
 
         .row_name {
             padding-right: 20px;

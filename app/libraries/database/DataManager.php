@@ -8,7 +8,6 @@
 
 namespace app\libraries\database;
 
-
 use app\libraries\datablocks\DataBlockManager;
 use app\libraries\tags\DataTagManager;
 
@@ -18,11 +17,11 @@ use app\libraries\tags\DataTagManager;
  */
 class DataManager
 {
+    
     private static $memoryObject;
     public $dataTagManager;
     public $dataBlockManager;
-
-
+    
     /**
      * MemoryDataManager constructor.
      */
@@ -31,14 +30,14 @@ class DataManager
         $this->dataTagManager = new DataTagManager($this);
         $this->dataBlockManager = new DataBlockManager($this);
     }
-
+    
     /**
      * @return DataManager
      */
     public static function getInstance()
     {
-        if(!isset(self::$memoryObject))
-            self::$memoryObject  = new DataManager();
+        if (!isset(self::$memoryObject))
+            self::$memoryObject = new DataManager();
         return self::$memoryObject;
     }
 }

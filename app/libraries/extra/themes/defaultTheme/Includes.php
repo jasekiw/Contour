@@ -17,7 +17,7 @@ use app\libraries\theme\Theme;
  */
 class Includes
 {
-
+    
     /**
      * Includes constructor.
      */
@@ -25,9 +25,10 @@ class Includes
     {
         $this->run();
     }
+    
     public function run()
     {
         Theme::get_ajax_manager()->add_script(new AjaxTagController());
     }
-
+    
 }

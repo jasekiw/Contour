@@ -8,10 +8,10 @@
 
 namespace app\libraries\excel\import\exception;
 
-
 use Exception;
 
 class ExcelImportException extends Exception
 {
+    
     protected $nl = "\r\n";
 }

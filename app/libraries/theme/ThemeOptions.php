@@ -8,10 +8,10 @@
 
 namespace app\libraries\theme;
 
-
 abstract class ThemeOptions
 {
-
+    
     public abstract function __construct();
+    
     public abstract function get_name();
 }

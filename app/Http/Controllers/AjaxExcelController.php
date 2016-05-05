@@ -36,15 +36,14 @@ class AjaxExcelController extends Controller
     {
 
         TableConstructor::printTable($id);
-
     }
 
     public function status()
     {
 
         return UserMeta::get('tableLoading');
-
     }
+
     public function reset()
     {
         UserMeta::save('tableLoading', '');

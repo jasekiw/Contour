@@ -8,7 +8,6 @@
 
 namespace app\libraries\excel\import\suite;
 
-
 use app\libraries\tags\DataTag;
 
 /**
@@ -17,15 +16,19 @@ use app\libraries\tags\DataTag;
  */
 abstract class SuiteTemplateAbstract
 {
+    
     protected $parentTag;
+    
     /**
      * @param DataTag $parent
+     *
      * @throws \TijsVerkoyen\CssToInlineStyles\Exception
      */
     public function preRun($parent)
     {
         $this->parentTag = $parent;
     }
+    
     /**
      * @return ImportTemplateSuite
      */

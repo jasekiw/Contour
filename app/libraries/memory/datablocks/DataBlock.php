@@ -8,11 +8,9 @@
 
 namespace app\libraries\memory\datablocks;
 
-
 use app\libraries\datablocks\DataBlockAbstract;
 use app\libraries\memory\tags\TagCollection;
 use app\libraries\memory\types\Type;
-
 
 /**
  * Class DataBlock
@@ -20,11 +18,12 @@ use app\libraries\memory\types\Type;
  */
 class DataBlock extends DataBlockAbstract
 {
-
+    
     /**
      * DataBlock constructor.
-     * @param int $id
-     * @param Type $type
+     *
+     * @param int           $id
+     * @param Type          $type
      * @param TagCollection $tags
      */
     function __construct($id = null, $type = null, $tags = null, $value = null)
@@ -34,7 +33,7 @@ class DataBlock extends DataBlockAbstract
         $this->tags = $tags;
         $this->value = $value;
     }
-
+    
     /**
      * @return Type
      */
@@ -42,7 +41,7 @@ class DataBlock extends DataBlockAbstract
     {
         return $this->type;
     }
-
+    
     /**
      * Gets the proccessed value of the datablock
      * @return string
@@ -51,7 +50,7 @@ class DataBlock extends DataBlockAbstract
     {
         // TODO: Implement getProccessedValue() method.
     }
-
+    
     /**
      *Creates a datablock in the datablock with the same properties
      * @return bool Returns true if succesful
@@ -60,7 +59,7 @@ class DataBlock extends DataBlockAbstract
     {
         // TODO: Implement create() method.
     }
-
+    
     /**
      * Saves the datablock to the database if it already exists
      * @return bool
@@ -69,7 +68,7 @@ class DataBlock extends DataBlockAbstract
     {
         // TODO: Implement save() method.
     }
-
+    
     /**
      * Deletes the datablock
      * @return bool true if deleted, false if the datablock does not exist
@@ -78,7 +77,7 @@ class DataBlock extends DataBlockAbstract
     {
         // TODO: Implement deleteTagsAndDatablock() method.
     }
-
+    
     /**
      * Deletes The Object
      * @return mixed
@@ -87,7 +86,7 @@ class DataBlock extends DataBlockAbstract
     {
         // TODO: Implement delete() method.
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass
@@ -98,23 +97,23 @@ class DataBlock extends DataBlockAbstract
         $std->id = $this->get_id();
         $std->value = $this->getValue();
         $std->tags = [];
-        foreach($this->getTags()->getAsArray() as $key => $tag)
+        foreach ($this->getTags()->getAsArray() as $key => $tag)
             $std->tags[$key] = $tag->toStdClass();
-
+        
         $std->updated_at = $this->updated_at();
         $std->created_at = $this->created_at();
         return $std;
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return string
      */
     public function updated_at()
     {
-       return $this->updated_at;
+        return $this->updated_at;
     }
-
+    
     /**
      * Gets the date at when the object was created
      * @return string

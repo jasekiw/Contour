@@ -26,13 +26,16 @@ use Maatwebsite\Excel\Readers\LaravelExcelReader;
  */
 class Importer
 {
+    
     public static $multithreaded = false;
-
+    
     /**
      * Runs the import on the specified excel file with the import suite and location to import into
-     * @param ImportTemplateSuite $importSuite The template suite used to define the import parameters
-     * @param string $fileLocation The location of the excel file.
-     * @param string $tagLocation The tag location to import into.
+     *
+     * @param ImportTemplateSuite $importSuite  The template suite used to define the import parameters
+     * @param string              $fileLocation The location of the excel file.
+     * @param string              $tagLocation  The tag location to import into.
+     *
      * @return string Any response from the import
      */
     public function run($importSuite, $fileLocation, $tagLocation)
@@ -41,35 +44,31 @@ class Importer
         $excelTag = $this->getExceltag();
         $excelTagName = $excelTag->get_name();
         $path = explode("/", $tagLocation);
-        foreach($path as $key => $tag)
-            if($tag == "")
+        foreach ($path as $key => $tag)
+            if ($tag == "")
                 unset($path[$key]);
         $path = array_values($path);
         $currentTag = $excelTag;
-
-        if(sizeof($path) == 1 && $path[0] == "")
+        
+        if (sizeof($path) == 1 && $path[0] == "")
             $importSuite->setBaseTag($currentTag);
         else
-            foreach($path as $tag)
-            {
+            foreach ($path as $tag) {
                 $child = $currentTag->findChild($tag);
-                if(!isset($child))
+                if (!isset($child))
                     return "Tag: $tag not found in file path /$excelTagName/$tagLocation";
                 $currentTag = $child;
             }
         $importSuite->setBaseTag($currentTag);
         $importSuite->runPreImportTasks();
-        try
-        {
+        try {
             Excel::load($fileLocation, $this->loadExcel($importSuite));
             return "DONE!";
-        }
-        catch(SheetNotFoundException $e)
-        {
+        } catch (SheetNotFoundException $e) {
             return $e->getMessage();
         }
     }
-
+    
     /**
      * Gets the excel tag in the root directory.
      * This is the root directory for importing.
@@ -78,62 +77,67 @@ class Importer
      */
     public function getExceltag()
     {
-        $excelTag = DataTags::get_by_string("excel",-1);
-        if(!isset($excelTag))
-        {
-            $excelTag = new DataTag("excel",-1,Types::get_type_folder(),0 );
+        $excelTag = DataTags::get_by_string("excel", -1);
+        if (!isset($excelTag)) {
+            $excelTag = new DataTag("excel", -1, Types::get_type_folder(), 0);
             $excelTag->create();
         }
         return $excelTag;
     }
-
+    
     /**
      * Loads the excel file and loops the sheets.
+     *
      * @param ImportTemplateSuite $importSuite
+     *
      * @return \Closure
      */
     private function loadExcel(&$importSuite)
     {
         return
-            function(LaravelExcelReader $reader) use (&$importSuite)
-            {
+            function (LaravelExcelReader $reader) use (&$importSuite) {
                 $reader->calculate(false);
                 $reader->noHeading();
                 $count = 1;
                 $reader->each($this->processSheet($count, $importSuite));
             };
     }
-
+    
     /**
      * Loops through the excel sheets and imports them
-     * @param int $count
+     *
+     * @param int                 $count
      * @param ImportTemplateSuite $importSuite
+     *
      * @return \Closure
      */
     private function processSheet(&$count, &$importSuite)
     {
         return
-        function(RowCollection $sheet)  use (&$count, &$importSuite)
-        {
-            $sheetTitle = str_replace("'", "", $sheet->getTitle());
-            if(!Importer::$multithreaded)
-                $this->runImport($sheet,$sheetTitle, $count, $importSuite);
-            else {/** TODO: add multithreaded import */ }
-            echo "  " . $sheetTitle . "<br />" .  "current_sheet: " . $count . "<br />";
-            flush();
-            \UserMeta::save('importProgressSheet', $sheetTitle);
-            \UserMeta::save('importProgress', $count . "/" . "94");
-            $count++;
-        };
+            function (RowCollection $sheet) use (&$count, &$importSuite) {
+                $sheetTitle = str_replace("'", "", $sheet->getTitle());
+                if (!Importer::$multithreaded)
+                    $this->runImport($sheet, $sheetTitle, $count, $importSuite);
+                else {
+                    /** TODO: add multithreaded import */
+                }
+                echo "  " . $sheetTitle . "<br />" . "current_sheet: " . $count . "<br />";
+                flush();
+                \UserMeta::save('importProgressSheet', $sheetTitle);
+                \UserMeta::save('importProgress', $count . "/" . "94");
+                $count++;
+            };
     }
-
+    
     /**
      * Runs the import for the current sheet.
      * It created a new SheetImporter object and passes the suite to it.
-     * @param RowCollection $sheet
-     * @param String $sheet_title
-     * @param integer $sheet_num
+     *
+     * @param RowCollection       $sheet
+     * @param String              $sheet_title
+     * @param integer             $sheet_num
      * @param ImportTemplateSuite $suite
+     *
      * @return ImportCollection
      * @throws Exception
      */
@@ -141,33 +145,25 @@ class Importer
     {
         $template_sheets = $suite->getTemplateCollection();
         gc_enable();
-        if($template_sheets->exists($sheet_title))
-        {
+        if ($template_sheets->exists($sheet_title)) {
             $match = $template_sheets->find($sheet_title);
             $parent = $match->getParentTag();
             $importer = new SheetImporter();
             $importer->runImport($sheet, $sheet_title, $match, $sheet_num, $parent, $suite);
-        }
-        else if($template_sheets->inRule($sheet_title))
-        {
+        } else if ($template_sheets->inRule($sheet_title)) {
             $rule = $template_sheets->getRule($sheet_title);
             $match = $template_sheets->find($rule->templateSheet);
             $parent = $match->getParentTag();
             $importer = new SheetImporter();
-            $importer->runImport($sheet, $sheet_title, $match, $sheet_num,$parent, $suite);
-        }
-        else if($template_sheets->inRule((int)$sheet_num))
-        {
+            $importer->runImport($sheet, $sheet_title, $match, $sheet_num, $parent, $suite);
+        } else if ($template_sheets->inRule((int)$sheet_num)) {
             $rule = $template_sheets->getRule((int)$sheet_num);
             $match = $template_sheets->find($rule->templateSheet);
             $parent = $match->getParentTag();
             $importer = new SheetImporter();
-            $importer->runImport($sheet, $sheet_title, $match, $sheet_num,$parent, $suite);
-        }
-        else // not found at all :(
-            throw new SheetNotFoundException($sheet_num,$sheet_title);
-
-
+            $importer->runImport($sheet, $sheet_title, $match, $sheet_num, $parent, $suite);
+        } else // not found at all :(
+            throw new SheetNotFoundException($sheet_num, $sheet_title);
     }
-
+    
 }

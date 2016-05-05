@@ -21,8 +21,9 @@ class AsyncController extends Controller
      */
     public function handle($id)
     {
-        return  AsyncHandler::handle($id);
+        return AsyncHandler::handle($id);
     }
+
     public function launch()
     {
         AsyncHandler::launchIt();

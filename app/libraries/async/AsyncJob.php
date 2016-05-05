@@ -8,7 +8,6 @@
 
 namespace app\libraries\async;
 
-
 use app\libraries\api\APIClient;
 use App\Models\Async_Job;
 
@@ -18,30 +17,31 @@ use App\Models\Async_Job;
  */
 class AsyncJob
 {
+    
     /** @var \stdClass */
     private $data;
     /** @var string */
     private $job;
     /** @var int */
     private $id;
-
+    
     /**
      * AsyncJob constructor.
      */
     public function __construct()
     {
-
     }
-
+    
     /**
      * Sets the data to be sent to the job
+     *
      * @param \stdClass $data
      */
     public function setData($data)
     {
         $this->data = $data;
     }
-
+    
     /**
      * @param $name
      */
@@ -49,7 +49,7 @@ class AsyncJob
     {
         $this->job = $name;
     }
-
+    
     /**
      * Activates the job and returns the job id to track the progress
      * @requires data to be set and the job name to be set
@@ -65,25 +65,24 @@ class AsyncJob
         $uniqueId = uniqid();
         $job->token = $uniqueId;
         $job->save();
-
+        
         $dataToSend->id = $job->id;
         $dataToSend->token = $uniqueId;
         $apiClient->setData($dataToSend);
         $apiClient->setURL("http://localhost/jobs/" . $this->job);
         $apiClient->setTimeout(15000);
         $response = $apiClient->postAndGetResponse();
-        if(!$apiClient->successful)
-        {
+        if (!$apiClient->successful) {
             echo $apiClient->error;
             return -1;
         }
-
-       if(!$response->success)
-           throw new \Exception("unable to launch job ERROR:" . $response->error);
+        
+        if (!$response->success)
+            throw new \Exception("unable to launch job ERROR:" . $response->error);
         $this->id = $response->id;
         return $this->id;
     }
-
+    
     /**
      * Cheks the progress of the current task
      * @return string|null
@@ -91,11 +90,11 @@ class AsyncJob
     public function checkProgress()
     {
         $job = Async_Job::where('id', '=', $this->id)->first();
-        if($job === null)
+        if ($job === null)
             return null;
         return $job->progress;
     }
-
+    
     /**
      * Checks if the current job is completed
      * @return bool
@@ -103,9 +102,9 @@ class AsyncJob
     public function isComplete()
     {
         $job = Async_Job::where('id', '=', $this->id)->first();
-        if($job === null)
+        if ($job === null)
             return null;
         return (boolean)$job->complete;
     }
-
+    
 }

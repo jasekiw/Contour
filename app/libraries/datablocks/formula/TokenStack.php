@@ -8,47 +8,52 @@
 
 namespace app\libraries\datablocks\formula;
 
-
 class TokenStack
 {
+    
     protected $stack;
-
+    
     /**
      * TokenStack constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         // initialize the stack
-        $this->stack = array();
+        $this->stack = [];
     }
-
+    
     /**
      * @param $item
      */
-    public function push($item) {
+    public function push($item)
+    {
         array_unshift($this->stack, $item);
     }
-
+    
     /**
      * @return Token
      */
-    public function pop() {
+    public function pop()
+    {
         if ($this->isEmpty())
             return null;
         else
             return array_shift($this->stack);
     }
-
+    
     /**
      * @return bool
      */
-    public function isEmpty() {
+    public function isEmpty()
+    {
         return empty($this->stack);
     }
-
+    
     /**
      * @return Token
      */
-    public function top() {
+    public function top()
+    {
         return current($this->stack);
     }
 }

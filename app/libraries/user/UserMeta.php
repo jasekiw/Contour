@@ -18,79 +18,73 @@ use app\libraries\contour\Contour;
  */
 class UserMeta
 {
-
+    
     /**
      * Returns empty string if column not found
+     *
      * @param String $var
+     *
      * @return String
      */
     public static function get($var)
     {
         $answer = null;
         $alternate_answer = null;
-        if($var == "date_joined" )
-        {
-            $alternate_answer = Auth::user()->created_at;
-        }
-        else if($var == "email")
-        {
-            $alternate_answer = Auth::user()->email;
-        }
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($var == "date_joined")
+            $alternate_answer = $user->created_at;
+        else if ($var == "email")
+            $alternate_answer = $user->email;
         else {
-
-            $answer = User_Meta::where("user_id", "=", Auth::user()->id)->where("key", "=", $var)->first(array('value'));
-            if(!isset($answer))
-            {
+            
+            $answer = User_Meta::where("user_id", "=", $user->id)->where("key", "=", $var)->first(['value']);
+            if (!isset($answer))
                 return ''; // returns an empty string if nothing found
-            }
             return $answer->value;
         }
-
-
         return $alternate_answer;
-
     }
-
+    
     /**
      * Saves a file to the current user and moves it to the uploads folder
+     *
      * @param $name
+     *
      * @return string
      */
     public static function save_file($name)
     {
-        if(\Input::hasFile($name))
-        {
+        if (\Input::hasFile($name)) {
             $filename = \Input::file($name)->getClientOriginalName();
-            \Input::file($name)->move( Contour::getConfigManager()->get('constants.uploads_folder'), $filename);
+            \Input::file($name)->move(Contour::getConfigManager()->get('constants.uploads_folder'), $filename);
             self::save($name, Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
             return Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename;
         }
         return '';
     }
-
+    
     /**
      * Saves a value to the current user under the key $name
+     *
      * @param string $name
      * @param string $value
      */
     public static function save($name, $value)
     {
-        if(!isset($value))
-        {
+        if (!isset($value))
             return;
-        }
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
         $answer = null;
-        $answer = User_Meta::where('user_id', '=', Auth::user()->id)->where("key", "=", $name)->first();
-
-        if(isset($answer))
-        {
+        $answer = User_Meta::where('user_id', '=', $user->id)->where("key", "=", $name)->first();
+        
+        if (isset($answer)) {
             $answer->value = $value;
             $answer->save();
-        }
-        else
-        {
+        } else {
             $answer = new User_Meta();
-            $answer->user_id = Auth::user()->id;
+            $answer->user_id = $user->id;
             $answer->key = $name;
             $answer->value = $value;
             $answer->save();

@@ -8,14 +8,13 @@
 
 namespace app\libraries\extra\themes\defaultTheme;
 
-
 use app\libraries\theme\ThemeOptions;
 
 class DefaultTheme extends ThemeOptions
 {
-
+    
     private $includes = null;
-
+    
     /**
      * DefaultTheme constructor.
      */
@@ -23,7 +22,7 @@ class DefaultTheme extends ThemeOptions
     {
         $this->includes = new Includes();
     }
-
+    
     public function get_name()
     {
         return "default";

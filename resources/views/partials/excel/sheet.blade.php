@@ -13,18 +13,18 @@ $tag = $sheet->getParentTag();
 ?>
 @if($sheet->hasData())
 <div class="editor">
-    <table class="sheet_editor" sheet="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
+    <table class="sheet_editor" parent="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
         <thead>
         <tr>
             <th></th>
             @foreach($sheet->getColumnTags() as $column)
-                <th class="sheet_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
+                <th class="tag_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
             @endforeach
         </tr>
         </thead>
         <tbody>
             @foreach($sheet->getRowTags() as $y => $row)
-                <tr class="sheet_row" tag="{!! $row->get_id() !!}">
+                <tr class="tag_row" tag="{!! $row->get_id() !!}">
                     <td class="row_name tag" tag="{!! $row->get_id() !!}" >{!! $row->get_name() !!}</td>
                     @foreach($sheet->getColumnTags() as $x => $column)
                         <?php

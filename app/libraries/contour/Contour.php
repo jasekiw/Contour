@@ -7,7 +7,6 @@
  */
 namespace app\libraries\contour;
 
-
 use app\libraries\config\Config;
 use app\libraries\contour\routes\RoutesManager;
 use app\libraries\theme\Theme;
@@ -19,14 +18,12 @@ use app\libraries\user\UserMeta;
  */
 class Contour
 {
-    /**
-     * @var Theme
-     */
+
+    /** @var Theme   */
     private static $theme = null;
     private static $config = null;
     private static $userMeta = null;
     private static $routesManager = null;
-
 
     public static function construct()
     {
@@ -69,8 +66,5 @@ class Contour
     {
         return self::$routesManager;
     }
-
-
-
 
 }

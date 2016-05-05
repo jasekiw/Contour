@@ -8,7 +8,6 @@
 
 namespace app\libraries\types;
 
-
 use app\libraries\database\DatabaseObject;
 
 /**
@@ -17,10 +16,9 @@ use app\libraries\database\DatabaseObject;
  */
 abstract class TypeCategoryAbstract extends DatabaseObject
 {
+    
     protected $name = null;
-
-
-
+    
     /**
      * Gets the name
      * @return String
@@ -29,20 +27,21 @@ abstract class TypeCategoryAbstract extends DatabaseObject
     {
         return $this->name;
     }
-
+    
     /**
      * Sets the name
+     *
      * @param $name
      */
     public function setName($name)
     {
         $this->name = $name;
     }
-
+    
     /**
      *  Saves the TypeCategory to the Database
      * @return bool sucessfull
      */
     public abstract function save();
-
+    
 }

@@ -8,20 +8,17 @@
 
 namespace app\libraries\excel\import\suite;
 
-
 /**
  * Class ImportTemplateSuiteCollection
  * @package app\libraries\excel\templates\imports\tags
  */
 class ImportTemplateSuiteCollection
 {
-
-    /**
-     * @var ImportTemplateSuite[]
-     */
+    
+    /** @var ImportTemplateSuite[]   */
     private $suites = [];
     private $rule = [];
-
+    
     /**
      * @param ImportTemplateSuite $suite
      */
@@ -29,7 +26,7 @@ class ImportTemplateSuiteCollection
     {
         array_push($this->suites, $suite);
     }
-
+    
     /**
      * @return ImportTemplateSuite[]
      */
@@ -37,16 +34,18 @@ class ImportTemplateSuiteCollection
     {
         return $this->suites;
     }
-
+    
     /**
      * Gets the suite by name
+     *
      * @param $name
+     *
      * @return ImportTemplateSuite|null
      */
     function get($name)
     {
-        foreach($this->suites as $suite)
-            if($suite->getName() == $name)
+        foreach ($this->suites as $suite)
+            if ($suite->getName() == $name)
                 return $suite;
         return null;
     }

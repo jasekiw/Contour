@@ -8,11 +8,11 @@
 
 namespace app\libraries\ModelHelpers;
 
-
 use App\Models\User_Access_Group;
 
 class UserAccessGroups
 {
+    
     /**
      * Returns an associative array of the user access groups.
      * id => name
@@ -21,10 +21,10 @@ class UserAccessGroups
     public static function getAssociativeArray()
     {
         $result = [];
-       $groups = User_Access_Group::all();
-        foreach($groups as $group)
-            $result[$group->id] =   $group->name;
+        $groups = User_Access_Group::all();
+        foreach ($groups as $group)
+            $result[$group->id] = $group->name;
         return $result;
     }
-
+    
 }

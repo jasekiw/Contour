@@ -8,28 +8,24 @@
 
 namespace app\libraries\excel;
 
-
 /**
  * Class ExcelTab
  * @package app\libraries\excel
  */
 class ExcelTab
 {
-    /**
-     * @var string $name
-     */
+    
+    /** @var string $name   */
     public $name;
-    /**
-     * @var ExcelView
-     */
+    /** @var ExcelView   */
     public $excelView;
-
+    
     function __construct($name, $sheet)
     {
         $this->name = $name;
         $this->excelView = $sheet;
     }
-
+    
     public function getCodeName()
     {
         return str_replace(">", "", $this->name);

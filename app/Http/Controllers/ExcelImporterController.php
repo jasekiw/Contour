@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use app\libraries\excel\import\Importer;
 use app\libraries\excel\import\suite\TemplateSuiteManager;
 use app\libraries\contour\Contour;
@@ -15,6 +14,7 @@ use App\Http\Requests;
  */
 class ExcelImporterController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -32,6 +32,7 @@ class ExcelImporterController extends Controller
         $view->suites = $suites;
         return $this->render($view);
     }
+
     public function start()
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -44,7 +45,6 @@ class ExcelImporterController extends Controller
         $importLocation = public_path("uploads{$ds}import{$ds}import.xls");
         $message = $importer->run($suite, $importLocation, $importTagLocation);
         echo $message;
-        
     }
 
     /**
@@ -57,7 +57,7 @@ class ExcelImporterController extends Controller
         /**
          * @var \Symfony\Component\HttpFoundation\File\UploadedFile[]
          */
-        try{
+        try {
             $ds = DIRECTORY_SEPARATOR;
             $file = $request->files->get("excelFile");
             $uploadsFolder = public_path("uploads{$ds}import");
@@ -66,15 +66,12 @@ class ExcelImporterController extends Controller
             $response->success = true;
             $response->message = "sucessfully uploaded File";
             return json_encode($response);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             $response = new \stdClass();
             $response->success = false;
             $response->message = "failed to upload file";
             return json_encode($response);
         }
-
     }
 
     /**
@@ -90,7 +87,7 @@ class ExcelImporterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -101,7 +98,7 @@ class ExcelImporterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -112,7 +109,7 @@ class ExcelImporterController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -123,8 +120,8 @@ class ExcelImporterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -135,7 +132,7 @@ class ExcelImporterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

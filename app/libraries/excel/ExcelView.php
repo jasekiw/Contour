@@ -8,7 +8,6 @@
 
 namespace app\libraries\excel;
 
-
 use app\libraries\tags\DataTag;
 use app\libraries\types\Types;
 
@@ -18,38 +17,28 @@ use app\libraries\types\Types;
  */
 class ExcelView
 {
-    /**
-     * @var DataTag
-     */
+    
+    /** @var DataTag   */
     public $parentTag;
-    /**
-     * @var ExcelTable
-     */
+    /** @var ExcelTable   */
     public $summaryTable;
-    /**
-     * @var ExcelSheet
-     */
+    /** @var ExcelSheet   */
     public $summarySheet;
-    /**
-     * @var ExcelSheet
-     */
+    /** @var ExcelSheet   */
     public $summaryHybrid;
-    /**
-     * @var ExcelView[]
-     */
+    /** @var ExcelView[]   */
     public $composits = [];
-    /**
-     * @var ExcelProperties
-     */
+    /** @var ExcelProperties   */
     public $propertysView;
-
+    
     private $loopedChildren = false;
-
-
+    
     /**
      * ExcelView constructor.
-     * @param DataTag $tag
-     * @param DataTag[]|null $paramHeaders the default headers to use for the header table if no headers where found for the child.
+     *
+     * @param DataTag        $tag
+     * @param DataTag[]|null $paramHeaders the default headers to use for the header table if no headers where found
+     *                                     for the child.
      * @param DataTag[]|null $paramColumns
      */
     function __construct($tag, $paramHeaders = null, $paramColumns = null)
@@ -58,11 +47,11 @@ class ExcelView
         $children = $this->parentTag->getSimpleChildren();
         $composits = $this->parentTag->getCompositChildren();
         $columns = $children->getTagWithTypesAsArray([Types::get_type_column()]);
-        if(sizeof($columns) == 0 && is_array($paramColumns))
+        if (sizeof($columns) == 0 && is_array($paramColumns))
             $columns = $paramColumns;
-
-        $headers = $children->getTagWithTypesAsArray([Types::get_type_table_header() ]);
-        if(sizeof($headers) == 0 && is_array($paramHeaders))
+        
+        $headers = $children->getTagWithTypesAsArray([Types::get_type_table_header()]);
+        if (sizeof($headers) == 0 && is_array($paramHeaders))
             $headers = $paramHeaders;
         $children->remove([Types::get_type_column(), Types::get_type_table_header()]);
         $rows = $children->getTagWithTypesAsArray([Types::get_type_row()]);
@@ -73,15 +62,15 @@ class ExcelView
         $this->summarySheet = new ExcelSheet($rows, $columns, $tag);
         $properties = $children->getTagWithTypesAsArray([Types::get_type_property()]);
         $this->propertysView = new ExcelProperties($properties, $tag);
-        foreach($composits->getAsArray() as $composit)
-            array_push($this->composits, new ExcelView($composit,$headers, $columns));
-
+        foreach ($composits->getAsArray() as $composit)
+            array_push($this->composits, new ExcelView($composit, $headers, $columns));
     }
+    
     public function hasChildren()
     {
         return sizeof($this->composits) != 0;
     }
-
+    
     /**
      * @return bool
      */
@@ -89,64 +78,61 @@ class ExcelView
     {
         return $this->loopedChildren;
     }
+    
     public function setLoopedChildren()
     {
         $this->loopedChildren = true;
     }
-
+    
     /**
      * @return ExcelTab[]
      */
     public function getNavTitles()
     {
         $navTitles = [];
-
-        $stackframes = [ ['index' => 0, 'sheet' => $this]];
+        
+        $stackframes = [['index' => 0, 'sheet' => $this]];
         $currentStack = 0;
-        while(isset($stackframes[$currentStack]))
-        {
+        while (isset($stackframes[$currentStack])) {
             $index = &$stackframes[$currentStack]['index'];
             /**  @var ExcelView $sheet */
             $sheet = &$stackframes[$currentStack]['sheet'];
-
-            if(!isset($sheet->composits[$index])) // if we got to the ned of the loop, pop the stack
+            
+            if (!isset($sheet->composits[$index])) // if we got to the ned of the loop, pop the stack
             {
-                array_push($navTitles, new ExcelTab($this->getNameStack($stackframes, $currentStack), $sheet ));
-                unset($stackframes[$currentStack] );
+                array_push($navTitles, new ExcelTab($this->getNameStack($stackframes, $currentStack), $sheet));
+                unset($stackframes[$currentStack]);
                 $currentStack--;
-                if(isset($stackframes[$currentStack]))
+                if (isset($stackframes[$currentStack]))
                     $stackframes[$currentStack]['index']++;
-            }
-            else
-            {
+            } else {
                 $currentStack++;
                 $stackframes[$currentStack] = ['index' => 0, 'sheet' => $sheet->composits[$index]];
             }
-
         }
         return array_reverse($navTitles);
     }
-
+    
     /**
      * @param array $stack
-     * @param int $currentStack
+     * @param int   $currentStack
+     *
      * @return string
      */
     private function getNameStack($stack, $currentStack)
     {
         $name = [];//$sheet->composits[$index]->get_name();
         $imaginaryIndex = $currentStack;
-        while($imaginaryIndex >= 0)
-        {
+        while ($imaginaryIndex >= 0) {
             /** @var ExcelView $imaginarySheet */
             $imaginarySheet = $stack[$imaginaryIndex]['sheet'];
-            array_unshift($name,$imaginarySheet->get_name() );
+            array_unshift($name, $imaginarySheet->get_name());
             $imaginaryIndex--;
         }
-        $name = implode("->",$name);
+        $name = implode("->", $name);
         return $name;
     }
-
+    
     /**
      * @return string
      */
@@ -154,9 +140,5 @@ class ExcelView
     {
         return $this->parentTag->get_name();
     }
-
-
-
-
-
+    
 }

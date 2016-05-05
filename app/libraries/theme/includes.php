@@ -33,20 +33,13 @@ Theme::enqueue_style('drop-zone', 'assets/css/mini_drop_zone/style.css', 'profil
  * Dashboard
  */
 
-
-
 /*
  * Configuration
  */
 
-
-
 /**
  * Tag Browser
  */
-
-
-
 
 //Theme::enqueue_script('loadexcel', 'assets/js/excel/ExcelTableBuilder.js', 'Excel Editor');
 

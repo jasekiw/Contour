@@ -8,14 +8,13 @@
 
 namespace app\libraries\contour\routes;
 
-
 class RoutesCollection
 {
+    
     /**
      * Holds the routes
      */
     function __construct()
     {
-
     }
 }

@@ -19,10 +19,8 @@ use app\libraries\types\Types;
  */
 class ImportRule
 {
-
-    /**
-     * @var string
-     */
+    
+    /** @var string   */
     const TAG_HEADER_FUNCTION = "HeaderTag";
     const TAG_CHILD_OF_FUNCTION = "ChildrenOf";
     const TAG_PROPERTY_FUNCTION = "TagProperty";
@@ -32,28 +30,21 @@ class ImportRule
     const ONE_DIMENSIONS_TAG_AXIS_X = "ONE_DIMENSIONS_TAG_AXIS_X";
     const ONE_DIMENSIONS_TAG_AXIS_Y = "ONE_DIMENSIONS_TAG_AXIS_Y";
     const CELL_ONE_TAG_FUNCTION = "CELL_ONE_TAG_FUNCTION";
-    /**
-     * @var Type
-     */
+    /** @var Type   */
     public $parentType = null;
-    /**
-     * @var Area
-     */
+    /** @var Area   */
     private $area;
-    /**
-     * @var Point $parent
-     */
+    /** @var Point $parent   */
     private $parent = null;
     private $function = null;
     private $axis = null;
-    /**
-     * @var Type $type
-     */
+    /** @var Type $type   */
     private $type = null;
-
+    
     /**
      * Creates new import rule with the specified function. ex. ImportRule::HEADER_TAG_FUNCTION
-     * @param Area $area. the area that the rule should apply to
+     *
+     * @param Area   $area . the area that the rule should apply to
      * @param string $function
      */
     function __construct(Area $area, $function)
@@ -61,10 +52,11 @@ class ImportRule
         $this->area = $area;
         $this->function = $function;
     }
-
+    
     /**
      * @param Area $area
      * @param Type $type
+     *
      * @return ImportRule
      */
     public static function createTagHeaderRule($area, $type)
@@ -73,11 +65,12 @@ class ImportRule
         $rule->type = $type;
         return $rule;
     }
-
+    
     /**
-     * @param Area $area
+     * @param Area  $area
      * @param Point $parent
-     * @param Type $type
+     * @param Type  $type
+     *
      * @return ImportRule
      */
     public static function createTagChildOfRule($area, $parent, $type)
@@ -87,9 +80,10 @@ class ImportRule
         $rule->type = $type;
         return $rule;
     }
-
+    
     /**
      * @param Area $area
+     *
      * @return ImportRule
      */
     public static function createExclusionRule(Area $area)
@@ -97,9 +91,10 @@ class ImportRule
         $rule = new ImportRule($area, ImportRule::EXLUDE_FUNCTION);
         return $rule;
     }
-
+    
     /**
      * @param Area $area
+     *
      * @return ImportRule
      */
     public static function createTwoDimensionalCellRule(Area $area)
@@ -108,11 +103,13 @@ class ImportRule
         $rule->type = Types::get_type_cell();
         return $rule;
     }
-
+    
     /**
-     * @param Area $area
-     * @param Area $belongsTo the area where the headers are
-     * @param string $axis The direction of the table. is the table horizontal or vertical? ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y || ImportRule::ONE_DIMENSIONS_TAG_AXIS_X
+     * @param Area   $area
+     * @param Area   $belongsTo the area where the headers are
+     * @param string $axis      The direction of the table. is the table horizontal or vertical?
+     *                          ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y || ImportRule::ONE_DIMENSIONS_TAG_AXIS_X
+     *
      * @return ImportRule
      */
     public static function createOneDimensionalCellRule(Area $area, $belongsTo, $axis)
@@ -123,11 +120,13 @@ class ImportRule
         $rule->parent = $belongsTo;
         return $rule;
     }
-
+    
     /**
      * Creates a enw rule for a one tag to cell basis
+     *
      * @param Point $point
      * @param Point $tagLocation
+     *
      * @return ImportRule
      */
     public static function createPropertyCellRule($point, $tagLocation)
@@ -138,43 +137,47 @@ class ImportRule
         $rule->parent = $tagLocation;
         return $rule;
     }
-
+    
     /**
      * Gets the starting row that this rule applies to
      * @return Point
      */
-    public function getStarting(){
+    public function getStarting()
+    {
         return $this->area->getTopLeft();
     }
-
+    
     /**
      * Gets the starting row that this rule applies to
      * @return Point
      */
-    public function getEnding(){
+    public function getEnding()
+    {
         return $this->area->getBottomRight();
     }
-
+    
     /**
      * Checks to see if the Point is in the current rule;
+     *
      * @param Point $point
+     *
      * @return bool
      */
     public function inRule(Point $point)
     {
-        if($this->area->isWithin($point))
+        if ($this->area->isWithin($point))
             return true;
-        else if(
-                    (
-                        $this->getFunction() == self::TAG_PROPERTY_FUNCTION ||
-                        $this->getFunction() == self::CELL_ONE_TAG_FUNCTION
-                    ) &&
-                    $this->getParent()->toArea()->isWithin($point)
-                )
+        else if (
+            (
+                $this->getFunction() == self::TAG_PROPERTY_FUNCTION ||
+                $this->getFunction() == self::CELL_ONE_TAG_FUNCTION
+            ) &&
+            $this->getParent()->toArea()->isWithin($point)
+        )
             return true;
         return false;
     }
-
+    
     /**
      * @return string
      */
@@ -182,15 +185,16 @@ class ImportRule
     {
         return $this->function;
     }
-
+    
     /**
      * Gets the parent location in the excel sheet
-     *@return Point
+     * @return Point
      */
-    public function getParent(){
+    public function getParent()
+    {
         return $this->parent;
     }
-
+    
     /**
      * @return Type
      */
@@ -198,7 +202,7 @@ class ImportRule
     {
         return $this->type;
     }
-
+    
     /**
      * Gets the axis that a once dimension cell is tagged with
      * @return string

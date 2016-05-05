@@ -8,7 +8,6 @@
 
 namespace app\libraries\excel\import\exception;
 
-
 use Exception;
 
 /**
@@ -17,10 +16,12 @@ use Exception;
  */
 class SheetNotFoundException extends ExcelImportException
 {
+    
     /**
      * SheetNotFoundException constructor.
-     * @param string $sheet_num The sheet number
-     * @param int $sheetTitle The Sheet Title
+     *
+     * @param string $sheet_num  The sheet number
+     * @param int    $sheetTitle The Sheet Title
      */
     function __construct($sheet_num, $sheetTitle)
     {

@@ -8,7 +8,6 @@
 
 namespace app\libraries\memory\types;
 
-
 use app\libraries\types\TypeAbstract;
 use app\libraries\memory\types\TypeCategory;
 
@@ -18,13 +17,14 @@ use app\libraries\memory\types\TypeCategory;
  */
 class Type extends TypeAbstract
 {
-
+    
     /**
      * Type constructor.
-     * @param string $name
+     *
+     * @param string       $name
      * @param TypeCategory $typeCategory
-     * @param null $updated_at
-     * @param null $created_at
+     * @param null         $updated_at
+     * @param null         $created_at
      */
     function __construct($id = null, $name = null, $typeCategory = null, $updated_at = null, $created_at = null)
     {
@@ -34,7 +34,7 @@ class Type extends TypeAbstract
         $this->updated_at = $updated_at;
         $this->created_at = $created_at;
     }
-
+    
     /**
      * Deletes The Object
      * @return mixed
@@ -43,7 +43,7 @@ class Type extends TypeAbstract
     {
         // TODO: Implement delete() method.
     }
-
+    
     /**
      * Saves the Type
      * @return mixed
@@ -52,7 +52,7 @@ class Type extends TypeAbstract
     {
         // TODO: Implement save() method.
     }
-
+    
     /**
      * Returns a standard object encoding of this Type
      * @return \stdClass
@@ -68,7 +68,7 @@ class Type extends TypeAbstract
         $std->id = $this->get_id();
         return $std;
     }
-
+    
     /**
      * Gets the Category Id
      * @return mixed
@@ -77,7 +77,7 @@ class Type extends TypeAbstract
     {
         return $this->category->get_id();
     }
-
+    
     /**
      * @return TypeCategory
      */
@@ -85,7 +85,7 @@ class Type extends TypeAbstract
     {
         return $this->category;
     }
-
+    
     /**
      * Gets the date at when the object was updated.
      * @return string
@@ -94,7 +94,7 @@ class Type extends TypeAbstract
     {
         return $this->updated_at;
     }
-
+    
     /**
      * Gets the date at when the object was created
      * @return string

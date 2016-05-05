@@ -8,47 +8,52 @@
 
 namespace app\libraries\helpers;
 
-
 /**
  * Class StringStack
  * @package app\libraries\helpers
  */
 class StringStack extends Stack
 {
+    
     protected $stack;
-
+    
     /**
      * TokenStack constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
-
+    
     /**
      * @param string $item
      */
-    public function push($item) {
+    public function push($item)
+    {
         parent::push($item);
     }
-
+    
     /**
      * @return String
      */
-    public function pop() {
-       return parent::pop();
+    public function pop()
+    {
+        return parent::pop();
     }
-
+    
     /**
      * @return String
      */
-    public function top() {
-       return parent::top();
+    public function top()
+    {
+        return parent::top();
     }
-
+    
     /**
      * @return bool
      */
-    public function isEmpty() {
-       return parent::isEmpty();
+    public function isEmpty()
+    {
+        return parent::isEmpty();
     }
 }

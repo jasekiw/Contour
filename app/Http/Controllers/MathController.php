@@ -8,47 +8,47 @@ use App\Http\Controllers\Controller;
 use Input;
 use Response;
 
-class MathController extends Controller {
+class MathController extends Controller
+{
 
-	/**
-	 * Display a listing of the resource.
-	 * GET /math
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
+    /**
+     * Display a listing of the resource.
+     * GET /math
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        //
         $view = \View::make('math.index');
         $view->title = "Evaluator";
         $view->equation = Input::get('equation');
         $view->variables = Input::get('variables');
         $view->answer = Input::get('answer');
         return $this->render($view);
-	}
+    }
 
-	/**
-	 * Show the form for creating a new resource.
-	 * GET /math/create
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+    /**
+     * Show the form for creating a new resource.
+     * GET /math/create
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
 
+    }
 
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 * POST /math
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
+    /**
+     * Store a newly created resource in storage.
+     * POST /math
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        //
 //        $view = \View::make('math.index');
 //        $view->title = "Evaluator";
 //        $view->equation = Input::get('equation');
@@ -66,54 +66,54 @@ class MathController extends Controller {
 //        $view->answer = $answer;
 //
 //        return $this->render($view);
-	}
+    }
 
-	/**
-	 * Display the specified resource.
-	 * GET /math/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
+    /**
+     * Display the specified resource.
+     * GET /math/{id}
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
 
-	/**
-	 * Show the form for editing the specified resource.
-	 * GET /math/{id}/edit
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
+    /**
+     * Show the form for editing the specified resource.
+     * GET /math/{id}/edit
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
-	/**
-	 * Update the specified resource in storage.
-	 * PUT /math/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
+    /**
+     * Update the specified resource in storage.
+     * PUT /math/{id}
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        //
+    }
 
-	/**
-	 * Remove the specified resource from storage.
-	 * DELETE /math/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
+    /**
+     * Remove the specified resource from storage.
+     * DELETE /math/{id}
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 
 }

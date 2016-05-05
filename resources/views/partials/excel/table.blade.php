@@ -18,12 +18,12 @@ $tag = $table->getParentTag();
 <div class="editor">
 
 
-    <table class="table_editor" sheet="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
+    <table class="table_editor" parent="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
         <thead>
         <tr>
 
             @foreach($table->getheaders() as $column)
-                <th class="table_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
+                <th class="tag_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
             @endforeach
         </tr>
         </thead>
@@ -34,7 +34,7 @@ $tag = $table->getParentTag();
             ?>
             @while($hasData)
 
-                <tr class="table_row" number="{!! $y !!}">
+                <tr class="tag_row" number="{!! $y !!}">
                     @foreach($table->getheaders() as $x => $column)
                         <?php
                         $cell  =  $table->getCell($x, $y);

@@ -8,7 +8,6 @@
 
 namespace app\libraries\datablocks\converter;
 
-
 use app\libraries\datablocks\formula\Parser;
 use app\libraries\database\DataManager;
 use app\libraries\datablocks\DataBlock;
@@ -20,36 +19,34 @@ use app\libraries\memory\MemoryDataManager;
  */
 class DataBlockValueConvertor
 {
-    /**
-     * @var DataBlock
-     */
+    
+    /** @var DataBlock   */
     private $datablock;
     private $useMemory;
-
+    
     /**
      * DataBlockValueConvertor constructor.
+     *
      * @param DataBlock $datablock
-     * @param bool $useMemory
+     * @param bool      $useMemory
      */
     public function __construct($datablock = null, $useMemory = false)
     {
         $this->useMemory = $useMemory;
         $this->datablock = $datablock;
     }
-
-
+    
     /**
      * @return string
      */
     public function getProcessedValue($value, $context)
     {
-        $parser= null;
-        if($this->useMemory)
-            $parser = new Parser( MemoryDataManager::getInstance());
+        $parser = null;
+        if ($this->useMemory)
+            $parser = new Parser(MemoryDataManager::getInstance());
         else
-            $parser = new Parser( DataManager::getInstance());
+            $parser = new Parser(DataManager::getInstance());
         return $parser->parse($value, $context);
-
     }
-
+    
 }

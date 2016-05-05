@@ -16,16 +16,14 @@ use app\libraries\excel\import\ImportUnit;
  */
 class ImportCollection
 {
-    /**
-     * @var ImportUnit[] $importUnits
-     */
-    private $importUnits = array();
-
+    
+    /** @var ImportUnit[] $importUnits   */
+    private $importUnits = [];
+    
     function __construct()
     {
-
     }
-
+    
     /**
      * @param ImportUnit $importUnit
      */
@@ -33,53 +31,49 @@ class ImportCollection
     {
         array_push($this->importUnits, $importUnit);
     }
-
+    
     /**
      * add an array of ImportUnit objects
+     *
      * @param array $importUnits
      */
     public function addAll($importUnits)
     {
         array_push($this->importUnits, $importUnit);
     }
-
-
+    
     /**
      * Removes element at the specific index
+     *
      * @param integer $index
      *
      * @return bool Sucessfull, false if array is already empty.
      */
     public function remove($index)
     {
-        if(sizeof($this->importUnits) > 0)
-        {
+        if (sizeof($this->importUnits) > 0) {
             unset($this->importUnits[$index]);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-
+    
     /**
      * Removes the last element from the array
-     * @return bool returns true if it succesffuly removed last element on the array. if the array is empty, false is returned.
+     * @return bool returns true if it succesffuly removed last element on the array. if the array is empty, false is
+     *              returned.
      */
     public function removeLast()
     {
-        if(sizeof($this->importUnits) > 0)
-        {
+        if (sizeof($this->importUnits) > 0) {
             array_pop($this->importUnits);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-
+    
     /**
      * Removes first element from the array
      *
@@ -87,17 +81,14 @@ class ImportCollection
      */
     public function removeFirst()
     {
-        if(sizeof($this->importUnits) > 0)
-        {
+        if (sizeof($this->importUnits) > 0) {
             array_shift($this->importUnits);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-
+    
     /**
      * @return ImportUnit[]
      */
@@ -105,16 +96,17 @@ class ImportCollection
     {
         return $this->importUnits;
     }
-
+    
     /**
      * @param $index
+     *
      * @return ImportUnit
      */
     public function get($index)
     {
         return $this->importUnits[$index];
     }
-
+    
     /**
      * @return int
      */

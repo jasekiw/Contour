@@ -15,65 +15,61 @@ use Symfony\Component\Debug\Exception\FatalErrorException;
 /**
  * Class DataBlockTranslatorController
  */
-class DataBlockTranslatorController extends Controller {
+class DataBlockTranslatorController extends Controller
+{
 
-	/**
-	 * Display a listing of the resource.
-	 * GET /datablocktranslator
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
-	}
-
-	/**
-	 * POST /api/getValue
-	 * json datablock => value
-	 * @return string
+    /**
+     * Display a listing of the resource.
+     * GET /datablocktranslator
+     *
+     * @return Response
      */
-	public function getValue()
-	{
-		ini_set('display_errors',1);
-		error_reporting(E_ALL);
-		$GLOBALS['datablockIDS'] = array();
-		$value =  \Input::get("datablock");
-		$context = intval( ( \Input::get("context") !== null ? \Input::get("context") : -1) );
-		$datablockId = intval( ( \Input::get("datablockid") !== null ? \Input::get("datablockid") : -1) );
-		if($datablockId !== -1)
-		{
-			$datablock = DataBlocks::getByID($datablockId);
-			if(isset($datablock))
-				$context = $datablock->getTags()->getRowsAsArray()[0]->get_parent_id();
-		}
+    public function index()
+    {
+        //
+    }
 
-		$parser = new Parser(DataManager::getInstance());
-		$response = new \stdClass();
+    /**
+     * POST /api/getValue
+     * json datablock => value
+     * @return string
+     */
+    public function getValue()
+    {
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+        $GLOBALS['datablockIDS'] = array();
+        $value = \Input::get("datablock");
+        $context = intval((\Input::get("context") !== null ? \Input::get("context") : -1));
+        $datablockId = intval((\Input::get("datablockid") !== null ? \Input::get("datablockid") : -1));
+        if ($datablockId !== -1) {
+            $datablock = DataBlocks::getByID($datablockId);
+            if (isset($datablock))
+                $context = $datablock->getTags()->getRowsAsArray()[0]->get_parent_id();
+        }
 
-		$timer = new TimeTracker();
-		$timer->startTimer("parser");
-		$response->result = $parser->parse($value, $context);
-		$timer->stopTimer("parser");
-		$response->testData = $timer->getResultsAsString();
-		$response->success = true;
-		return  json_encode($response);
+        $parser = new Parser(DataManager::getInstance());
+        $response = new \stdClass();
 
-	}
-	public function getValueTest()
-	{
+        $timer = new TimeTracker();
+        $timer->startTimer("parser");
+        $response->result = $parser->parse($value, $context);
+        $timer->stopTimer("parser");
+        $response->testData = $timer->getResultsAsString();
+        $response->success = true;
+        return json_encode($response);
+    }
 
-		$value =  "#(Combined_OP_Summary/Revenue/Total_Revenues, Jan)-#(Phoenix_OP_Summary/Revenue/Total_Revenues, Jan)";
-		$context = intval( ( \Input::get("context") !== null ? \Input::get("context") : 477) );
-		$parser = new Parser(DataManager::getInstance());
-		$response = new \stdClass();
-		$response->result = $parser->parse($value, $context);
-		$response->success = true;
-		return  json_encode($response);
+    public function getValueTest()
+    {
 
-	}
-
-
-
+        $value = "#(Combined_OP_Summary/Revenue/Total_Revenues, Jan)-#(Phoenix_OP_Summary/Revenue/Total_Revenues, Jan)";
+        $context = intval((\Input::get("context") !== null ? \Input::get("context") : 477));
+        $parser = new Parser(DataManager::getInstance());
+        $response = new \stdClass();
+        $response->result = $parser->parse($value, $context);
+        $response->success = true;
+        return json_encode($response);
+    }
 
 }

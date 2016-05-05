@@ -8,16 +8,16 @@
 
 namespace app\libraries\excel\import\exception;
 
-
 use app\libraries\excel\import\SheetImporter;
 
 class ParentNotFoundException extends ExcelImportException
 {
-
+    
     /**
      * SheetNotFoundException constructor.
-     * @param string $column
-     * @param int $row
+     *
+     * @param string        $column
+     * @param int           $row
      * @param SheetImporter $importObject
      */
     function __construct($column, $row, $importObject)

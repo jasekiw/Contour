@@ -14,11 +14,9 @@ namespace app\libraries\contour\routes;
  */
 class Route
 {
+    
     function __construct()
     {
-
     }
-
-
-
+    
 }

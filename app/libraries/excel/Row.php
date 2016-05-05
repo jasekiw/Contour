@@ -8,10 +8,10 @@
 
 namespace app\libraries\excel;
 
-
 class Row
 {
+    
     public $tag;
     public $columns = [];
-
+    
 }

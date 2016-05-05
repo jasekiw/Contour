@@ -21,5 +21,4 @@ class ErrorController extends Controller
         return $view->render();
     }
 
-
 }

@@ -8,9 +8,9 @@
 
 namespace app\libraries\excel;
 
-
 class Column
 {
+    
     public $tag;
     public $cell;
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
@@ -9,6 +10,7 @@ use App\Http\Controllers\Controller;
 
 class InstallController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -23,16 +25,15 @@ class InstallController extends Controller
         return $this->render($view);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if(\Schema::hasTable('config'))
+        if (\Schema::hasTable('config'))
             return;
         \Artisan::call('migrate');
         $output = "";
@@ -44,7 +45,6 @@ class InstallController extends Controller
         $view->output = $output;
         $view->title = "Finished Installing";
         return $this->render($view);
-
     }
 
 }

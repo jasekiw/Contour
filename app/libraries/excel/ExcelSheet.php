@@ -19,50 +19,41 @@ use app\libraries\tags\DataTag;
 class ExcelSheet extends ExcelData
 {
     
-    /**
-     * @var DataTag[]
-     */
+    /** @var DataTag[]   */
     private $columns = [];
-    /**
-     * @var DataTag[]
-     */
+    /** @var DataTag[]   */
     private $rows = [];
-    /**
-     * @var DataBlock[][]
-     */
+    /** @var DataBlock[][]   */
     private $cells = [];
     private $tagsById = [];
-
-
+    
     /**
      * Sets the tags and grabs the datablocks
+     *
      * @param DataTag[] $rows
      * @param DataTag[] $columns
-     * @param DataTag $parentTag
+     * @param DataTag   $parentTag
      */
     function __construct($rows, $columns, $parentTag)
     {
         $this->parentTag = $parentTag;
-
+        
         $this->rows = array_values($rows);
         $this->columns = array_values($columns);
-
-        foreach($this->rows as $y => $row)
-        {
-            if(!isset($this->cells[$y]))
+        
+        foreach ($this->rows as $y => $row) {
+            if (!isset($this->cells[$y]))
                 $this->cells[$y] = [];
-            foreach($this->columns as $x => $column)
-            {
-                $datablock = DataBlocks::getByTagsArray([ $row, $column]);
-                if(isset($datablock))
+            foreach ($this->columns as $x => $column) {
+                $datablock = DataBlocks::getByTagsArray([$row, $column]);
+                if (isset($datablock))
                     $this->containsData = true;
-                if(!isset($this->cells[$y][$x]))
+                if (!isset($this->cells[$y][$x]))
                     $this->cells[$y][$x] = $datablock;
             }
         }
     }
-
-
+    
     /**
      * @return DataTag[]
      */
@@ -70,8 +61,7 @@ class ExcelSheet extends ExcelData
     {
         return $this->rows;
     }
-
-
+    
     /**
      * @return DataTag[]
      */
@@ -79,7 +69,7 @@ class ExcelSheet extends ExcelData
     {
         return $this->columns;
     }
-
+    
     /**
      * Gets the cells that were found.
      * @return DataBlock[][]
@@ -88,20 +78,18 @@ class ExcelSheet extends ExcelData
     {
         return $this->cells;
     }
-
-
+    
     /**
      * @param $x
      * @param $y
+     *
      * @return DataBlock|null
      */
     public function getCell($x, $y)
     {
-        if(isset($this->cells[$y][$x]))
+        if (isset($this->cells[$y][$x]))
             return $this->cells[$y][$x];
         return null;
     }
-
     
-
 }

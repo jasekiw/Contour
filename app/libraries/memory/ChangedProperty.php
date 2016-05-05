@@ -7,8 +7,8 @@
  */
 
 namespace app\libraries\memory;
-use app\libraries\database\DatabaseObject;
 
+use app\libraries\database\DatabaseObject;
 
 /**
  * Class ChangedProperty
@@ -16,6 +16,7 @@ use app\libraries\database\DatabaseObject;
  */
 class ChangedProperty
 {
+    
     /**
      * The property name in the database
      * @var string
@@ -31,9 +32,7 @@ class ChangedProperty
      * @var string
      */
     public $table;
-    /**
-     * @var DatabaseObject
-     */
+    /** @var DatabaseObject   */
     public $sourceObject;
-
+    
 }
