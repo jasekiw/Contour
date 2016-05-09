@@ -57,4 +57,13 @@ class User extends \Eloquent implements AuthenticatableContract,
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * checks to see if it is an admin account
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->user_access_group_id == 1;
+    }
 }

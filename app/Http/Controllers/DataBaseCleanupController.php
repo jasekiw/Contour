@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use app\libraries\database\Query;
+use app\libraries\helpers\TimeTracker;
+use App\Models\Revision;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -69,6 +71,52 @@ class DataBaseCleanupController extends Controller
             Query::getPDO()->exec($query);
         }
         echo "deleted " . $affected . " broken references";
+    }
+
+    public function cleanRevisions()
+    {
+        $deleted = 0;
+        $timer = new TimeTracker();
+        $timer->startTimer('cleanup');
+
+        Revision::orderBy('id', 'desc')->chunk(1000, function ($revisions) use (&$deleted) {
+            /** @var Revision[] $revisions */
+            foreach ($revisions as $revision) {
+                $type = $revision->revisionable_type;
+
+                if (!$type::whereId($revision->revisionable_id)->exists()) {
+                    $revision->forceDelete();
+                    $deleted++;
+                }
+
+
+            }
+        });
+        $timer->stopTimer('cleanup');
+        $timer->getResults();
+        echo "cleaned " . $deleted . " rows";
+    }
+
+    public function getMemoryUsage()
+    {
+        $usage = memory_get_usage();
+        $steps = 0;
+        while (($usage / 1024) >= 1) {
+            $usage = $usage / 1024;
+            $steps++;
+        }
+        $sizes = [
+            "bytes",
+            "KB",
+            "MB",
+            "GB",
+            "TB",
+            "PB",
+            "XB"
+        ];
+        $endSize = $sizes[$steps];
+        $usage = round($usage, 2);
+        return $usage . " " . $endSize;
     }
 
 }

@@ -96,6 +96,11 @@ class SheetsController extends Controller
 
         $name = \Input::get('name');
         $template = \Input::get('template');
+        if(!isset($template) || $template == 0)
+        {
+            
+        }
+            
         $templateTag = DataTags::get_by_id($template);
         $newSheet = new DataTag($name, $parentID, Types::get_type_sheet());
         $newSheet->create();

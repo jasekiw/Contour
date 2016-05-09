@@ -48,11 +48,12 @@ Route::post('users/register', 'Auth\AuthController@postRegister');
 //Route::delete('author/delete', array('before' => 'csrf', 'uses' => 'AuthorsController@delete_destroy'));
 //Route::resource('excel', 'ExcelController');
 
-Route::get('sandbox',array('as' => 'sandbox','middleware' => 'auth', 'uses' => 'SandboxController@index'));
+Route::get('sandbox',array('as' => 'sandbox','middleware' => 'auth.admin', 'uses' => 'SandboxController@index'));
 //Route::get( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'get_ajax','middleware' => 'auth', 'uses' => 'AjaxController@get'))->where('id', '(.*)');
 //Route::post( Theme::get_ajax_manager()->get_url() . '/{id}',array('as' => 'post_ajax','middleware' => 'auth', 'uses' => 'AjaxController@post'))->where('id', '(.*)');
 
-Route::get('clean',array('as' => 'cleanup.clean','middleware' => 'auth', 'uses' => 'DataBaseCleanupController@fixBroken'));
+Route::get('clean',array('as' => 'cleanup.clean','middleware' => 'auth.admin', 'uses' => 'DataBaseCleanupController@fixBroken'));
+Route::get('clean/revisions',array('as' => 'cleanup.clean','middleware' => 'auth.admin', 'uses' => 'DataBaseCleanupController@cleanRevisions'));
 /**
  * Excel Handlers
  */
@@ -61,8 +62,8 @@ Route::get('excel/show/{id}',array('as' => 'edit_excel','middleware' => 'auth', 
 Route::get('excel/import',array('as' => 'import_excel','middleware' => 'auth', 'uses' => 'ExcelController@store'));
 Route::get('excel/convert',array('as' => 'convert_excel','middleware' => 'auth', 'uses' => 'ExcelController@convert'));
 Route::resource('import', 'ExcelImporterController', [ 'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('excelimport') ]);
-Route::post('import/upload', ['as' => 'excelimport.upload','middleware' => 'auth', 'uses' => 'ExcelImporterController@upload']);
-Route::post('import/start', ['as' => 'excelimport.start','middleware' => 'auth', 'uses' => 'ExcelImporterController@start']);
+Route::post('import/upload', ['as' => 'excelimport.upload','middleware' => 'auth.admin', 'uses' => 'ExcelImporterController@upload']);
+Route::post('import/start', ['as' => 'excelimport.start','middleware' => 'auth.admin', 'uses' => 'ExcelImporterController@start']);
 /**
  * Ajax Excel Handlers
  */
@@ -132,12 +133,12 @@ Route::resource('math', 'MathController');
 /**
  * User Management
  */
-Route::get('users/index/{letter}', ['as' => 'users_index_letter','middleware' => 'auth', 'uses' => 'UserController@index']);
-Route::get('users',['as' => 'users_index', 'middleware' => 'auth', 'uses' => 'UserController@index']);
-Route::get('users/create',['as' => 'users_create', 'middleware' => 'auth', 'uses' => 'UserController@create']);
-Route::post('users/create',['as' => 'users.store', 'middleware' => 'auth', 'uses' => 'UserController@store']);
-Route::get('users/{id}',['as' => 'users_show', 'middleware' => 'auth', 'uses' => 'UserController@show']);
-Route::put('users/{id}',['as' => 'users_save', 'middleware' => 'auth', 'uses' => 'UserController@update']);
+Route::get('users/index/{letter}', ['as' => 'users_index_letter','middleware' => 'auth.admin', 'uses' => 'UserController@index']);
+Route::get('users',['as' => 'users_index', 'middleware' => 'auth.admin', 'uses' => 'UserController@index']);
+Route::get('users/create',['as' => 'users_create', 'middleware' => 'auth.admin', 'uses' => 'UserController@create']);
+Route::post('users/create',['as' => 'users.store', 'middleware' => 'auth.admin', 'uses' => 'UserController@store']);
+Route::get('users/{id}',['as' => 'users_show', 'middleware' => 'auth.admin', 'uses' => 'UserController@show']);
+Route::put('users/{id}',['as' => 'users_save', 'middleware' => 'auth.admin', 'uses' => 'UserController@update']);
 
 
 
