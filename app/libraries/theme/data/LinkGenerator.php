@@ -12,6 +12,7 @@ class LinkGenerator
 {
     
     /**
+     * Sets the items in a
      * @param string $route     The name of the route to generate the links from
      * @param string $title     The title property of the resource
      * @param string $linkid    The property name that should be used for the id

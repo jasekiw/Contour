@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Redirect;
 use Response;
 use Route;
 
@@ -84,15 +85,10 @@ class MenuController extends Controller
         if (!isset($name)) {
             $response->success = false;
 //			$view->message = "no name given";
-            /** @var \Illuminate\Routing\Redirector $redirect */
-            $redirect = redirect();
-            return $redirect->route("menu.create")->with("message", "Name has to be filled out!");
+            return Redirect::route("menu.create")->with("message", "Name has to be filled out!");
         }
-
         $id = $menuManager->addMenu($name);
-        /** @var \Illuminate\Routing\Redirector $redirect */
-        $redirect = redirect();
-        return $redirect->route("menu.edit", [$id])->with("message", "Menu Created");
+        return Redirect::route("menu.edit", [$id])->with("message", "Menu Created");
     }
 
     /**
@@ -159,11 +155,9 @@ class MenuController extends Controller
             if (!isset($this->menuItemsThatWillBeSaved[$item->getName()]))
                 $item->delete();
         $isAjax = (boolean)\Input::get("isAjax");
-        if (!$isAjax) {
-            /** @var \Illuminate\Routing\Redirector $redirect */
-            $redirect = redirect();
-            return $redirect->route("menu.index")->with("message", "Menu Saved");
-        }
+        if (!$isAjax)
+            return Redirect::route("menu.index")->with("message", "Menu Saved");
+
         $resonse = new \stdClass();
         $resonse->redirect = route("menu.index");
         $resonse->message = "Menu Saved";
@@ -198,9 +192,8 @@ class MenuController extends Controller
         $menu = Contour::getThemeManager()->getMenuManager()->get_menu_by_id($id);
         $menu->delete();
 
-        /** @var \Illuminate\Routing\Redirector $redirect */
-        $redirect = redirect();
-        return $redirect->route("menu.index")->with("message", "Menu Deleted");
+
+        return Redirect::route("menu.index")->with("message", "Menu Deleted");
     }
 
 }

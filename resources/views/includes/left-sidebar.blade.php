@@ -1,4 +1,5 @@
 <?php
+use app\libraries\contour\Contour;
 /**
  * Created by PhpStorm.
  * User: Jason Gallavin
@@ -21,9 +22,8 @@
 
                             </ul>
                         </li>
-                        <!--                                --><?php $main_menu = \app\libraries\contour\Contour::getThemeManager()->getMenuManager()->getAssociatedMenu()
-
-
+                        <?php
+                            $main_menu = Contour::getThemeManager()->getMenuManager()->getAssociatedMenu()
                         ?>
                         @if(isset($main_menu))
                             @foreach($main_menu->getMenuItems() as $menuItem)

@@ -8,6 +8,7 @@ use app\libraries\contour\Contour;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Redirect;
 
 /**
  * Class UserAccessGroupsController
@@ -68,9 +69,8 @@ class UserAccessGroupsController extends Controller
         $group = new User_Access_Group();
         $group->name = $groupName;
         $group->save();
-        /** @var \Illuminate\Routing\Redirector $redirect */
-        $redirect = redirect();
-        return $redirect->route("user_access_groups_index")->with("message", "New User Access Group created!");
+
+        return Redirect::route("user_access_groups_index")->with("message", "New User Access Group created!");
     }
 
     /**
@@ -120,9 +120,7 @@ class UserAccessGroupsController extends Controller
             $group->name = $name;
         $group->menu_id = \Input::get("menu");
         $group->save();
-        /** @var \Illuminate\Routing\Redirector $redirect */
-        $redirect = redirect();
-        return $redirect->route('user_access_groups_index')->with('message', "Successfully Saved!");
+        return Redirect::route('user_access_groups_index')->with('message', "Successfully Saved!");
     }
 
     /**

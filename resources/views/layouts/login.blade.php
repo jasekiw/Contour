@@ -50,7 +50,7 @@
 <div class="wrapper full-page-wrapper page-auth page-login text-center">
     <div class="inner-page">
         <div class="logo">
-            <a href="{!! route('home') !!}"><img src="@if(isset($logo_url)) {!! $logo_url !!} @endif" alt="" /></a>
+            <a href="{!! route('home') !!}"><img src="@if(isset($login_logo_url)) {!! $login_logo_url !!} @endif" alt="" /></a>
         </div>
 
 

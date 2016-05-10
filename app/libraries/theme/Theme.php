@@ -10,6 +10,7 @@ namespace app\libraries\theme;
 
 use app\libraries\ajax\AjaxManager;
 use app\libraries\extra\themes\defaultTheme\DefaultTheme;
+use app\libraries\theme\menu\MenuManager;
 
 class Theme
 {
@@ -32,23 +33,22 @@ class Theme
      *                      $view->title
      * @param array  $attr  add attributes like defer or async ex. "defer" => ""
      */
-    public static function enqueue_script($name, $src, $group = null, $attr = [])
+    public static function enqueue_script($name, $src, $group = null, $attr = [], $external = false)
     {
-        $src = asset($src);
+        if (!$external)
+            $src = asset($src);
         $attributeString = self::getAttributeString($attr);
         $script = "<script type=\"text/javascript\" class=\"{$name}_script\" src=\"{$src}\" $attributeString ></script>";
-        
+
         if (isset($group)) {
             $group = strtoupper($group);
             if (!isset(self::$specific_enqueue_scripts[$group]))
                 self::$specific_enqueue_scripts[$group] = [];
             self::$specific_enqueue_scripts[$group][$name] = $script;
-        } else {
-            
+        } else
             self::$enqueue_scripts[$name] = $script;
-        }
     }
-    
+
     /**
      * @param string[] $attr attributes for a script or style.
      *
@@ -57,12 +57,11 @@ class Theme
     private static function getAttributeString($attr)
     {
         $attributeString = "";
-        foreach ($attr as $key => $value) {
+        foreach ($attr as $key => $value)
             if (empty($value))
                 $attributeString .= " " . $key;
             else
                 $attributeString .= " " . $key . '"' . $value . '"';
-        }
         return $attributeString;
     }
     
@@ -71,10 +70,8 @@ class Theme
      */
     public static function getMenue()
     {
-        if (!isset(self::$menu)) {
-            self::$menu = new \app\libraries\theme\menu\MenuManager();
-        }
-        
+        if (!isset(self::$menu))
+            self::$menu = new MenuManager();
         return self::$menu;
     }
     
@@ -93,12 +90,9 @@ class Theme
             $group = strtoupper($group);
             if (!isset(self::$specific_enqueue_scripts[$group]))
                 self::$specific_enqueue_scripts[$group] = [];
-            
             self::$specific_enqueue_scripts[$group][$name] = $script;
-        } else {
-            
+        } else
             self::$enqueue_scripts[$name] = $script;
-        }
     }
     
     /**
@@ -115,16 +109,15 @@ class Theme
             if (!isset(self::$specific_enqueue_styles[$group]))
                 self::$specific_enqueue_styles[$group] = [];
             self::$specific_enqueue_styles[$group][$name] = $style;
-        } else {
+        } else
             self::$enqueue_styles[$name] = $style;
-        }
     }
     
     public static function get_ajax_manager()
     {
-        if (isset(self::$ajax_manager)) {
+        if (isset(self::$ajax_manager))
             return self::$ajax_manager;
-        } else {
+        else {
             self::$ajax_manager = new AjaxManager();
             return self::$ajax_manager;
         }
@@ -140,13 +133,11 @@ class Theme
         $style = '<style type="text/css" class="' . $name . '_style" >' . $value . "</style>";
         if (isset($group)) {
             $group = strtoupper($group);
-            if (!isset(self::$specific_enqueue_styles[$group])) {
+            if (!isset(self::$specific_enqueue_styles[$group]))
                 self::$specific_enqueue_styles[$group] = [];
-            }
             self::$specific_enqueue_styles[$group][$name] = $style;
-        } else {
+        } else
             self::$enqueue_styles[$name] = $style;
-        }
     }
     
     public static function header($group = null)
@@ -154,17 +145,12 @@ class Theme
         $response = "";
         if (isset($group)) {
             $group = strtoupper($group);
-            if (isset(self::$specific_enqueue_styles[$group])) {
-                foreach (self::$specific_enqueue_styles[$group] as $style) {
+            if (isset(self::$specific_enqueue_styles[$group]))
+                foreach (self::$specific_enqueue_styles[$group] as $style)
                     $response .= $style . "\n";
-                }
-            }
-        } else {
-            
-            foreach (self::$enqueue_styles as $style) {
+        } else
+            foreach (self::$enqueue_styles as $style)
                 $response .= $style . "\n";
-            }
-        }
         return $response;
     }
     
@@ -173,21 +159,14 @@ class Theme
         $response = "";
         if (isset($group)) {
             $group = strtoupper($group);
-            if (isset(self::$specific_enqueue_scripts[$group])) {
-                foreach (self::$specific_enqueue_scripts[$group] as $script) {
+            if (isset(self::$specific_enqueue_scripts[$group]))
+                foreach (self::$specific_enqueue_scripts[$group] as $script)
                     $response .= $script . "\n";
-                }
-            }
-        } else {
-            foreach (self::$enqueue_scripts as $script) {
+        } else
+            foreach (self::$enqueue_scripts as $script)
                 $response .= $script . "\n";
-            }
-        }
-        
-        foreach (self::$footertasks as $footerTask) {
+        foreach (self::$footertasks as $footerTask)
             $response .= $footerTask . "\n";
-        }
-        
         return $response;
     }
     

@@ -73,9 +73,8 @@ class UserController extends Controller
         $user->user_access_group_id = $userAccessId;
         $user->email = $email;
         $user->save();
-        /** @var \Illuminate\Routing\Redirector $redirect */
-        $redirect = redirect();
-        return $redirect->route("users_index")->with('message', "New user created!");
+
+        return Redirect::route("users_index")->with('message', "New user created!");
     }
 
     /**
@@ -123,9 +122,7 @@ class UserController extends Controller
             $user->password = \Hash::make($newPassword);
         $user->user_access_group_id = \Input::get('group');
         $user->save();
-        /** @var \Illuminate\Routing\Redirector $redirect */
-        $redirect = redirect();
-        return $redirect->route('users_show', [$id])->with("message", "Successfully Saved");
+        return Redirect::route('users_show', [$id])->with("message", "Successfully Saved");
     }
 
     /**

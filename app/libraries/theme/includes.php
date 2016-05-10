@@ -16,6 +16,7 @@ Theme::enqueue_script('flash_message', 'theme/js/plugins/jquery-gritter/jquery.g
 Theme::enqueue_script('context', 'theme/js/plugins/bootstrap-contextmenu/bootstrap-contextmenu.js');
 Theme::enqueue_script('jquery-ui', 'theme/js/jquery-ui/jquery-ui-1.10.4.custom.js');
 Theme::enqueue_script('full-height', 'assets/js/full-height/FullHeight.js');
+Theme::enqueue_script('tiny-mce', '//cdn.tinymce.com/4/tinymce.min.js', null,[],true);
 //Theme::enqueue_script('application', 'assets/ts/Main/Main.js');
 /**
  * Profile Page

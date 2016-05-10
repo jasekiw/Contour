@@ -82,6 +82,8 @@ Route::post('tags/delete',array('as' => 'tag_delete','middleware' => 'auth', 'us
 Route::get('tags/types',array('as' => 'tag_type','middleware' => 'auth', 'uses' => 'TagController@getTypes'));
 Route::get('tags/{id}',array('as' => 'tag_show','middleware' => 'auth', 'uses' => 'TagController@show'));
 
+
+Route::resource('page','PageController');
 /**
  * Ajax Datablock routes, will be removed in the future and replace with api routes
  */

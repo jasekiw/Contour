@@ -38,12 +38,11 @@ class ConfigController extends Controller
     public function save()
     {
         $values = array('company_name', 'website_name', 'website_description');
-        foreach ($values as $value) {
+        foreach ($values as $value) 
             ConfigHelper::save($value, Input::get($value));
-        }
-
         ConfigHelper::save_file('favicon');
         ConfigHelper::save_file('logo');
+        ConfigHelper::save_file('login-logo');
 
         return Redirect::route('view_config')->with('message_title', 'Successful!')->with('message', 'Successfully updated the config!');
     }

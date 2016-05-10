@@ -31,6 +31,7 @@ class HeaderTasks
         $developer = "Jason Gallavin";
         $company_name = ConfigHelper::get('company_name', '');
         $logo_url = ConfigHelper::get('logo', asset("assets/img/logo.png"));
+        $login_logo_url = ConfigHelper::get('login-logo', asset("assets/img/logo.png"));
         $website_name = ConfigHelper::get('website_name', "Management Dashboard");
         $website_description = ConfigHelper::get('website_description', $company_name . " " . $website_name);
         $favicon_url = ConfigHelper::get('favicon', asset('assets/ico/favicon.ico'));
@@ -43,6 +44,7 @@ class HeaderTasks
         View::share("developer", $developer);
         View::share('copyright_html', '<footer class="footer">&copy; ' . date('Y') . ' ' . $company_name . '</footer>');
         View::share('logo_url', $logo_url);
+        View::share('login_logo_url', $login_logo_url);
         View::share('company_name', $company_name);
         //if logged in
         

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use app\libraries\user\UserMeta;
 use App\Models\User;
 use App\Models\User_Meta;
+use Auth;
+use Redirect;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -75,7 +77,7 @@ class AuthController extends Controller
 
         // if the validator fails, redirect back to the form
         if ($validator->fails()) {
-            return \Redirect::to('login')
+            return Redirect::to('login')
                 ->withErrors($validator)// send back all errors to the login form
                 ->withInput(\Input::except('password')); // send back the input (not the password) so that we can repopulate the form
         } else {
@@ -87,20 +89,22 @@ class AuthController extends Controller
             );
 
             // attempt to do the login
-            if (\Auth::attempt($userdata)) {
-                $row = User_Meta::where('user_id', '=', \Auth::user()->id)->where('key', '=', 'last_logged_in')->first();
+            if (Auth::attempt($userdata)) {
+                /** @var \App\Models\User $user */
+                $user = Auth::user();
+                $row = User_Meta::where('user_id', '=', $user->id)->where('key', '=', 'last_logged_in')->first();
                 $last_logged_in = UserMeta::get('last_logged_in');
 
                 if ($last_logged_in == '') {
                     $date = new \DateTime();
                     $row = new User_Meta();
-                    $row->user_id = \Auth::user()->id;
+                    $row->user_id = $user->id;
                     $row->key = 'last_logged_in';
                     $row->value = $date->format('Y-m-d h:i:s');
                     $row->save();
                 } else {
                     $date = new \DateTime();
-                    $row->user_id = \Auth::user()->id;
+                    $row->user_id = $user->id;
                     $row->key = 'last_logged_in';
                     $row->value = $date->format('Y-m-d h:i:s');
                     $row->save();
@@ -111,11 +115,11 @@ class AuthController extends Controller
                 // return Redirect::to('secure');
                 // for now we'll just echo success (even though echoing in a controller is bad)
                 //echo 'SUCCESS!';
-                return \Redirect::to('/');
+                return Redirect::to('/');
             } else {
 
                 // validation not successful, send back to form
-                return \Redirect::to('login')->with('message', "login attempt failed!");
+                return Redirect::to('login')->with('message', "login attempt failed!");
             }
         }
     }
@@ -128,8 +132,8 @@ class AuthController extends Controller
      */
     public function getLogout()
     {
-        \Auth::logout(); // log the user out of our application
-        return \Redirect::to('login'); // redirect the user to the login screen
+        Auth::logout(); // log the user out of our application
+        return Redirect::to('login'); // redirect the user to the login screen
     }
 
     /**

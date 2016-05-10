@@ -12,24 +12,14 @@
             <div class="container">
                 <div class="row">
                     <!-- logo -->
-                    <div class="col-md-2 logo">
+                    <div class="col-md-2 col-sm-12 logo">
                         <a  href="{!! route('home') !!}"><img class="logo" src="{!! isset($logo_url) ? $logo_url : "" !!}" alt="Admin Dashboard" /></a>
                         <h1 class="sr-only">Evergreen - Admin Dashboard</h1>
                     </div>
                     <!-- end logo -->
-                    <div class="col-md-10">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <!-- search box -->
-                                {{--<div id="tour-searchbox" class="input-group searchbox">--}}
-                                {{--<input type="search" class="form-control" placeholder="enter keyword here...">--}}
-                                {{--<span class="input-group-btn">--}}
-                                {{--<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>--}}
-                                {{--</span>--}}
-                                {{--</div>--}}
-                                        <!-- end search box -->
-                            </div>
-                            <div class="col-md-9">
+                    <div class="col-md-10 col-sm-12">
+
+
                                 <div class="top-bar-right">
                                     <!-- responsive menu bar icon -->
                                     <a href="#" class="hidden-md hidden-lg main-nav-toggle"><i class="fa fa-bars"></i></a>
@@ -90,8 +80,7 @@
                                     <!-- end logged user and the menu -->
                                 </div>
                                 <!-- /top-bar-right -->
-                            </div>
-                        </div>
+
                         <!-- /row -->
                     </div>
                 </div>

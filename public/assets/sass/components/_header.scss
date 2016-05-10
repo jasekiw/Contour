@@ -1,21 +1,22 @@
-
+$normalHeight : 80px;
 .top-bar {
     padding: 0;
     background-color: $evergreen;
-    height:80px;
-    .container {
-        height:100%;
-        .row {
-            height: 100%;
-            [class*='col-'] {
-                height:100%;
 
-            }
-            .logo a {
-                padding: 5px 0;
-                height:100%;
+    .container {
+
+        .row {
+
+
+            .logo {
+                height: $normalHeight;
+                a {
+                    padding: 5px 0;
+
+                }
+
                 img {
-                    height:100%;
+                    height: $normalHeight;
                 }
             }
             .top-bar-right
@@ -23,7 +24,7 @@
                 margin-right:-15px;
                 top: 0;
                 padding-right: 0;
-                height:100%;
+                height: $normalHeight;
                 .logged-user {
 
                     height:100%;
@@ -68,4 +69,22 @@
             }
         }
     }
+}
+
+
+@media all and (max-width: 992px)
+{
+    .top-bar-right .main-nav-toggle{
+        top: 50%;
+        position: relative;
+        transform: translateY(-50%);
+        i {
+            font-size:60px;
+        }
+    }
+
+}
+
+.content-wrapper {
+    box-shadow: inset 0 0 14px rgba(0,0,0,0.5)
 }
