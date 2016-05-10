@@ -135,8 +135,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
-        /*
+        /**
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
@@ -148,7 +147,7 @@ return [
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        'Maatwebsite\Excel\ExcelServiceProvider'
+        Maatwebsite\Excel\ExcelServiceProvider::class
     ],
 
     /*
@@ -163,7 +162,6 @@ return [
     */
 
     'aliases' => [
-
         'App'       => Illuminate\Support\Facades\App::class,
         'Artisan'   => Illuminate\Support\Facades\Artisan::class,
         'Auth'      => Illuminate\Support\Facades\Auth::class,
@@ -196,11 +194,9 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
-        'Excel'     => 'Maatwebsite\Excel\Facades\Excel'
-
-
+        'Form'      => Collective\Html\FormFacade::class,
+        'Html'      => Collective\Html\HtmlFacade::class,
+        'Excel'     => Maatwebsite\Excel\Facades\Excel::class
     ],
 
 ];

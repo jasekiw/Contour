@@ -3,26 +3,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/12/2015
- * Time: 3:00 PM
- */
+
+
 
 
 /**
- * Class Revision
+ * App\Models\Revision
  *
- * @property int $id
- * @property String $revisionable_type
- * @property int $revisionable_id
- * @property int $user_id
- * @property String $key
- * @property String $old_value
- * @property String $new_value
+ * @property integer $id
+ * @property string $revisionable_type
+ * @property integer $revisionable_id
+ * @property integer $user_id
+ * @property string $key
+ * @property string $old_value
+ * @property string $new_value
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereRevisionableType($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereRevisionableId($value)
@@ -32,8 +29,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereNewValue($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Revision whereDeletedAt($value)
+ * @mixin \Eloquent
  */
-class Revision extends \Eloquent {
+class Revision extends Model {
     protected $fillable = [];
     use SoftDeletes;
     protected $dates = ['deleted_at'];

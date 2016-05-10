@@ -3,6 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+
 /**
  * App\Models\Tags_view
  *
@@ -23,8 +24,9 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Tags_view whereSortNumber($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Tags_view whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Tags_view whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-class Tags_view extends \Eloquent {
+class Tags_view extends Model {
     use RevisionableTrait;
 	protected $fillable = [];
     protected $table = 'tags_view';

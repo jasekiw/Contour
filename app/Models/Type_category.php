@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+
 /**
  * App\Models\Type_category
  *
@@ -11,13 +12,16 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property string $name
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Type_category whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Type_category whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Type_category whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Type_category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Type_category whereDeletedAt($value)
+ * @mixin \Eloquent
  */
-class Type_category extends \Eloquent {
+class Type_category extends Model {
 	use RevisionableTrait;
 	use SoftDeletes;
 	protected $fillable = [];

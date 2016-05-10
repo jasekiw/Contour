@@ -1,11 +1,10 @@
 <?php
-
-
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
+
 class Kernel extends HttpKernel
 {
     /**
@@ -14,6 +13,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected
+
         $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \App\Http\Middleware\EncryptCookies::class,
@@ -44,7 +44,6 @@ class Kernel extends HttpKernel
      */
     function __construct(Application $app, Router $router)
     {
-
         parent::__construct($app, $router);
     }
 }
