@@ -49,7 +49,6 @@ $tabs =  $sheet->getNavTitles();
     </div>
 </div>
 
-
     <div id="sheet_tabbed" class="container">
         <div class="nav-container">
             <ul  class="nav nav-pills">
@@ -59,28 +58,20 @@ $tabs =  $sheet->getNavTitles();
                         <a href="#{{$tab->getCodeName()}}" data-toggle="tab" >{{$tab->name}}</a>
                     </li>
                 @endforeach
-
             </ul>
         </div>
         <div class="tab-content clearfix">
             <?php $first = true; ?>
             @foreach($tabs as $tab)
                 <div class="tab-pane @if($first) active @endif" id="{{$tab->getCodeName()}}">
-                    {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView->summarySheet]) !!}
                     {!! View::make('partials.excel.table', ['table' => $tab->excelView->summaryTable]) !!}
                     {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView->summaryHybrid]) !!}
+                    {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView->summarySheet]) !!}
                     {!! View::make('partials.excel.properties', ['propertiesView' => $tab->excelView->propertysView]) !!}
                 </div>
                     <?php $first = false; ?>
             @endforeach
-
         </div>
-
     </div>
 
 @endsection
-
-@section('scripts')
-    @include('excel.scripts')
-@endsection
-

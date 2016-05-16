@@ -25,8 +25,7 @@ class ExcelSheet extends ExcelData
     private $rows = [];
     /** @var DataBlock[][]   */
     private $cells = [];
-    private $tagsById = [];
-    
+    protected $templateName = "Sheet Data";
     /**
      * Sets the tags and grabs the datablocks
      *
@@ -40,7 +39,8 @@ class ExcelSheet extends ExcelData
         
         $this->rows = array_values($rows);
         $this->columns = array_values($columns);
-        
+        if(!empty($rows) && !empty($columns) )
+            $this->containsData = true;
         foreach ($this->rows as $y => $row) {
             if (!isset($this->cells[$y]))
                 $this->cells[$y] = [];

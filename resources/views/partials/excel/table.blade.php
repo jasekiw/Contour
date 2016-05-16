@@ -16,7 +16,7 @@ $tag = $table->getParentTag();
 ?>
 @if($table->hasData())
 <div class="editor">
-
+    <h3>{!! $table->getTemplateName() !!}</h3>
 
     <table class="table_editor" parent="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
         <thead>

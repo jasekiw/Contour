@@ -25,7 +25,8 @@ class ExcelTable extends ExcelData
     
     /** @var DataBlock[][]   */
     private $table_cells = [];
-    
+
+    protected $templateName = "Table Data";
     /**
      * ExcelTable constructor.
      *

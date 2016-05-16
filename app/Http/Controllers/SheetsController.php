@@ -127,30 +127,13 @@ class SheetsController extends Controller
      */
     public function edit($id)
     {
-
-//        Theme::enqueue_script('data_block_editor', "assets/js/datablock_editor/ts/main.js");
-
         $view = \View::make("excel.editor"); // gets the editor view
-//        $timeTracker = new TimeTracker();
-//        $timeTracker->startTimer("tableCompiler");
-
         $excelView = new ExcelView(DataTags::get_by_id($id));
-
-//        $compiler = new TableCompiler($id);
-
-//        $timeTracker->stopTimer("tableCompiler");
-//        $timeTracker->getResults();
-//        exit;
         $view->tag = $excelView->parentTag;
         $view->parent = $excelView->parentTag->get_parent();
         $view->title = $excelView->parentTag->get_name();
-//        $view->summary = $compiler->summary;
-//        $view->summaryBlocks = $compiler->summaryBlocks;
-//        $view->columns = $compiler->columns;
-//        $view->compositTags = $compiler->compositTags;
-//        $view->summaryTable = $compiler->summaryTable;
-//        $view->compositTables = $compiler->compositTables;
         $view->sheet = $excelView;
+        $hasData = $excelView->summarySheet->hasData();
         return $this->render($view);
     }
 

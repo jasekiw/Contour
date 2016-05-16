@@ -13,6 +13,7 @@ $tag = $sheet->getParentTag();
 ?>
 @if($sheet->hasData())
 <div class="editor">
+    <h3>{!! $sheet->getTemplateName() !!}</h3>
     <table class="sheet_editor" parent="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
         <thead>
         <tr>
@@ -32,10 +33,11 @@ $tag = $sheet->getParentTag();
                         ?>
 
                         @if(isset($cell))
-                            <td class="cell"> <input type="text" class="form-control input-sm" datablock="{!! $cell->get_id() !!}"
-                                                     value="{!! $cell->getValue() !!}" /></td>
+                            <td class="cell">
+                                <input type="text" class="form-control input-sm" datablock="{!! $cell->get_id() !!}" value="{!! $cell->getValue() !!}" />
+                            </td>
                         @else
-                            <td class="cell"> <input type="text" class="form-control input-sm"  /></td>
+                            <td class="cell"><input type="text" class="form-control input-sm"  /></td>
                         @endif
                     @endforeach
                 </tr>

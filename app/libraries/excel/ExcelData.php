@@ -12,12 +12,14 @@ use app\libraries\tags\DataTag;
 
 abstract class ExcelData
 {
-    
-    /** @var bool   */
+
+    /** @var bool */
     protected $containsData = false;
-    /** @var DataTag   */
+    /** @var DataTag */
     protected $parentTag;
-    
+    /** @var string */
+    protected $templateName = "Excel Data";
+
     /**
      * Check if this template has data in it.
      * @return bool
@@ -26,7 +28,7 @@ abstract class ExcelData
     {
         return $this->containsData;
     }
-    
+
     /**
      * @return DataTag
      */
@@ -34,12 +36,28 @@ abstract class ExcelData
     {
         return $this->parentTag;
     }
-    
+
     /**
      * @return string
      */
     public function get_name()
     {
         return $this->parentTag->get_name();
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setTemplateName($name)
+    {
+        $this->templateName = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateName()
+    {
+        return $this->templateName;
     }
 }

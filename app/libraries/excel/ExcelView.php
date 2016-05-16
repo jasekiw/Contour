@@ -59,6 +59,7 @@ class ExcelView
         
         $this->summaryTable = new ExcelTable($headers, $tag);
         $this->summaryHybrid = new ExcelSheet($rows, $headers, $tag);
+        $this->summaryHybrid->setTemplateName("Hybrid Data");
         $this->summarySheet = new ExcelSheet($rows, $columns, $tag);
         $properties = $children->getTagWithTypesAsArray([Types::get_type_property()]);
         $this->propertysView = new ExcelProperties($properties, $tag);

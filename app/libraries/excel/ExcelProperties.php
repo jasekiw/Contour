@@ -24,7 +24,7 @@ class ExcelProperties extends ExcelData
     private $propertyTags;
     /** @var DataBlock[]   */
     private $values = [];
-    
+    protected $templateName = "Properties";
     /**
      * ExcelProperties constructor.
      *

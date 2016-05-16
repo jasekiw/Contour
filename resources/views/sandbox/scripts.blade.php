@@ -8,7 +8,7 @@
 use app\libraries\theme\userInterface\DataBlockEditor;
         ?>
 <?php
-echo DataBlockEditor::get();
+//echo DataBlockEditor::get();
 ?>
 
 <script type="text/javascript">

@@ -74,7 +74,7 @@ use app\libraries\theme\data\TableConstructor;
 
 @section('scripts')
     <?php
-    echo DataBlockEditor::get();
+//    echo DataBlockEditor::get();
     ?>
     @include('excel.scripts')
 @endsection
