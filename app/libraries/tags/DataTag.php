@@ -10,6 +10,7 @@ namespace app\libraries\tags;
 
 use app\libraries\database\Query;
 use app\libraries\datablocks\DataBlock;
+use app\libraries\datablocks\DataBlockCollection;
 use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\types\TypeAbstract;
@@ -125,6 +126,16 @@ class DataTag extends DataTagAbstract
     {
         $datablock = DataBlocks::getByTagsArray([$this]);
         return $datablock;
+    }
+
+    /**
+     * Gets the datablocks that has been tagged with this tag
+     * @return DataBlockCollection
+     */
+    public function getDataBlocks()
+    {
+        $datablocks = DataBlocks::getMultipleByTagsArray([$this]);
+        return $datablocks;
     }
     
     /**

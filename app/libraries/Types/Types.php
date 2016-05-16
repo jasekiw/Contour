@@ -180,6 +180,15 @@ class Types
     {
         return self::getTypeWithName("table-cell", "tag");
     }
+
+    /**
+     * Gets a table header type for a tag
+     * @return Type
+     */
+    public static function getTagPrimary()
+    {
+        return self::getTypeWithName("primary", "tag");
+    }
     
     /**
      * @return Type

@@ -9,22 +9,24 @@
 namespace app\libraries\datablocks;
 
 use app\libraries\memory\datablocks\DataBlock as MemoryDataBlock;
+use app\libraries\tags\collection\TagCollection;
+use app\libraries\tags\DataTag;
 use app\libraries\types\Type;
 use app\libraries\memory\types\Type as MemoryType;
 
 abstract class DataBlockCollectionAbstract
 {
-    
+
     const SORT_TYPE_NONE = "NONE";
     const SORT_TYPE_BY_SORT_NUMBER = "sortBySortNumber";
     const SORT_TYPE_BY_ID = "sortById";
-    /** @var DataBlock[]   */
+    /** @var DataBlock[] */
     public $blocks = [];
-    /** @var DataBlock[]   */
+    /** @var DataBlock[] */
     protected $blocksById = [];
-    
+
     protected $sorted = false;
-    
+
     /**
      * Creates a new Collection Of tags. This does not change anything in the database but allows easy reference to
      * multiple tags
@@ -44,7 +46,7 @@ abstract class DataBlockCollectionAbstract
             $this->blocksById[$inputBlocks->get_id()] = $inputTags;
         }
     }
-    
+
     /**
      * Gets the tags as an array. Sort options are available use TagCollection::SORT_TYPE*
      *
@@ -59,7 +61,7 @@ abstract class DataBlockCollectionAbstract
         $this->$sort(); // sorts by the method name
         return $this->blocks;
     }
-    
+
     /**
      * Gets all tags that start with the specified string. good for seperating by starting letter
      *
@@ -77,7 +79,7 @@ abstract class DataBlockCollectionAbstract
         }
         return $matches;
     }
-    
+
     /**
      * @param Type | MemoryType $type
      *
@@ -91,7 +93,7 @@ abstract class DataBlockCollectionAbstract
                 array_push($array, $block);
         return $array;
     }
-    
+
     /**
      * @param DataBlock | MemoryDataBlock $block
      *
@@ -105,7 +107,7 @@ abstract class DataBlockCollectionAbstract
         $this->blocksById[$block->get_id()] = $block;
         return true;
     }
-    
+
     /**
      * Removes the specified tag from the array. An integer ID can be given or a String name can be given
      *
@@ -133,18 +135,45 @@ abstract class DataBlockCollectionAbstract
                 $inputName = $input->getName();
                 if ($tagtypeName === $inputName) {
                     $tag = $this->blocks[$index];
-                    
+
                     unset($this->blocksById[$tag->get_id()]);
                     unset($this->blocks[$index]);
                     $found = true;
                 }
             }
             return $found; // not found
-            
+
         }
         return false; // integer or string was not given
     }
-    
+
+    /**
+     * Gets the tags that exist amongst all the datablocks in the collection
+     * @return TagCollection
+     */
+    public function getCommonTags()
+    {
+        $participating = [];
+        $size = sizeof($this->blocks);
+        $common = [];
+        $commonTags = []; // the tags that are in all rows
+        foreach ($this->blocks as $dataBlock) {
+            $tags = $dataBlock->getTags()->getAsArray(TagCollection::SORT_TYPE_NONE);
+            foreach ($tags as $tag) {
+                $participating[$tag->get_id()] = $tag;
+                if (!isset($common[$tag->get_id()]))
+                    $common[$tag->get_id()] = 0;
+                $common[$tag->get_id()]++;
+            }
+        }
+
+        foreach ($common as $id => $tagCount)
+            if ($tagCount == $size)
+                $commonTags[] = $participating[$id];
+
+        return new TagCollection($commonTags);
+    }
+
     /**
      * Gets the size of the array
      * @return int The size of the array
@@ -153,7 +182,7 @@ abstract class DataBlockCollectionAbstract
     {
         return sizeof($this->blocks);
     }
-    
+
     /**
      * Gets a tag by the name or id
      *
@@ -167,7 +196,7 @@ abstract class DataBlockCollectionAbstract
             return isset($this->blocksById[$input]) ? $this->blocksById[$input] : null;
         return null; // integer or string was not given
     }
-    
+
     /**
      * adds a collection or an aryay of tags to the collection
      *
@@ -188,10 +217,10 @@ abstract class DataBlockCollectionAbstract
             foreach ($blocks->getAsArray() as $tag)
                 $this->blocksById[$tag->get_id()] = $tag;
         }
-        
+
         return true;
     }
-    
+
     /**
      * Sorts the internal array of tags by their sort numbers
      */
@@ -207,7 +236,7 @@ abstract class DataBlockCollectionAbstract
             return $a->getSortNumber() - $b->getSortNumber();
         });
     }
-    
+
     private function sortById()
     {
         if (empty($this->blocks))
@@ -220,5 +249,5 @@ abstract class DataBlockCollectionAbstract
             return $a->get_id() - $b->get_id();
         });
     }
-    
+
 }

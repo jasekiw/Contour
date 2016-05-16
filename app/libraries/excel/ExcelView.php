@@ -10,6 +10,7 @@ namespace app\libraries\excel;
 
 use app\libraries\tags\DataTag;
 use app\libraries\types\Types;
+use app\libraries\tags\collection\TagCollection;
 
 /**
  * Class ExcelView
@@ -37,34 +38,27 @@ class ExcelView
      * ExcelView constructor.
      *
      * @param DataTag        $tag
-     * @param DataTag[]|null $paramHeaders the default headers to use for the header table if no headers where found
-     *                                     for the child.
-     * @param DataTag[]|null $paramColumns
      */
-    function __construct($tag, $paramHeaders = null, $paramColumns = null)
+    function __construct($tag)
     {
         $this->parentTag = $tag;
         $children = $this->parentTag->getSimpleChildren();
         $composits = $this->parentTag->getCompositChildren();
-        $columns = $children->getTagWithTypesAsArray([Types::get_type_column()]);
-        if (sizeof($columns) == 0 && is_array($paramColumns))
-            $columns = $paramColumns;
-        
-        $headers = $children->getTagWithTypesAsArray([Types::get_type_table_header()]);
+        $headers = $children->getTagWithTypesAsArray([Types::getTagPrimary()]);
         if (sizeof($headers) == 0 && is_array($paramHeaders))
             $headers = $paramHeaders;
-        $children->remove([Types::get_type_column(), Types::get_type_table_header()]);
-        $rows = $children->getTagWithTypesAsArray([Types::get_type_row()]);
-        $children->remove([Types::get_type_row()]);
+       
         
-        $this->summaryTable = new ExcelTable($headers, $tag);
-        $this->summaryHybrid = new ExcelSheet($rows, $headers, $tag);
-        $this->summaryHybrid->setTemplateName("Hybrid Data");
-        $this->summarySheet = new ExcelSheet($rows, $columns, $tag);
-        $properties = $children->getTagWithTypesAsArray([Types::get_type_property()]);
-        $this->propertysView = new ExcelProperties($properties, $tag);
-        foreach ($composits->getAsArray() as $composit)
-            array_push($this->composits, new ExcelView($composit, $headers, $columns));
+        foreach($headers as $header)
+        {
+            $datablocks = $header->getDataBlocks();
+            $tagCollection = $datablocks->getCommonTags();
+            $tagCollection->remove($header->get_id());
+            foreach($tagCollection->getAsArray(TagCollection::SORT_TYPE_NONE) as $tag)
+            {
+
+            }
+        }
     }
     
     public function hasChildren()
