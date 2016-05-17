@@ -8,6 +8,8 @@
 
 namespace app\libraries\excel;
 
+use app\libraries\datablocks\DataBlockCollection;
+use app\libraries\datablocks\DataBlock;
 use app\libraries\tags\DataTag;
 use app\libraries\types\Types;
 use app\libraries\tags\collection\TagCollection;
@@ -45,20 +47,32 @@ class ExcelView
         $children = $this->parentTag->getSimpleChildren();
         $composits = $this->parentTag->getCompositChildren();
         $headers = $children->getTagWithTypesAsArray([Types::getTagPrimary()]);
-        if (sizeof($headers) == 0 && is_array($paramHeaders))
-            $headers = $paramHeaders;
-       
-        
+        /**
+         * @var DataBlock[][] $columns
+         */
+        $columns = [];
         foreach($headers as $header)
+            $columns[] = $header->getDataBlocks()->getAsArray(DataBlockCollection::SORT_TYPE_BY_SORT_NUMBER);
+        /**
+         * @var DataBlockCollection[] $rows
+         */
+        $rows = [];
+        foreach($columns as $column)
         {
-            $datablocks = $header->getDataBlocks();
-            $tagCollection = $datablocks->getCommonTags();
-            $tagCollection->remove($header->get_id());
-            foreach($tagCollection->getAsArray(TagCollection::SORT_TYPE_NONE) as $tag)
+            foreach($column as $rowNumber => $rowDataBlock)
             {
-
+                if(!isset($rows[$rowNumber]))
+                    $rows[$rowNumber] = new DataBlockCollection();
+                $rows[$rowNumber]->add($rowDataBlock);
             }
         }
+
+        $rowTags = [];
+        foreach($rows as $key => $row)
+            $rowTags[$key] = $row->getCommonTags()->getAsArray();
+
+
+
     }
     
     public function hasChildren()
