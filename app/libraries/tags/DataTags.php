@@ -126,7 +126,7 @@ class DataTags
      *
      * @return \app\libraries\tags\DataTag
      */
-    private static function fetchByPDORow($sqlTag)
+    public static function fetchByPDORow($sqlTag)
     {
         
         $tag = DataTag::constructWithTimestamp($sqlTag["updated_at"], $sqlTag["created_at"]);

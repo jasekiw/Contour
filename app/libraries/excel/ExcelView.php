@@ -23,16 +23,15 @@ class ExcelView
     
     /** @var DataTag   */
     public $parentTag;
-    /** @var ExcelTable   */
-    public $summaryTable;
-    /** @var ExcelSheet   */
-    public $summarySheet;
-    /** @var ExcelSheet   */
-    public $summaryHybrid;
+    /** @var  DataTag[] */
+    public $headerTags;
     /** @var ExcelView[]   */
     public $composits = [];
-    /** @var ExcelProperties   */
-    public $propertysView;
+    /**
+     * @var DataTag[][]
+     */
+    private $rowTags = [];
+    private $rows = [];
     
     private $loopedChildren = false;
     
@@ -46,33 +45,115 @@ class ExcelView
         $this->parentTag = $tag;
         $children = $this->parentTag->getSimpleChildren();
         $composits = $this->parentTag->getCompositChildren();
+        $primaryType = Types::getTagPrimary();
+        $generalType = Types::getTagGeneral();
         $headers = $children->getTagWithTypesAsArray([Types::getTagPrimary()]);
         /**
          * @var DataBlock[][] $columns
          */
         $columns = [];
-        foreach($headers as $header)
-            $columns[] = $header->getDataBlocks()->getAsArray(DataBlockCollection::SORT_TYPE_BY_SORT_NUMBER);
+        usort($headers, function($x,$y){
+            /** @var DataTag $x */
+            /** @var DataTag $y */
+            return $x->get_sort_number() - $y->get_sort_number();
+        });
+        $this->headerTags = $headers;
         /**
-         * @var DataBlockCollection[] $rows
+         * @var DataTag[] $headers The headers Tags
          */
+        foreach($headers as $header)
+            $columns[$header->get_sort_number()] = $header->getDataBlocks()->getAssociativeArrayOfSortNumber(); // sort numbers are row numbers
+
+
+        ksort($columns);
         $rows = [];
-        foreach($columns as $column)
+        /**
+         * Invert the rows and columns
+         */
+        foreach($columns as $colSort => $column)
         {
-            foreach($column as $rowNumber => $rowDataBlock)
+            foreach($column as $rowSort => $rowDataBlock)
             {
-                if(!isset($rows[$rowNumber]))
-                    $rows[$rowNumber] = new DataBlockCollection();
-                $rows[$rowNumber]->add($rowDataBlock);
+                if(!isset($rows[$rowSort]))
+                    $rows[$rowSort] = [];
+                $rows[$rowSort][$colSort] = $rowDataBlock;
             }
         }
 
         $rowTags = [];
-        foreach($rows as $key => $row)
-            $rowTags[$key] = $row->getCommonTags()->getAsArray();
+        ksort($rows);
+        foreach($rows as $rowNum => $row)
+            $rowTags[$rowNum] = (new DataBlockCollection($row))->getCommonTags()->getAsArray(TagCollection::SORT_TYPE_NONE);
+        $this->rowTags = $rowTags;
+        $vRowNum = 0;
 
+        $this->rows = $rows;
+//        foreach($rows as $rowNum => $row)
+//        {
+//            $vColNum = 0;
+//            $rowTag = $rowTags[$rowNum];
+//
+//            foreach($headers as $header)
+//            {
+//
+//                if(isset($row[$header->get_sort_number()]))
+//                {
+//                    /** @var DataBlock $datablock */
+//                    $datablock = $row[$header->get_sort_number()];
+//
+//                }
+//                $vColNum++;
+//            }
+//            $vRowNum++;
+//        }
 
+    }
 
+    /**
+     * @param int $x
+     * @param int $y
+     * @return DataBlock | null
+     */
+    public function getCell(int $x, int $y)
+    {
+        if(isset($this->rows[$y][$x]))
+            return $this->rows[$y][$x];
+        else return null;
+    }
+
+    public function hasData()
+    {
+        return true;
+    }
+    public function getHeaderTags()
+    {
+        return $this->headerTags;
+    }
+
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
+    /**
+     * @param $rowNum
+     * @return DataTag[]
+     */
+    public function getTagsForRow($rowNum)
+    {
+        if(!isset($this->rowTags[$rowNum]))
+            return [];
+        return $this->rowTags[$rowNum];
+    }
+
+    public function getCommaDelimitedTagsForRow($rowNum)
+    {
+        if(!isset($this->rowTags[$rowNum]))
+            return "";
+        $ids = [];
+        foreach($this->rowTags[$rowNum] as $tag)
+            $ids[] = $tag->get_id();
+        return implode(",", $ids);
     }
     
     public function hasChildren()
@@ -148,6 +229,11 @@ class ExcelView
     public function get_name()
     {
         return $this->parentTag->get_name();
+    }
+
+    public function getParentTag()
+    {
+        return $this->parentTag;
     }
     
 }

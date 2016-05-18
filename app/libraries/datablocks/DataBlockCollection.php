@@ -220,5 +220,12 @@ class DataBlockCollection extends DataBlockCollectionAbstract
         $this->$sort(); // sorts by the method name
         return $this->blocks;
     }
+    public function getAssociativeArrayOfSortNumber()
+    {
+        $sortedBlocks = [];
+        foreach($this->blocks as $block)
+            $sortedBlocks[$block->getSortNumber()] = $block;
+        return $sortedBlocks;
+    }
     
 }

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call('ConfigurationSeeder');
         $this->call('UserAccessTableSeeder');
         $this->call('PagesSeeder');
+        $this->call('DefaultTagsSeeder');
         Model::reguard();
     }
 }

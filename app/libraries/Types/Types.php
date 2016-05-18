@@ -189,6 +189,14 @@ class Types
     {
         return self::getTypeWithName("primary", "tag");
     }
+    /**
+     * Gets a general tag type for a tag
+     * @return Type
+     */
+    public static function getTagGeneral()
+    {
+        return self::getTypeWithName("general", "tag");
+    }
     
     /**
      * @return Type

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use app\libraries\tags\DataTags;
+use Artisan;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
@@ -34,8 +36,8 @@ class InstallController extends Controller
     public function store(Request $request)
     {
         if (\Schema::hasTable('config'))
-            return;
-        \Artisan::call('migrate');
+            return "Already Installed";
+        Artisan::call('migrate');
         $output = "";
         $output .= \Artisan::output();
         \Artisan::call('db:seed');

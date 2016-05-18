@@ -25,7 +25,9 @@ class HeaderTasks
      */
     function perform()
     {
-
+        $installedAlready = \Schema::hasTable('config');
+        if(!$installedAlready)
+            return;
 //        if(\App::runningInConsole())
 //           return;
         $developer = "Jason Gallavin";

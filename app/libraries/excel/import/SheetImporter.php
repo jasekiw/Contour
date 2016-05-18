@@ -255,9 +255,11 @@ class SheetImporter
             } else if ($cell->rule->getFunction() == ImportRule::CELL_TWO_DIMENSION_TAG_FUNCTION) {
                 if (!isset($this->column_titles[$cell->column]) || !isset($this->row_titles[$cell->row]))
                     throw new TagNotFoundException($cell->column, $cell->row, $this);
+                $sort_number = $cell->row;
                 $tags = new TagCollection([$this->row_titles[$cell->row], $this->column_titles[$cell->column]]);
             } else if ($cell->rule->getFunction() == ImportRule::CELL_ONE_TAG_FUNCTION) {
                 $tag = $this->getTagAt($cell->rule->getParent());
+                $sort_number = $cell->row;
                 if (isset($tag))
                     $tags = new TagCollection([$tag]);
             }

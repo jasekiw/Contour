@@ -30,6 +30,9 @@ gulp.task('watch', function () {
     gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
     gulp.watch("./public/assets/ts/contour/**/*.ts", ['compile-typescript-front-end'])
 });
+gulp.task('watch-sass', function() {
+    gulp.watch('./public/assets/sass/**/*.scss', ['sass']);
+});
 
 
 

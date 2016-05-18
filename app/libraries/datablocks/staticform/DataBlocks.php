@@ -155,8 +155,8 @@ class DataBlocks
     public static function getMultipleByTagsArray($dataTags, $selectionType = DataBlocks::SELCTION_TYPE_LIGHT, $showTrashed = false, $sort = false)
     {
         $queryEngine = new DataBlockQueryEngine($dataTags, $showTrashed, $sort);
-        $datablock = $queryEngine->getDataBlocks();
-        $datablockCollection = new DataBlockCollection($datablock);
+        $datablocks = $queryEngine->getDataBlocks();
+        $datablockCollection = new DataBlockCollection($datablocks);
         return $datablockCollection;
     }
     

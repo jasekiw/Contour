@@ -22,12 +22,11 @@ class ConfigurationSeeder extends Seeder
     {
         Eloquent::unguard();
         //DB::table('type_categories')->truncate();
-        $systemTagId = Tag::create(array(
+        Tag::create([
             'name' => 'system',
             'type_id' => 5,
             'parent_tag_id' => -1,
             'sort_number' => 1
-        ))->id;
-      echo $systemTagId;
+        ]);
     }
 }

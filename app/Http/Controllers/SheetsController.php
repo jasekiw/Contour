@@ -133,7 +133,7 @@ class SheetsController extends Controller
         $view->parent = $excelView->parentTag->get_parent();
         $view->title = $excelView->parentTag->get_name();
         $view->sheet = $excelView;
-        $hasData = $excelView->summarySheet->hasData();
+//        $hasData = $excelView->summarySheet->hasData();
         return $this->render($view);
     }
 

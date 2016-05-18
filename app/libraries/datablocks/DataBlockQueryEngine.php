@@ -155,19 +155,21 @@ class DataBlockQueryEngine
      */
     public function getDataBlocks()
     {
-        $answerDatablocks = $this->getRows();
-        if (empty($answerDatablocks))
+        $rows = $this->getRows();
+        if (empty($rows))
             return [];
-        
+
+
+        $answerDatablocks = [];
         /**
          * @var DataBlock[] $answerDatablocks
          */
-        foreach ($answerDatablocks as $key => $answerDatablock) {
-            $datablockRow = $answerDatablocks[$key];
-            $answerDatablocks[$key] = new DataBlock(new TagCollection($this->tags), Types::get_by_id($datablockRow["type_id"]));
-            $answerDatablocks[$key]->set_value($datablockRow["value"]);
-            $answerDatablocks[$key]->set_id($datablockRow["id"]);
-            $answerDatablocks[$key]->setSortNumber($datablockRow["sort_number"]);
+        foreach ($rows as $key => $row) {
+            $answerDatablocks[$key] = new DataBlock();
+            $answerDatablocks[$key]->set_type(Types::get_by_id($row["type_id"]));
+            $answerDatablocks[$key]->set_value($row["value"]);
+            $answerDatablocks[$key]->set_id($row["id"]);
+            $answerDatablocks[$key]->setSortNumber($row["sort_number"]);
         }
         return $answerDatablocks;
     }

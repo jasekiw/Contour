@@ -26,40 +26,25 @@ use Maatwebsite\Excel\Readers\LaravelExcelReader;
  */
 class Importer
 {
-    
+
     public static $multithreaded = false;
-    
+    protected $error = "";
+
     /**
      * Runs the import on the specified excel file with the import suite and location to import into
      *
-     * @param ImportTemplateSuite $importSuite  The template suite used to define the import parameters
-     * @param string              $fileLocation The location of the excel file.
-     * @param string              $tagLocation  The tag location to import into.
+     * @param ImportTemplateSuite $importSuite The template suite used to define the import parameters
+     * @param string $fileLocation The location of the excel file.
+     * @param string $tagLocation The tag location to import into.
      *
      * @return string Any response from the import
      */
     public function run($importSuite, $fileLocation, $tagLocation)
     {
-        $nl = "<br/>";
-        $excelTag = $this->getExceltag();
-        $excelTagName = $excelTag->get_name();
-        $path = explode("/", $tagLocation);
-        foreach ($path as $key => $tag)
-            if ($tag == "")
-                unset($path[$key]);
-        $path = array_values($path);
-        $currentTag = $excelTag;
-        
-        if (sizeof($path) == 1 && $path[0] == "")
-            $importSuite->setBaseTag($currentTag);
-        else
-            foreach ($path as $tag) {
-                $child = $currentTag->findChild($tag);
-                if (!isset($child))
-                    return "Tag: $tag not found in file path /$excelTagName/$tagLocation";
-                $currentTag = $child;
-            }
-        $importSuite->setBaseTag($currentTag);
+        $tag = $this->getTagFromPath($tagLocation);
+        if (!isset($tag))
+            return $this->error;
+        $importSuite->setBaseTag($tag);
         $importSuite->runPreImportTasks();
         try {
             Excel::load($fileLocation, $this->loadExcel($importSuite));
@@ -68,7 +53,7 @@ class Importer
             return $e->getMessage();
         }
     }
-    
+
     /**
      * Gets the excel tag in the root directory.
      * This is the root directory for importing.
@@ -84,7 +69,35 @@ class Importer
         }
         return $excelTag;
     }
-    
+
+    /**
+     * @param $tagLocation
+     * @return DataTag | null
+     */
+    protected function getTagFromPath($tagLocation)
+    {
+        $excelTag = $this->getExceltag();
+        $excelTagName = $excelTag->get_name();
+        $path = explode("/", $tagLocation);
+        foreach ($path as $key => $tag)
+            if ($tag == "")
+                unset($path[$key]);
+        $path = array_values($path);
+        $currentTag = $excelTag;
+        if (sizeof($path) == 1 && $path[0] == "")
+            $currentTag = $excelTag;
+        else
+            foreach ($path as $tag) {
+                $child = $currentTag->findChild($tag);
+                if (!isset($child)) {
+                    $this->error = "Tag: $tag not found in file path /$excelTagName/$tagLocation";
+                    return null;
+                }
+                $currentTag = $child;
+            }
+        return $currentTag;
+    }
+
     /**
      * Loads the excel file and loops the sheets.
      *
@@ -102,11 +115,11 @@ class Importer
                 $reader->each($this->processSheet($count, $importSuite));
             };
     }
-    
+
     /**
      * Loops through the excel sheets and imports them
      *
-     * @param int                 $count
+     * @param int $count
      * @param ImportTemplateSuite $importSuite
      *
      * @return \Closure
@@ -128,14 +141,14 @@ class Importer
                 $count++;
             };
     }
-    
+
     /**
      * Runs the import for the current sheet.
      * It created a new SheetImporter object and passes the suite to it.
      *
-     * @param RowCollection       $sheet
-     * @param String              $sheet_title
-     * @param integer             $sheet_num
+     * @param RowCollection $sheet
+     * @param String $sheet_title
+     * @param integer $sheet_num
      * @param ImportTemplateSuite $suite
      *
      * @return ImportCollection
@@ -165,5 +178,5 @@ class Importer
         } else // not found at all :(
             throw new SheetNotFoundException($sheet_num, $sheet_title);
     }
-    
+
 }

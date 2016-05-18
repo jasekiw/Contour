@@ -8,9 +8,11 @@
 
 namespace app\libraries\datablocks;
 
+use app\libraries\database\Query;
 use app\libraries\datablocks\converter\DataBlockValueConvertor;
 use app\libraries\datablocks\DataBlockAbstract;
 use app\libraries\tags\collection\TagCollection;
+use app\libraries\tags\DataTags;
 use app\libraries\types\Type;
 use app\libraries\types\Types;
 use App\Models\Data_block;
@@ -114,7 +116,21 @@ class DataBlock extends DataBlockAbstract
      */
     public function getTags()
     {
+        if(!isset($this->tags))
+        {
+            $sql = "
+                SELECT tags.* FROM tags_reference LEFT JOIN tags ON tags_reference.tag_id = tags.id
+                WHERE 
+                tags_reference.data_block_id = {$this->id} AND
+                tags.deleted_at IS NULL
+            ";
+            $rows = Query::getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+            $this->tags = new TagCollection();
+            foreach ($rows as $row)
+                $this->tags->add(DataTags::fetchByPDORow($row));
+        }
         return $this->tags;
+        
     }
     
     /**

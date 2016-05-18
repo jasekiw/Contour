@@ -8,6 +8,7 @@
 
 namespace app\libraries\datablocks;
 
+use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\memory\datablocks\DataBlock as MemoryDataBlock;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\tags\DataTag;
@@ -153,14 +154,17 @@ abstract class DataBlockCollectionAbstract
      */
     public function getCommonTags()
     {
-        $participating = [];
+        $participatingTags = [];
         $size = sizeof($this->blocks);
         $common = [];
         $commonTags = []; // the tags that are in all rows
         foreach ($this->blocks as $dataBlock) {
+
+
             $tags = $dataBlock->getTags()->getAsArray(TagCollection::SORT_TYPE_NONE);
+
             foreach ($tags as $tag) {
-                $participating[$tag->get_id()] = $tag;
+                $participatingTags[$tag->get_id()] = $tag;
                 if (!isset($common[$tag->get_id()]))
                     $common[$tag->get_id()] = 0;
                 $common[$tag->get_id()]++;
@@ -169,7 +173,7 @@ abstract class DataBlockCollectionAbstract
 
         foreach ($common as $id => $tagCount)
             if ($tagCount == $size)
-                $commonTags[] = $participating[$id];
+                $commonTags[] = $participatingTags[$id];
 
         return new TagCollection($commonTags);
     }
@@ -224,7 +228,7 @@ abstract class DataBlockCollectionAbstract
     /**
      * Sorts the internal array of tags by their sort numbers
      */
-    private function sortBySortNumber()
+    protected function sortBySortNumber()
     {
         if (empty($this->blocks))
             return;
@@ -237,7 +241,7 @@ abstract class DataBlockCollectionAbstract
         });
     }
 
-    private function sortById()
+    protected function sortById()
     {
         if (empty($this->blocks))
             return;
