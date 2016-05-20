@@ -122,12 +122,14 @@ class Config
     }
     
     /**
+     * Sets the System Path Tags for Contour
      * @return int[]
      */
     private function createPath()
     {
-        $reportsId = Tag::where('name', '=', 'reports')->where('type_id', '=', Types::get_type_folder()->get_id())->first()->id;
-        $facilitiesId = Tag::where('name', '=', 'facilities')->where('type_id', '=', Types::get_type_folder()->get_id())->first()->id; //DataTags::get_by_string_and_type("facilities", Types::get_type_sheet());
+        $folderType = Types::get_type_folder();
+        $reportsId = Tag::where('name', '=', 'reports')->where('type_id', '=', $folderType->get_id())->first()->id;
+        $facilitiesId = Tag::where('name', '=', 'facilities')->where('type_id', '=', $folderType->get_id())->first()->id; //DataTags::get_by_string_and_type("facilities", Types::get_type_sheet());
         $path = [$reportsId, $facilitiesId, 0];
         $this->save("PATH", serialize($path));
         $this->cachedPATH = $path;

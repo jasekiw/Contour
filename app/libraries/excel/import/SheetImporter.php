@@ -36,6 +36,7 @@ class SheetImporter
      * @access private
      */
     private $column_titles = [];
+
     /**
      * @var DataTag[]
      * @access private
@@ -125,8 +126,23 @@ class SheetImporter
             $rule = $this->template->getRules()->getRuleIn($column_number, $row_number);
             $rules = $this->template->getRules()->getRulesIn($column_number, $row_number);
             $location = new Point($column_number, $row_number);
+
             if (sizeof($rules) > 1)
-                throw new \Exception("multiple rules found");
+            {
+                $childOfFunctionInThere = false;
+                $headerFunctionInThere = false;
+                foreach($rules as $rule)
+                {
+                    if($rule->getFunction() == ImportRule::TAG_CHILD_OF_FUNCTION)
+                        $childOfFunctionInThere = true;
+                    if($rule->getFunction() == ImportRule::TAG_HEADER_FUNCTION)
+                        $headerFunctionInThere = true;
+                }
+                if(!$childOfFunctionInThere && !$headerFunctionInThere)
+                    throw new \Exception("multiple rules found at location " . $location . " Sheet: " . $this->sheet_title );
+            }
+
+
             
             if ($rule->getFunction() == ImportRule::TAG_CHILD_OF_FUNCTION) //children function
                 $this->importChildOf($rule, $cell, $column_number, $row_number);
@@ -202,10 +218,23 @@ class SheetImporter
     {
         $function = $rule->getFunction();
         $typeName = $rule->getType()->getName();
-        if ($function == ImportRule::TAG_HEADER_FUNCTION) {
-            if ($typeName == Types::get_type_row()->getName())
+        $axis = $rule->getAxis();
+
+        if ($function == ImportRule::TAG_HEADER_FUNCTION || $function == ImportRule::TAG_CHILD_OF_FUNCTION) {
+
+            if($axis == ImportRule::ONE_DIMENSIONS_TAG_AXIS_X)
+            {
+                $this->column_titles[$column] = $tag;
+            }
+            else if($axis == ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y)
+            {
                 $this->row_titles[$row] = $tag;
-            else if ($typeName == Types::get_type_column()->getName() || $typeName == Types::get_type_table_header()->getName())
+            }
+            else if ($typeName == Types::get_type_row()->getName() || $typeName == Types::getTagGeneral()->getName() )
+                $this->row_titles[$row] = $tag;
+            else if ($typeName == Types::get_type_column()->getName() ||
+                $typeName == Types::get_type_table_header()->getName() ||
+                $typeName == Types::getTagPrimary()->getName())
                 $this->column_titles[$column] = $tag;
         }
         if (!isset($this->tags[$row]))
@@ -228,7 +257,13 @@ class SheetImporter
             $type = $rule->parentType;
         else
             $type = $rule->getType();
-        $tag = new DataTag($cell, $this->sheetTag->get_id(), $type, $column_number);
+        $sort_number = 0;
+        if($rule->getAxis() == ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y)
+            $sort_number = $row_number;
+        else
+            $sort_number = $column_number;
+
+        $tag = new DataTag($cell, $this->sheetTag->get_id(), $type, $sort_number);
         $tag->create();
         $this->addTag($column_number, $row_number, $rule, $tag);
     }
@@ -255,7 +290,10 @@ class SheetImporter
             } else if ($cell->rule->getFunction() == ImportRule::CELL_TWO_DIMENSION_TAG_FUNCTION) {
                 if (!isset($this->column_titles[$cell->column]) || !isset($this->row_titles[$cell->row]))
                     throw new TagNotFoundException($cell->column, $cell->row, $this);
-                $sort_number = $cell->row;
+                if($this->column_titles[$cell->column]->get_type()->getName() == "primary")
+                    $sort_number = $cell->row;
+                else
+                    $sort_number = $cell->column;
                 $tags = new TagCollection([$this->row_titles[$cell->row], $this->column_titles[$cell->column]]);
             } else if ($cell->rule->getFunction() == ImportRule::CELL_ONE_TAG_FUNCTION) {
                 $tag = $this->getTagAt($cell->rule->getParent());

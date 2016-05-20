@@ -22,9 +22,9 @@ export class MultiTypeEditor
         {
             this.sheetEditors.push(new SheetEditor(this.dataBlockEditor, element))
         });
-        $(".table_editor").each((index, element) => {
-            this.tableEditors.push(new TableEditor(this.dataBlockEditor, element))
-        });
+        //$(".table_editor").each((index, element) => {
+        //    this.tableEditors.push(new TableEditor(this.dataBlockEditor, element))
+        //});
 
     }
 

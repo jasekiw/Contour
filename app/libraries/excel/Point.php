@@ -65,4 +65,8 @@ class Point
     {
         return Area::fromPoint($this);
     }
+    function __toString()
+    {
+        return "(" . $this->x . "," . $this->y . ")";
+    }
 }

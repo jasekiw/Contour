@@ -51,9 +51,46 @@ export class SheetEditor extends TabularEditor
         body.append($(newRowTemplate));
         this.addRowTagElement = body.find(".new_row i");
 
-        this.addColumnTagElement.click(() => this.showNewTagDialog("column"));
-        this.addRowTagElement.click(() => this.showNewTagDialog("row"));
+        this.addColumnTagElement.click(() => this.showNewTagDialog("primary"));
+        this.addRowTagElement.click(() => this.addRow());
 
+    }
+
+    protected addRow()
+    {
+        var columns = this.element.find('thead .tag_column').length;
+
+        var cellTemplate = `
+         <td class="cell">
+                <input type="text" class="form-control input-sm" value="">
+         </td>    
+        `;
+
+        var newRowTemplate = `
+            <tr class="tag_row" sort_number="{sort}">
+                <td class="row_head" tags="">
+                    <div class="tags">
+                        
+                    </div>
+                    <div class="sort_number">{sort}</div>
+                </td>
+                {cells}
+           </tr>
+            `;
+        var cellsToAdd = "";
+        for(let i =0; i < columns; i++)
+            cellsToAdd += cellTemplate;
+        var lastSortNumber = parseInt(this.element.find('tbody .tag_row').last().attr("sort_number"));
+        if(isNaN(lastSortNumber))
+            newRowTemplate = newRowTemplate.replace(new RegExp("{sort}", 'g'), "0");
+        else
+            newRowTemplate = newRowTemplate.replace(new RegExp("{sort}", 'g'), (lastSortNumber + 1).toString());
+
+        newRowTemplate = newRowTemplate.replace("{cells}", cellsToAdd);
+
+
+
+        this.element.find('tbody .new_row').before(newRowTemplate);
     }
 
     /**
@@ -62,7 +99,7 @@ export class SheetEditor extends TabularEditor
      */
     protected handleNewTag(tag : PlainTag)
     {
-        if (tag.type == "column")
+        if (tag.type == "primary")
             this.handleNewColumnTag(tag);
         else {
             let newTag = $(`<td class="row_name tag" tag="` + tag.id + `">` + tag.name + `</td>`);

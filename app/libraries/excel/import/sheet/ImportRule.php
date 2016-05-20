@@ -30,6 +30,7 @@ class ImportRule
     const ONE_DIMENSIONS_TAG_AXIS_X = "ONE_DIMENSIONS_TAG_AXIS_X";
     const ONE_DIMENSIONS_TAG_AXIS_Y = "ONE_DIMENSIONS_TAG_AXIS_Y";
     const CELL_ONE_TAG_FUNCTION = "CELL_ONE_TAG_FUNCTION";
+    const TAG_AXIS_NULL = "NULL";
     /** @var Type   */
     public $parentType = null;
     /** @var Area   */
@@ -52,32 +53,36 @@ class ImportRule
         $this->area = $area;
         $this->function = $function;
     }
-    
+
     /**
      * @param Area $area
      * @param Type $type
      *
+     * @param string $axis
      * @return ImportRule
      */
-    public static function createTagHeaderRule($area, $type)
+    public static function createTagHeaderRule($area, $type, $axis = ImportRule::TAG_AXIS_NULL)
     {
         $rule = new ImportRule($area, ImportRule::TAG_HEADER_FUNCTION);
+        $rule->axis = $axis;
         $rule->type = $type;
         return $rule;
     }
-    
+
     /**
-     * @param Area  $area
+     * @param Area $area
      * @param Point $parent
-     * @param Type  $type
+     * @param Type $type
      *
+     * @param string $axis
      * @return ImportRule
      */
-    public static function createTagChildOfRule($area, $parent, $type)
+    public static function createTagChildOfRule($area, $parent, $type, $axis = ImportRule::TAG_AXIS_NULL)
     {
         $rule = new ImportRule($area, ImportRule::TAG_CHILD_OF_FUNCTION);
         $rule->parent = $parent;
         $rule->type = $type;
+        $rule->axis = $axis;
         return $rule;
     }
     

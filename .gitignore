@@ -13,3 +13,4 @@ app/docs.zip
 /public/uploads
 /public/tracereader
 /phpunit.phar
+/public/assets/bower_components/

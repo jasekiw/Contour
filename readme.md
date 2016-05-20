@@ -33,3 +33,15 @@ Coming Soon
 ## This project allows the use of intellisense across the project
 
 
+##Running
+
+Requires redis.
+
+Windows:
+install chocolately
+choco install redis-64
+run redis-server
+
+
+
+

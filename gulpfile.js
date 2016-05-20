@@ -4,6 +4,7 @@ var sass = require('gulp-sass');
 var ts = require('gulp-typescript');
 var sourcemaps = require("gulp-sourcemaps");
 var gulpTypings = require("gulp-typings");
+var bower = require('gulp-bower');
 gulp.task('sass', function () {
     return gulp.src('./public/assets/sass/**/*.scss')
         .pipe(sourcemaps.init())
@@ -35,9 +36,15 @@ gulp.task('watch-sass', function() {
 });
 
 
+gulp.task('bower', function() {
+    return bower({ directory: './bower_components', cwd: './public/assets' })
+        .pipe(gulp.dest('./public/assets/bower_components'))
+});
 
 
-gulp.task('build', ['sass', 'installTypings', 'compile-typescript-front-end']);
+
+
+gulp.task('build', ['sass', 'installTypings', 'compile-typescript-front-end', 'bower']);
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management

@@ -8,11 +8,13 @@
 
 namespace app\libraries\excel\import;
 
+use app\libraries\contour\Contour;
 use app\libraries\excel\import\exception\SheetNotFoundException;
 use app\libraries\excel\import\suite\ImportTemplateSuite;
 use \app\libraries\tags\DataTag;
 use app\libraries\tags\DataTags;
 use app\libraries\types\Types;
+use app\libraries\user\UserMeta;
 use Excel;
 use Exception;
 use Maatwebsite\Excel\Collections\CellCollection;
@@ -41,6 +43,7 @@ class Importer
      */
     public function run($importSuite, $fileLocation, $tagLocation)
     {
+        Contour::getConfigManager()->setTimeLimit(1200); //20 minutes
         $tag = $this->getTagFromPath($tagLocation);
         if (!isset($tag))
             return $this->error;
@@ -128,16 +131,20 @@ class Importer
     {
         return
             function (RowCollection $sheet) use (&$count, &$importSuite) {
+                $nl = "<br />";
                 $sheetTitle = str_replace("'", "", $sheet->getTitle());
+
+                echo "Importing Sheet: " . $count . " - " . $sheetTitle . $nl;
+                flush();
                 if (!Importer::$multithreaded)
                     $this->runImport($sheet, $sheetTitle, $count, $importSuite);
                 else {
                     /** TODO: add multithreaded import */
                 }
-                echo "  " . $sheetTitle . "<br />" . "current_sheet: " . $count . "<br />";
+                echo "Imported Sheet: " . $count . " - " . $sheetTitle . $nl;
                 flush();
-                \UserMeta::save('importProgressSheet', $sheetTitle);
-                \UserMeta::save('importProgress', $count . "/" . "94");
+                UserMeta::save('importProgressSheet', $sheetTitle);
+                UserMeta::save('importProgress', $count . "/" . "94");
                 $count++;
             };
     }

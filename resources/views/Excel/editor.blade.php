@@ -65,7 +65,13 @@ $tabs =  $sheet->getNavTitles();
             @foreach($tabs as $tab)
                 <div class="tab-pane @if($first) active @endif" id="{{$tab->getCodeName()}}">
                     {{--{!! View::make('partials.excel.table', ['table' => $tab->excelView->summaryTable]) !!}--}}
-                    {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView]) !!}
+
+                    @if($tab->excelView->getOrientation() == "column")
+                        {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView]) !!}
+                    @else
+                        {!! View::make('partials.excel.sheetflipped', ['sheet' => $tab->excelView]) !!}
+                    @endif
+
                     {{--{!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView->summarySheet]) !!}--}}
                     {{--{!! View::make('partials.excel.properties', ['propertiesView' => $tab->excelView->propertysView]) !!}--}}
                 </div>
@@ -73,5 +79,4 @@ $tabs =  $sheet->getNavTitles();
             @endforeach
         </div>
     </div>
-
 @endsection

@@ -280,7 +280,7 @@ class Parser
                     if (!isset($this->evaluatedDatablock->getTags()->getRowsAsArray()[0])) {
                         $test = "test";
                     }
-                    $parsed = $subParser->parse($processed->getValue(), $this->evaluatedDatablock->getTags()->getRowsAsArray()[0]->get_parent_id(), $this->evaluatedDatablock->get_id());
+                    $parsed = $subParser->parse($processed->getValue(), $this->evaluatedDatablock->getTags()->getTagWithTypeAsArray(Types::getTagPrimary())[0]->get_parent_id(), $this->evaluatedDatablock->get_id());
                     if ($subParser->error) {
                         $this->error = $subParser->error;
                         $this->error_type = $subParser->error_type;

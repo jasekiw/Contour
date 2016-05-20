@@ -32,6 +32,7 @@ class ExcelView
      */
     private $rowTags = [];
     private $rows = [];
+    private $orientation = "column";
     
     private $loopedChildren = false;
     
@@ -43,8 +44,15 @@ class ExcelView
     function __construct($tag)
     {
         $this->parentTag = $tag;
+        $orientation = $this->parentTag->getMetaValue('orientation'); // row  or column // the location that primary tags are displayed
+        if($orientation == "")
+        {
+            $orientation = "column";
+            $this->parentTag->setMetaValue('orientation', $orientation);
+        }
+        $this->orientation = "row";
         $children = $this->parentTag->getSimpleChildren();
-        $composits = $this->parentTag->getCompositChildren();
+        $composits = $this->parentTag->getCompositChildren()->getAsArray(TagCollection::SORT_TYPE_NONE);
         $primaryType = Types::getTagPrimary();
         $generalType = Types::getTagGeneral();
         $headers = $children->getTagWithTypesAsArray([Types::getTagPrimary()]);
@@ -58,12 +66,9 @@ class ExcelView
             return $x->get_sort_number() - $y->get_sort_number();
         });
         $this->headerTags = $headers;
-        /**
-         * @var DataTag[] $headers The headers Tags
-         */
+        /** @var DataTag[] $headers The headers Tags */
         foreach($headers as $header)
             $columns[$header->get_sort_number()] = $header->getDataBlocks()->getAssociativeArrayOfSortNumber(); // sort numbers are row numbers
-
 
         ksort($columns);
         $rows = [];
@@ -88,6 +93,10 @@ class ExcelView
         $vRowNum = 0;
 
         $this->rows = $rows;
+
+        foreach($composits as $composit)
+            $this->composits[] = new ExcelView($composit);
+
 //        foreach($rows as $rowNum => $row)
 //        {
 //            $vColNum = 0;
@@ -119,6 +128,11 @@ class ExcelView
         if(isset($this->rows[$y][$x]))
             return $this->rows[$y][$x];
         else return null;
+    }
+
+    public function getOrientation()
+    {
+        return $this->orientation;
     }
 
     public function hasData()

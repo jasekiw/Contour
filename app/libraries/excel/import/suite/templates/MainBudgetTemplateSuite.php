@@ -43,8 +43,8 @@ class MainBudgetTemplateSuite
          * EG Corporate Projections
          */
         $EGCorporateProjections = new ImportTemplate("EG Corporate Projections");
-        $EGCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 4), new Point(1, 64)), Types::get_type_row()));
-        $EGCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 2), new Point(14, 2)), Types::get_type_column()));
+        $EGCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 4), new Point(1, 64)), Types::getTagGeneral()));
+        $EGCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 2), new Point(14, 2)), Types::getTagPrimary()));
         $EGCorporateProjections->setGetParentFunction($this, 'getReportsTag');
         $template_sheets->add($EGCorporateProjections);
         
@@ -52,8 +52,8 @@ class MainBudgetTemplateSuite
          * EG Corporate Roll Up
          */
         $EGPHCoporaterollUp = new ImportTemplate("EG - PH Corporate Roll UP");
-        $EGPHCoporaterollUp->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 1), new Point(1, 71)), Types::get_type_row()));
-        $EGPHCoporaterollUp->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 1), new Point(14, 1)), Types::get_type_column()));
+        $EGPHCoporaterollUp->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 1), new Point(1, 71)), Types::getTagGeneral()));
+        $EGPHCoporaterollUp->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 1), new Point(14, 1)), Types::getTagPrimary()));
         $EGPHCoporaterollUp->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 73), new Point(14, 76))));
         $EGPHCoporaterollUp->setGetParentFunction($this, 'getReportsTag');
         $template_sheets->add($EGPHCoporaterollUp);
@@ -62,9 +62,10 @@ class MainBudgetTemplateSuite
          * PH Corporate Projections
          */
         $PHCorporateProjections = new ImportTemplate("PH Coporate Projections");
-        $PHCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 3), new Point(1, 44)), Types::get_type_row()));
-        $PHCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 1), new Point(14, 1)), Types::get_type_column()));
-        $PHCorporateProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 9), new Point(1, 42)), new Point(1, 8), Types::get_type_row()));
+        $PHCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 3), new Point(1, 8)), Types::getTagGeneral()));
+        $PHCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 44), new Point(1, 44)), Types::getTagGeneral()));
+        $PHCorporateProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 9), new Point(1, 42)), new Point(1, 8), Types::getTagGeneral()));
+        $PHCorporateProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 1), new Point(14, 1)), Types::getTagPrimary()));
         $PHCorporateProjections->setGetParentFunction($this, 'getReportsTag');
         $template_sheets->add($PHCorporateProjections);
         
@@ -72,8 +73,8 @@ class MainBudgetTemplateSuite
          * Combined Revenue Summary
          */
         $CombinedRevenueSummary = new ImportTemplate("Combined Revenue Summary");
-        $CombinedRevenueSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 4), new Point(1, 99)), Types::get_type_row()));
-        $CombinedRevenueSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(14, 3)), Types::get_type_column()));
+        $CombinedRevenueSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 4), new Point(1, 99)), Types::getTagGeneral()));
+        $CombinedRevenueSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(14, 3)), Types::getTagPrimary()));
         $CombinedRevenueSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 1), new Point(14, 2))));
         $CombinedRevenueSummary->setGetParentFunction($this, 'getReportsTag');
         $template_sheets->add($CombinedRevenueSummary);
@@ -82,8 +83,8 @@ class MainBudgetTemplateSuite
          * Combined OP Profit Summary
          */
         $CombinedOPProfitSummary = new ImportTemplate("Combined OP Profit Summary");
-        $CombinedOPProfitSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 4), new Point(1, 93)), Types::get_type_row()));
-        $CombinedOPProfitSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(14, 3)), Types::get_type_column()));
+        $CombinedOPProfitSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 4), new Point(1, 93)), Types::getTagGeneral()));
+        $CombinedOPProfitSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(14, 3)), Types::getTagPrimary()));
         $CombinedOPProfitSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 96), new Point(14, 102))));
         $CombinedOPProfitSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 1), new Point(14, 2))));
         $CombinedOPProfitSummary->setGetParentFunction($this, 'getReportsTag');
@@ -93,10 +94,10 @@ class MainBudgetTemplateSuite
          * Combined OP Profit Summary
          */
         $combinedOpSummary = new ImportTemplate("Combined OP Summary");
-        $combinedOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(2, 36)), Types::get_type_row()));
-        $combinedOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(16, 4)), Types::get_type_column()));
-        $combinedOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 6), new Point(2, 16)), new Point(2, 3), Types::get_type_row()));
-        $combinedOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 20), new Point(2, 26)), new Point(2, 18), Types::get_type_row()));
+        $combinedOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(2, 36)), Types::getTagGeneral()));
+        $combinedOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(16, 4)), Types::getTagPrimary()));
+        $combinedOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 6), new Point(2, 16)), new Point(2, 3), Types::getTagGeneral()));
+        $combinedOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 20), new Point(2, 26)), new Point(2, 18), Types::getTagGeneral()));
         $combinedOpSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(2, 38), new Point(14, 49))));
         $combinedOpSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(3, 7), new Point(16, 7))));
         $combinedOpSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(3, 9), new Point(16, 9))));
@@ -112,10 +113,10 @@ class MainBudgetTemplateSuite
          * Phoenix OP Summary
          */
         $phoenixOPSummary = new ImportTemplate("Phoenix OP Summary");
-        $phoenixOPSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 3), new Point(1, 30)), Types::get_type_row()));
-        $phoenixOPSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(13, 4)), Types::get_type_column()));
-        $phoenixOPSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 6), new Point(1, 16)), new Point(1, 3), Types::get_type_row()));
-        $phoenixOPSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 20), new Point(1, 26)), new Point(1, 18), Types::get_type_row()));
+        $phoenixOPSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 3), new Point(1, 30)), Types::getTagGeneral()));
+        $phoenixOPSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(13, 4)), Types::getTagPrimary()));
+        $phoenixOPSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 6), new Point(1, 16)), new Point(1, 3), Types::getTagGeneral()));
+        $phoenixOPSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 20), new Point(1, 26)), new Point(1, 18), Types::getTagGeneral()));
         $phoenixOPSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 25), new Point(14, 25))));
         $phoenixOPSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(15, 6), new Point(15, 30))));
         $phoenixOPSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 1), new Point(1, 1))));
@@ -133,10 +134,10 @@ class MainBudgetTemplateSuite
          * EG  OP Summary
          */
         $EgOpSummary = new ImportTemplate("EG  OP Summary");
-        $EgOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(2, 30)), Types::get_type_row()));
-        $EgOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 4), new Point(14, 4)), Types::get_type_column()));
-        $EgOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 6), new Point(1, 16)), new Point(1, 3), Types::get_type_row()));
-        $EgOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 20), new Point(1, 26)), new Point(1, 18), Types::get_type_row()));
+        $EgOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 3), new Point(2, 30)), Types::getTagGeneral()));
+        $EgOpSummary->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 4), new Point(14, 4)), Types::getTagPrimary()));
+        $EgOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 6), new Point(1, 16)), new Point(1, 3), Types::getTagGeneral()));
+        $EgOpSummary->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(1, 20), new Point(1, 26)), new Point(1, 18), Types::getTagGeneral()));
         $EgOpSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(16, 6), new Point(16, 28))));
         $EgOpSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 1), new Point(1, 1))));
         $EgOpSummary->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 19), new Point(15, 19))));
@@ -148,16 +149,16 @@ class MainBudgetTemplateSuite
          * EG  OP Summary
          */
         $budgetProjections = new ImportTemplate("Budget Projections");
-        $budgetProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 2), new Point(1, 878)), Types::get_type_row()));
-        $budgetProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 1), new Point(14, 1)), Types::get_type_column()));
+        $budgetProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(1, 2), new Point(1, 878)), Types::getTagGeneral()));
+        $budgetProjections->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 1), new Point(14, 1)), Types::getTagPrimary()));
         $budgetProjections->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(2, 1), new Point(2, 1))));
         
         for ($i = 2; $i < 851; $i += 10) {
-            $budgetProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, $i), new Point(2, $i + 9)), new Point(1, $i), Types::get_type_row()));
+            $budgetProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, $i), new Point(2, $i + 9)), new Point(1, $i), Types::getTagGeneral()));
         }
         
-        $budgetProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 853), new Point(2, 862)), new Point(1, 853), Types::get_type_row()));
-        $budgetProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 867), new Point(2, 876)), new Point(1, 867), Types::get_type_row()));
+        $budgetProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 853), new Point(2, 862)), new Point(1, 853), Types::getTagGeneral()));
+        $budgetProjections->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 867), new Point(2, 876)), new Point(1, 867), Types::getTagGeneral()));
         $budgetProjections->setGetParentFunction($this, 'getReportsTag');
         $template_sheets->add($budgetProjections);
         
@@ -165,11 +166,11 @@ class MainBudgetTemplateSuite
          * Facilities
          */
         $facilities = new ImportTemplate('facility');
-        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(2, 60)), Types::get_type_row()));
-        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(14, 3)), Types::get_type_column()));
-        $facilities->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 19), new Point(2, 29)), new Point(2, 17), Types::get_type_row()));
-        $facilities->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 33), new Point(2, 39)), new Point(2, 31), Types::get_type_row()));
-        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(16, 17), new Point(16, 17)), Types::get_type_column()));
+        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(2, 60)), Types::getTagPrimary(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
+        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(14, 3)), Types::getTagGeneral(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_X ));
+        $facilities->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 19), new Point(2, 29)), new Point(2, 17), Types::getTagPrimary() , ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
+        $facilities->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 33), new Point(2, 39)), new Point(2, 31), Types::getTagPrimary(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
+        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(16, 17), new Point(16, 17)), Types::getTagGeneral(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_X ));
         $facilities->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(15, 4), new Point(16, 6))));
         $facilities->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 1), new Point(14, 2))));
         $facilities->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 20), new Point(28, 20))));
@@ -188,11 +189,11 @@ class MainBudgetTemplateSuite
          */
         
         $mapleRidge = new ImportTemplate('Maple Ridge');
-        $mapleRidge->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 4), new Point(3, 60)), Types::get_type_row()));
-        $mapleRidge->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(4, 3), new Point(15, 3)), Types::get_type_column()));
-        $mapleRidge->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(3, 19), new Point(3, 29)), new Point(3, 17), Types::get_type_row()));
-        $mapleRidge->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(3, 33), new Point(3, 39)), new Point(3, 31), Types::get_type_row()));
-        $mapleRidge->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(17, 17), new Point(17, 17)), Types::get_type_column()));
+        $mapleRidge->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 4), new Point(3, 60)), Types::getTagGeneral()));
+        $mapleRidge->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(4, 3), new Point(15, 3)), Types::getTagPrimary()));
+        $mapleRidge->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(3, 19), new Point(3, 29)), new Point(3, 17), Types::getTagGeneral()));
+        $mapleRidge->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(3, 33), new Point(3, 39)), new Point(3, 31), Types::getTagGeneral()));
+        $mapleRidge->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(17, 17), new Point(17, 17)), Types::getTagPrimary()));
         $mapleRidge->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(17, 4), new Point(17, 6))));
         $mapleRidge->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(2, 1), new Point(16, 2))));
         $mapleRidge->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(2, 20), new Point(29, 20))));
@@ -218,11 +219,11 @@ class MainBudgetTemplateSuite
          */
         
         $saluda = new ImportTemplate('Saluda');
-        $saluda->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(2, 60)), Types::get_type_row()));
-        $saluda->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(14, 3)), Types::get_type_column()));
-        $saluda->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 19), new Point(2, 29)), new Point(2, 17), Types::get_type_row()));
-        $saluda->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 33), new Point(2, 39)), new Point(2, 31), Types::get_type_row()));
-        $saluda->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(16, 17), new Point(16, 17)), Types::get_type_column()));
+        $saluda->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(2, 60)), Types::getTagGeneral()));
+        $saluda->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(14, 3)), Types::getTagPrimary()));
+        $saluda->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 19), new Point(2, 29)), new Point(2, 17), Types::getTagGeneral()));
+        $saluda->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 33), new Point(2, 39)), new Point(2, 31), Types::getTagGeneral()));
+        $saluda->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(16, 17), new Point(16, 17)), Types::getTagPrimary()));
         
         $saluda->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(16, 4), new Point(16, 6))));
         $saluda->getRules()->add(ImportRule::createExclusionRule(new Area(new Point(1, 1), new Point(14, 2))));
