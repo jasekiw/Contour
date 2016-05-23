@@ -104,6 +104,7 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
         Route::post('api/tags/create',['as' => 'api.tags.create','middleware' => 'auth', 'uses' => 'api\TagController@create']);
         Route::post('api/tags/delete',['as' => 'api.tags.create','middleware' => 'auth', 'uses' => 'api\TagController@delete']);
         Route::get('api/tags/types',['as' => 'api.tags.types','middleware' => 'auth', 'uses' => 'api\TagController@types']);
+        Route::post('api/tags/setmeta/{id}',['as' => 'api.tags.setmeta','middleware' => 'auth', 'uses' => 'api\TagController@setMeta']);
 
     /**
      *  Datablocks subsection
@@ -113,6 +114,13 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
         Route::post('api/datablocks/save/',['as' => 'api.datablocks.save','middleware' => 'auth', 'uses' => 'api\DataBlockController@save']);
         Route::post('api/datablocks/save/{id}',['as' => 'api.datablocks.save.alt','middleware' => 'auth', 'uses' => 'api\DataBlockController@save']);
         Route::post('api/datablocks/create/',['as' => 'api.datablocks.create','middleware' => 'auth', 'uses' => 'api\DataBlockController@create']);
+
+    /**
+     * Sheets subsection
+     */
+    Route::get('api/sheets/show/{id}', ['as' => 'api.sheets.show', 'middleware' => 'auth', 'uses' => 'api\SheetsController@show']);
+
+
 /**
  * END API ROUTES
  */

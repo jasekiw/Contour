@@ -1,5 +1,5 @@
 import {PlainDataBlock} from "../data/datablock/DataBlock";
-import {Ajax, AjaxData} from "../Ajax";
+import {Ajax, AjaxResponse} from "../Ajax";
 
 export class DataBlocksApi
 {
@@ -57,7 +57,7 @@ export class DataBlocksApi
 /**
  * used for DataBlock responses
  */
-interface AjaxDataBlockReponse extends AjaxData
+interface AjaxDataBlockReponse extends AjaxResponse
 {
     payload : PlainDataBlock;
 }

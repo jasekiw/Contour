@@ -13,11 +13,10 @@ export class MultiTypeEditor
     constructor()
     {
         this.tagContextMenuHandler = new TagContextMenuHandler(".tag");
-
         this.dataBlockEditor = new DataBlockEditor();
-        $(".sheet_editor").each((index, element) =>
-        {
-            this.sheetEditors.push(new SheetEditor(this.dataBlockEditor, element))
+        $(".editor").each((index, element) => {
+            if($(element).find(".sheet_editor").length != 0)
+                this.sheetEditors.push(new SheetEditor($(element), this.dataBlockEditor))
         });
 
     }

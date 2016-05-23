@@ -6,6 +6,7 @@ use app\libraries\datablocks\DataBlock;
 use app\libraries\tags\DataTag;
 use app\libraries\types\Types;
 use app\libraries\tags\collection\TagCollection;
+use View;
 
 /**
  * Class ExcelView
@@ -31,6 +32,10 @@ class ExcelView
     private $orientation = "column";
     
     private $loopedChildren = false;
+    const ORIENTATION_COLUMN = "column";
+    const ORIENTATION_ROW = "row";
+    const ORIENATION  = "orientation";
+
     
     /**
      * ExcelView constructor.
@@ -40,11 +45,11 @@ class ExcelView
     function __construct($tag)
     {
         $this->parentTag = $tag;
-        $this->orientation = $this->parentTag->getMetaValue('orientation'); // row  or column // the location that primary tags are displayed
+        $this->orientation = $this->parentTag->getMetaValue(self::ORIENATION); // row  or column // the location that primary tags are displayed
         if($this->orientation == "")
         {
-            $this->orientation = "column";
-            $this->parentTag->setMetaValue('orientation', $this->orientation);
+            $this->orientation = self::ORIENTATION_COLUMN;
+            $this->parentTag->setMetaValue(self::ORIENATION, $this->orientation);
         }
         $children = $this->parentTag->getSimpleChildren();
         $composits = $this->parentTag->getCompositChildren()->getAsArray(TagCollection::SORT_TYPE_NONE);
@@ -92,11 +97,17 @@ class ExcelView
         else return null;
     }
 
+    /**
+     * @return string
+     */
     public function getOrientation()
     {
         return $this->orientation;
     }
 
+    /**
+     * @return DataTag[]
+     */
     public function getHeaderTags()
     {
         return $this->headerTags;
@@ -121,6 +132,10 @@ class ExcelView
         return $this->rowTags[$rowNum];
     }
 
+    /**
+     * @param int $rowNum
+     * @return string
+     */
     public function getCommaDelimitedTagsForRow($rowNum)
     {
         if(!isset($this->rowTags[$rowNum]))
@@ -130,7 +145,10 @@ class ExcelView
             $ids[] = $tag->get_id();
         return implode(",", $ids);
     }
-    
+
+    /**
+     * @return bool
+     */
     public function hasChildren()
     {
         return sizeof($this->composits) != 0;
@@ -143,12 +161,7 @@ class ExcelView
     {
         return $this->loopedChildren;
     }
-    
-    public function setLoopedChildren()
-    {
-        $this->loopedChildren = true;
-    }
-    
+
     /**
      * @return ExcelTab[]
      */
@@ -197,6 +210,18 @@ class ExcelView
         $name = implode("->", $name);
         return $name;
     }
+
+    /**
+     * Renders the table
+     * @return string
+     */
+    public function render()
+    {
+        if($this->orientation == self::ORIENTATION_COLUMN)
+            return View::make('partials.excel.sheet', ['sheet' => $this])->render();
+        else
+            return View::make('partials.excel.sheetflipped', ['sheet' => $this])->render();
+    }
     
     /**
      * @return string
@@ -206,6 +231,9 @@ class ExcelView
         return $this->parentTag->get_name();
     }
 
+    /**
+     * @return DataTag
+     */
     public function getParentTag()
     {
         return $this->parentTag;

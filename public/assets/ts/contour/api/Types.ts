@@ -1,4 +1,4 @@
-import {AjaxData, Ajax} from "../Ajax";
+import {AjaxResponse, Ajax} from "../Ajax";
 import {PlainType} from "../data/type/DataType";
 /**
  * Created by Jason Gallavin on 4/21/2016.
@@ -21,7 +21,7 @@ export class Types
 /**
  *
  */
-export interface AjaxTagArrayReponse extends AjaxData
+export interface AjaxTagArrayReponse extends AjaxResponse
 {
     payload : PlainType[];
 }

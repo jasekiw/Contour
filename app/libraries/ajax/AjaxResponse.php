@@ -23,7 +23,7 @@ class AjaxResponse
     /**
      * Sets the data to be sent
      *
-     * @param \stdClass| \stdClass[] $data
+     * @param \stdClass| \stdClass[] | string | number $data
      */
     public function setPayload($data)
     {
@@ -60,19 +60,28 @@ class AjaxResponse
             else
                 $this->message .= " " . $message;
     }
-    
+
     /**
      * @param mixed[] $arr Associative array of vairables with the names to be used that should be checked
      *
+     * @param bool $hasValue set to true to check if the value is empty also
      * @return bool successful. if false is returned then the input is not set and the operation should fail
      */
-    public function reliesOnMany($arr)
+    public function reliesOnMany($arr, $hasValue = false)
     {
         foreach ($arr as $name => $value)
-            if (!isset($value)) {
-                $this->fail($name . " is not sent.");
-                return false;
-            }
+        {
+            if($hasValue)
+                if (!isset($value) && empty($value)) {
+                    $this->fail($name . " is not sent or empty.");
+                    return false;
+                }
+            else
+                if (!isset($value)) {
+                    $this->fail($name . " is not sent.");
+                    return false;
+                }
+        }
         return true;
     }
     
@@ -106,5 +115,10 @@ class AjaxResponse
         $std->payload = $this->payload;
         $std->message = $this->message;
         return json_encode($std);
+    }
+
+    public function __toString()
+    {
+        return $this->send();
     }
 }

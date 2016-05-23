@@ -94,7 +94,7 @@ export class Ajax
     }
 }
 
-export interface AjaxData
+export interface AjaxResponse
 {
     success : boolean;
     message : string;

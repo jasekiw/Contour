@@ -64,13 +64,13 @@ $tabs =  $sheet->getNavTitles();
             <?php $first = true; ?>
             @foreach($tabs as $tab)
                 <div class="tab-pane @if($first) active @endif" id="{{$tab->getCodeName()}}">
-
-
+                    <div class="editor" >
                     @if($tab->excelView->getOrientation() == "column")
                         {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView]) !!}
                     @else
                         {!! View::make('partials.excel.sheetflipped', ['sheet' => $tab->excelView]) !!}
                     @endif
+                    </div>
                 </div>
                     <?php $first = false; ?>
             @endforeach

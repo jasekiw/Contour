@@ -1,6 +1,6 @@
 import {RenameTagDialog} from "./RenameTagDialog";
 import {DeleteTagDialog} from "./DeleteTagDialog";
-import {AjaxData} from "../Ajax";
+import {AjaxResponse} from "../Ajax";
 import {UIElement} from "./UIElement";
 
 var template = `
@@ -57,7 +57,7 @@ export class TagContextMenuHandler extends UIElement
             }, parseInt(context.attr("tag")));
         }
         else if (action == "delete") {
-            this.deleteDialog.show((e : AjaxData) =>
+            this.deleteDialog.show((e : AjaxResponse) =>
             {
                 if (e.success)
                     context.remove();

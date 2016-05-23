@@ -283,4 +283,22 @@ class TagController extends Controller
         return json_encode($answer);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
+    public function setMeta($id)
+    {
+        $metaKey = Input::get('metaKey');
+        $metaValue = Input::get('metaValue');
+        $response = new AjaxResponse();
+        if($response->reliesOnMany(['metaKey' => $metaKey, 'metaValue' => $metaValue], true))
+        {
+            $dataTag = DataTags::get_by_id($id);
+            $dataTag->setMetaValue($metaKey, $metaValue);
+            $dataTag->save();
+        }
+        return $response->send();
+    }
+
 }

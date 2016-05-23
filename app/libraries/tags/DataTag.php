@@ -20,7 +20,7 @@ use app\libraries\types\Type;
 use App\Models\Tag_meta;
 use App\Models\Tags_reference;
 use PDO;
-use TijsVerkoyen\CssToInlineStyles\Exception;
+use Exception;
 
 /**
  * Class DataTag

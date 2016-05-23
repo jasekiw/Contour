@@ -1,4 +1,4 @@
-import {AjaxData, Ajax} from "../Ajax";
+import {AjaxResponse, Ajax} from "../Ajax";
 import {PlainTag} from "../data/datatag/DataTag";
 /**
  * Created by Jason Gallavin on 4/22/2016.
@@ -59,7 +59,7 @@ export class TagsApi
      * @param id
      * @param funtionToCall
      */
-    public static deleteTag(id : number, funtionToCall? : (e : AjaxData) => void)
+    public static deleteTag(id : number, funtionToCall? : (e : AjaxResponse) => void)
     {
         var data = {
             id: id
@@ -75,12 +75,27 @@ export class TagsApi
             });
     }
 
+    public static setMeta(id : number, metaKey : string, metaValue : string, functionToCall? : () => void)
+    {
+        var data = {
+            metaKey : metaKey,
+            metaValue : metaValue
+        };
+        new Ajax().post("/api/tags/setmeta/" + id,
+            data
+            , (e : AjaxTagReponse) =>
+            {
+                if(typeof functionToCall != "undefined")
+                    functionToCall();
+            });
+    }
+
 }
 
 /**
  * used for Tag responses
  */
-export interface AjaxTagReponse extends AjaxData
+export interface AjaxTagReponse extends AjaxResponse
 {
     payload : PlainTag;
 }
