@@ -72,16 +72,28 @@ $editorGray: #8198A3;
         }
     }
 }
-.tag_row {
+
+.sort_number {
+    margin-right: 5px;
+    font-size: 80%;
+    background-color: $evergreen;
+    color: white;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left:auto;
+
+}
+
+.tag_column {
     .sort_number {
-        margin-right: 5px;
-        font-size: 80%;
-        background-color: $evergreen;
-        color: white;
-        font-weight: bold;
-        padding: 3px 8px;
-        border-radius: 3px;
-        margin-left:auto;
+        display: inline-block;
+        margin-top: 10px;
+    }
+}
+.tag_row {
+
+    .sort_number {
         float:right;
     }
     .row_head {
@@ -102,3 +114,4 @@ $editorGray: #8198A3;
     padding-left:10px;
     padding-right:10px;
 }
+

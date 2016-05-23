@@ -15,7 +15,8 @@ class Main
 
     constructor()
     {
-        $("body").on("contextmenu", (e : JQueryEventObject) =>
+        var $body = $("body");
+        $body.on("contextmenu", (e : JQueryEventObject) =>
         {
             if(e.ctrlKey)
                 return true;
@@ -27,7 +28,7 @@ class Main
             }
             return false;
         });
-        this.classes = $('body').attr('class');
+        this.classes = $body.attr('class');
         if (this.contains('SheetsController@edit'))
             this.executemultiTypeEdtior();
         if (this.contains('MenuController@edit'))

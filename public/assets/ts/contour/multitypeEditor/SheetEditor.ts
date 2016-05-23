@@ -1,11 +1,7 @@
 import {DataBlockEditor} from "./DataBlockEditor";
-import {Ajax} from "../Ajax";
-import {NewTagDialog} from "../ui/NewTagDialog";
-import {mouse} from "../components/MouseHandler";
 import {PlainTag} from "../data/datatag/DataTag";
 import {cellTemplate} from "../ui/templates/Cell";
 import {DataBlocksApi} from "../api/DataBlocks";
-import {Editor} from "./Editor";
 import {TabularEditor} from "./TabularEditor";
 
 /**
@@ -15,6 +11,7 @@ export class SheetEditor extends TabularEditor
 {
 
     protected addRowTagElement : JQuery;
+    protected orientation : string;
 
     /**
      * Constructs the Sheet Editor
@@ -24,6 +21,8 @@ export class SheetEditor extends TabularEditor
     constructor(dataBlockEditor : DataBlockEditor, element : Element)
     {
         super($(element), dataBlockEditor);
+        this.orientation = this.element.attr("orientation");
+        console.log(this.orientation);
     }
     
     /**

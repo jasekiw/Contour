@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason Gallavin
- * Date: 4/6/2016
- * Time: 1:50 PM
- */
-
 namespace app\libraries\excel;
 
 use app\libraries\datablocks\DataBlockCollection;
@@ -31,6 +24,9 @@ class ExcelView
      * @var DataTag[][]
      */
     private $rowTags = [];
+    /**
+     * @var DataBlock[][]
+     */
     private $rows = [];
     private $orientation = "column";
     
@@ -39,26 +35,21 @@ class ExcelView
     /**
      * ExcelView constructor.
      *
-     * @param DataTag        $tag
+     * @param DataTag $tag
      */
     function __construct($tag)
     {
         $this->parentTag = $tag;
-        $orientation = $this->parentTag->getMetaValue('orientation'); // row  or column // the location that primary tags are displayed
-        if($orientation == "")
+        $this->orientation = $this->parentTag->getMetaValue('orientation'); // row  or column // the location that primary tags are displayed
+        if($this->orientation == "")
         {
-            $orientation = "column";
-            $this->parentTag->setMetaValue('orientation', $orientation);
+            $this->orientation = "column";
+            $this->parentTag->setMetaValue('orientation', $this->orientation);
         }
-        $this->orientation = "row";
         $children = $this->parentTag->getSimpleChildren();
         $composits = $this->parentTag->getCompositChildren()->getAsArray(TagCollection::SORT_TYPE_NONE);
-        $primaryType = Types::getTagPrimary();
-        $generalType = Types::getTagGeneral();
         $headers = $children->getTagWithTypesAsArray([Types::getTagPrimary()]);
-        /**
-         * @var DataBlock[][] $columns
-         */
+        /** @var DataBlock[][] $columns */
         $columns = [];
         usort($headers, function($x,$y){
             /** @var DataTag $x */
@@ -69,53 +60,24 @@ class ExcelView
         /** @var DataTag[] $headers The headers Tags */
         foreach($headers as $header)
             $columns[$header->get_sort_number()] = $header->getDataBlocks()->getAssociativeArrayOfSortNumber(); // sort numbers are row numbers
-
         ksort($columns);
         $rows = [];
-        /**
-         * Invert the rows and columns
-         */
+        /** Invert the rows and columns */
         foreach($columns as $colSort => $column)
-        {
             foreach($column as $rowSort => $rowDataBlock)
             {
                 if(!isset($rows[$rowSort]))
                     $rows[$rowSort] = [];
                 $rows[$rowSort][$colSort] = $rowDataBlock;
             }
-        }
-
         $rowTags = [];
         ksort($rows);
         foreach($rows as $rowNum => $row)
             $rowTags[$rowNum] = (new DataBlockCollection($row))->getCommonTags()->getAsArray(TagCollection::SORT_TYPE_NONE);
         $this->rowTags = $rowTags;
-        $vRowNum = 0;
-
         $this->rows = $rows;
-
         foreach($composits as $composit)
             $this->composits[] = new ExcelView($composit);
-
-//        foreach($rows as $rowNum => $row)
-//        {
-//            $vColNum = 0;
-//            $rowTag = $rowTags[$rowNum];
-//
-//            foreach($headers as $header)
-//            {
-//
-//                if(isset($row[$header->get_sort_number()]))
-//                {
-//                    /** @var DataBlock $datablock */
-//                    $datablock = $row[$header->get_sort_number()];
-//
-//                }
-//                $vColNum++;
-//            }
-//            $vRowNum++;
-//        }
-
     }
 
     /**
@@ -135,15 +97,14 @@ class ExcelView
         return $this->orientation;
     }
 
-    public function hasData()
-    {
-        return true;
-    }
     public function getHeaderTags()
     {
         return $this->headerTags;
     }
 
+    /**
+     * @return array
+     */
     public function getRows()
     {
         return $this->rows;

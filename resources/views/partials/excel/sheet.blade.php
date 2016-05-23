@@ -12,10 +12,8 @@ use app\libraries\tags\DataTag;
 $tag = $sheet->getParentTag();
 
 ?>
-@if($sheet->hasData())
-<div class="editor">
-
-    <table class="sheet_editor" parent="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
+<div class="editor" >
+    <table class="sheet_editor" orientation="column" parent="{!! $tag->get_id() !!}" name="{!! $tag->get_name() !!}">
         <thead>
         <tr>
             <th></th>
@@ -61,4 +59,3 @@ $tag = $sheet->getParentTag();
 
     </table>
 </div>
-@endif

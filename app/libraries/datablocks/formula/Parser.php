@@ -8,6 +8,7 @@
 
 namespace app\libraries\datablocks\formula;
 
+use app\libraries\contour\Contour;
 use app\libraries\database\DataManager;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\helpers\StringStack;
@@ -66,17 +67,17 @@ class Parser
     
     /** @var DataManager | MemoryDataManager   */
     private $manager;
-    
+
     /**
      * Parser constructor.
+     * @param DataManager $manager
      */
     function __construct($manager)
     {
         $this->manager = $manager;
         $this->tokenStack = [];
         $this->functionStack = new StringStack();
-        //$this->postfix = new TokenStack();
-        set_time_limit(10);
+        Contour::getConfigManager()->setTimeLimit(10);
     }
     
     /**
@@ -188,12 +189,11 @@ class Parser
             $index++;
         }
         //$this->preprocessSUM();
-        
         $this->preprocessIdentifiers();
-        if ($this->error && $this->error_type == self::ERROR_TYPE_FATAL) return $this->error_message;
+        if ($this->error && $this->error_type == self::ERROR_TYPE_FATAL)
+            return $this->error_message;
         if ($this->debug)
             exit;
-        
         return $this->processTokens();
     }
     
@@ -272,14 +272,9 @@ class Parser
                     $index++;
                 }
                 $index++; // skips the ending token
-//                xdebug_start_trace();
                 $processed = $this->processIdentifer($identifier);
-//                xdebug_stop_trace();
                 if ($processed !== null) {
                     $subParser = new Parser($this->manager);
-                    if (!isset($this->evaluatedDatablock->getTags()->getRowsAsArray()[0])) {
-                        $test = "test";
-                    }
                     $parsed = $subParser->parse($processed->getValue(), $this->evaluatedDatablock->getTags()->getTagWithTypeAsArray(Types::getTagPrimary())[0]->get_parent_id(), $this->evaluatedDatablock->get_id());
                     if ($subParser->error) {
                         $this->error = $subParser->error;
@@ -343,7 +338,6 @@ class Parser
             $this->error_message = "could not find " . $this->getTokenArrayAsString($identifiers) . "";
             return null;
         }
-        // array_push($GLOBALS['datablockIDS'], $datablock->get_id());
         $this->evaluatedDatablock = $datablock;
         if ($this->debug) {
             $timer->stopTimer("processIdentifer");
@@ -411,10 +405,6 @@ class Parser
                         }
                     }
 
-//                    if($datatag === null)
-//                    {
-//                        $datatag = $this->manager->dataTagManager->get_by_string($currentTag);
-//                    }
                     if ($datatag == null)
                         $datatag = $this->manager->dataTagManager->get_by_id($tagID)->get_parent_of_type(Types::get_type_sheet())->findChild($currentTag);
                     
