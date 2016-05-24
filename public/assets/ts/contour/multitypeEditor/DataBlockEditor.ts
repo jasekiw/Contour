@@ -49,7 +49,6 @@ export class DataBlockEditor
         {
             this.exit();
         });
-
         this.backGroundFilter.css("background", "black")
             .css("display", "none")
             .css("top", 0)

@@ -5,6 +5,7 @@ import {DataBlocksApi} from "../api/DataBlocks";
 import {Editor} from "./Editor";
 import {TagsApi} from "../api/Tags";
 import {SheetsApi} from "../api/SheetsApi";
+import {Spinner} from "../ui/Spinner";
 
 /**
  * Sheet Editor Class
@@ -12,10 +13,11 @@ import {SheetsApi} from "../api/SheetsApi";
 export class SheetEditor extends Editor
 {
     protected editor : JQuery;
+    protected container : JQuery;
     protected addRowTagElement : JQuery;
     protected orientation : string;
     protected addColumnTagElement : JQuery;
-
+    protected spinner : Spinner;
     /**
      * Constructs the Sheet Editor
      * 
@@ -26,6 +28,7 @@ export class SheetEditor extends Editor
     {
         super(element.find(".sheet_editor"), dataBlockEditor);
         this.editor = element;
+        this.container = this.editor.find(".editor__inner_container");
         this.setupControls();
         this.setup();
 
@@ -39,6 +42,7 @@ export class SheetEditor extends Editor
         this.element.on("dblclick", ".cell input", (e) => this.openDataBlock(e));
         this.element.on("focusin", ".cell input", (e) => this.focusOnDataBlock(e));
         this.element.on("focusout", ".cell input", (e) => this.saveDataBlock($(e.currentTarget)));
+
     }
 
 
@@ -63,32 +67,63 @@ export class SheetEditor extends Editor
 
     protected setupControls()
     {
+
+        this.spinner = new Spinner(this.editor);
         let changeOrientation = $(`<a title="Change Orientation" href="javascript:void(0);"><i class="fa fa-repeat" aria-hidden="true"></i></a>`);
         let controlsTemplate = $(`<div class="controls"></div>`);
         controlsTemplate.append(changeOrientation);
         this.editor.prepend(controlsTemplate);
+
         //this.editor.find(".controls").append(changeOrientation);
         changeOrientation.click(() => this.changeOrientation());
     }
 
     protected changeOrientation()
     {
-        console.log("changing orientation...");
+        let startHeight = this.hideSheetAndLoad();
         let tagId = this.getParentId();
         if(this.orientation == "column")
             this.orientation = "row";
         else
             this.orientation = "column";
-
         TagsApi.setMeta(tagId, "orientation", this.orientation, () => {
             SheetsApi.get(tagId, (e : string) => {
-                this.element.find(".tag").off("remove");
-                this.element.replaceWith($(e));
-                this.element = this.editor.find(".sheet_editor");
-                this.setup();
+               this.finishChangingOrientation(startHeight, e);
             });
         });
 
+    }
+
+    protected hideSheetAndLoad() : number
+    {
+        let startHeight = this.editor.height();
+        this.editor.css("height", startHeight);
+        this.container.fadeOut({
+            duration: 300
+        });
+        this.spinner.start(300);
+        return startHeight
+    }
+
+    protected finishChangingOrientation(startHeight : number, e : string)
+    {
+        this.element.find(".tag").off("remove");
+        this.element.replaceWith($(e));
+        this.element = this.editor.find(".sheet_editor");
+        this.spinner.stop(300);
+        this.setup();
+        this.container.fadeIn({
+            duration: 300
+        });
+        this.editor.css('height', 'auto');
+        let endHeight = this.editor.height();
+        this.editor.css("height", startHeight);
+        this.editor.animate({height: endHeight}, {
+            duration: 300,
+            complete: () => {
+                this.editor.css('height', 'auto');
+            }
+        });
     }
 
 
