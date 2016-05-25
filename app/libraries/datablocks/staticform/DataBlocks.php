@@ -76,6 +76,7 @@ class DataBlocks
             
             $datablock = new DataBlock($tagcollection, Types::get_by_id($data['type_id']));
             $datablock->set_id($id);
+            $datablock->setSortNumber($data['sort_number']);
             $datablock->set_value($data['value']);
             return $datablock;
         }

@@ -18,13 +18,13 @@ $tag = $sheet->getParentTag();
 
                 $tagDelimited = $sheet->getCommaDelimitedTagsForRow($y)
                 ?>
-                <th class="tag_column tags" tags="{!! $tagDelimited !!}" >
+                <th class="tag_column tags" tags="{!! $tagDelimited !!}" sort_number="{{$y}}" >
                     <div class="tags">
                         @foreach($tags as $tag)
                             <div class="tag"  tag="{!! $tag->get_id() !!}" >{!! $tag->get_name() !!}</div>
                         @endforeach
                     </div>
-                    <div class="sort_number">{!! $y !!}</div>
+                    <div class="sort_number arrayHandle">{!! $y !!}</div>
                 </th>
             @endforeach
 
@@ -32,7 +32,7 @@ $tag = $sheet->getParentTag();
     </thead>
     <tbody>
     @foreach($sheet->getHeaderTags() as $x => $columnTag)
-        <tr class="tag_row" sort_number="{!! $columnTag->get_sort_number() !!}">
+        <tr class="tag_row" sort_number="{!! $columnTag->get_sort_number() !!}" tag="{!! $columnTag->get_id() !!}">
             <td class="row_head">
 
                 <div class="tag"  tag="{!! $columnTag->get_id() !!}" >{!! $columnTag->get_name() !!}</div>

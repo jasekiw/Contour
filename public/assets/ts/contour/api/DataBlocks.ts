@@ -9,14 +9,16 @@ export class DataBlocksApi
      * @param tagIds The tags that will be assigned
      * @param type the name of the type to use
      * @param value
-     * @param funtionToCall The function to call to give the tag object to
+     * @param sortNumber The sort number to assign to the datablock
+ * @param funtionToCall The function to call to give the tag object to
      */
-    public static create(tagIds : number[], type : string, value : string, funtionToCall? : (e : PlainDataBlock) => void) : void
+    public static create(tagIds : number[], type : string, value : string, sortNumber : number, funtionToCall? : (e : PlainDataBlock) => void) : void
     {
         var data = {
             tagIds:  tagIds,
             value: value,
-            type:  type
+            type:  type,
+            sort_number: sortNumber
         };
         new Ajax().post("/api/datablocks/create",
             data

@@ -29,6 +29,9 @@ $editorGray: #8198A3;
 
     }
 }
+.fa {
+    color:$evergreen;
+}
 
 .sheet_editor {
     .tag_column {
@@ -113,5 +116,10 @@ $editorGray: #8198A3;
 .tag_column {
     padding-left:10px;
     padding-right:10px;
+    vertical-align: bottom;
+}
+
+.arrayHandle {
+    cursor: default;
 }
 

@@ -55,7 +55,7 @@ class DataBlockController extends Controller
         $tagIds = Input::get('tagIds');
         $value = Input::get('value');
         $typeName = Input::get('type');
-
+        $sort_number = Input::get('sort_number', 0);
         if (!$response->reliesOnMany(["tagIds" => $tagIds, "value" => $value, "type" => $typeName]))
             return $response->send();
         if (!is_array($tagIds)) {
@@ -79,6 +79,7 @@ class DataBlockController extends Controller
 
         $datablock = new DataBlock(new TagCollection($dataTags), $type);
         $datablock->set_value($value);
+        $datablock->setSortNumber($sort_number);
         $datablock->create();
         $response->setPayload($datablock->toStdClass());
         $response->success("succesfully created");
