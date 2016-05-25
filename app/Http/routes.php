@@ -114,6 +114,7 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
         Route::post('api/datablocks/save/',['as' => 'api.datablocks.save','middleware' => 'auth', 'uses' => 'api\DataBlockController@save']);
         Route::post('api/datablocks/save/{id}',['as' => 'api.datablocks.save.alt','middleware' => 'auth', 'uses' => 'api\DataBlockController@save']);
         Route::post('api/datablocks/create/',['as' => 'api.datablocks.create','middleware' => 'auth', 'uses' => 'api\DataBlockController@create']);
+        Route::post('api/datablocks/remove/bulk',['as' => 'api.datablocks.remove.bulk','middleware' => 'auth', 'uses' => 'api\DataBlockController@removeBulk']);
 
     /**
      * Sheets subsection

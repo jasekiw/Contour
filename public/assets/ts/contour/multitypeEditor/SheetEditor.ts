@@ -6,6 +6,7 @@ import {TagsApi} from "../api/Tags";
 import {SheetsApi} from "../api/SheetsApi";
 import {Spinner} from "../ui/Spinner";
 import {DatablockSheetHandler} from "./DatablockSheetHandler";
+import {DataBlocksApi} from "../api/DataBlocksApi";
 
 /**
  * Sheet Editor Class
@@ -39,7 +40,47 @@ export class SheetEditor extends Editor
         this.orientation = this.element.attr("orientation");
         this.setupSheetControls();
         this.element.find(".tag").on("remove", (e) => this.handleRemovedTag(e));
+        this.element.find(".arrayHandle").on("remove", (e) => this.handleRemovedArray(e));
     
+
+    }
+
+    protected handleRemovedArray(e : JQueryEventObject)
+    {
+        if (this.orientation == "column")
+        {
+            $(e.target).off("remove");
+            let $header = $(e.target).parents(".tag_row");
+            let sort_number = $header.attr("sort_number");
+            let rowNumber = $(e.target).parents(".tag_row").prevAll(".tag_row").length;
+            let datablockIdsToRemove : number[] = [];
+            $(this.element.find("tbody .tag_row").get(rowNumber)).find(".cell").each((index, el) => {
+                let $cell = $(el);
+                let datablockId = parseInt($cell.find("input").attr("datablock"));
+                if(!isNaN(datablockId))
+                    datablockIdsToRemove.push(datablockId);
+                $cell.remove();
+            });
+            $header.remove();
+            DataBlocksApi.remove(datablockIdsToRemove);
+        }
+        else
+        {
+            $(e.target).off("remove");
+            let $header = $(e.target).parents(".tag_column");
+            let sort_number = $header.attr("sort_number");
+            let columnNumber = $(e.target).parents(".tag_column").prevAll(".tag_column").length;
+            let datablockIdsToRemove : number[] = [];
+            this.element.find("tbody .tag_row").each((index, element) => {
+                let $cell = $($(element).find(".cell").get(columnNumber));
+                let datablockId = parseInt($cell.find("input").attr("datablock"));
+                if(!isNaN(datablockId))
+                    datablockIdsToRemove.push(datablockId);
+                $cell.remove();
+            });
+            $header.remove();
+            DataBlocksApi.remove(datablockIdsToRemove);
+        }
 
     }
 
@@ -207,7 +248,7 @@ export class SheetEditor extends Editor
                     <div class="tags">
                         
                     </div>
-                    <div class="sort_number">{sort}</div>
+                    <div class="sort_number arrayHandle">{sort}</div>
                 </td>
                 {cells}
            </tr>
@@ -222,7 +263,9 @@ export class SheetEditor extends Editor
             newRowTemplate = newRowTemplate.replace(new RegExp("{sort}", 'g'), (lastSortNumber + 1).toString());
 
         newRowTemplate = newRowTemplate.replace("{cells}", cellsToAdd);
-        this.element.find('tbody .new_row').before(newRowTemplate);
+        let newElement = $(newRowTemplate);
+        this.element.find('tbody .new_row').before(newElement);
+        newElement.find(".sort_number").on("remove", (e) => this.handleRemovedArray(e));
     }
 
     protected handleNewColumnTag(tag : PlainTag)
@@ -238,6 +281,19 @@ export class SheetEditor extends Editor
 
     protected addColumn()
     {
+        let lastHeader = this.element.find("thead .tag_column").last();
+        let newHeaderTemplate = `
+        <th class="tag_column tags" tags="" sort_number="{sort}">
+            <div class="tags">
+            </div>
+            <div class="sort_number arrayHandle">{sort}</div>
+        </th>
+        `;
+        newHeaderTemplate = newHeaderTemplate.replace(new RegExp("{sort}", 'g'), (parseInt(lastHeader.attr("sort_number")) + 1).toString());
+        let newElement = $(newHeaderTemplate);
+        lastHeader.after(newElement);
+        console.log(newElement.find(".sort_number"));
+        newElement.find(".sort_number").on("remove", (e) => this.handleRemovedArray(e));
         this.element.find("tbody .tag_row").each((index, element) =>
         {
             $(element).append(cellTemplate);

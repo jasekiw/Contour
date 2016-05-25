@@ -16,18 +16,18 @@ class Main
     constructor()
     {
         var $body = $("body");
-        $body.on("contextmenu", (e : JQueryEventObject) =>
-        {
-            if(e.ctrlKey)
-                return true;
-            else
-            {
-                var tag = e.target.tagName.toUpperCase();
-                if(tag == "P" || tag.indexOf("H") > -1 ||tag == "SPAN")
-                    return true;
-            }
-            return false;
-        });
+        //$body.on("contextmenu", (e : JQueryEventObject) =>
+        //{
+        //    if(e.ctrlKey)
+        //        return true;
+        //    else
+        //    {
+        //        var tag = e.target.tagName.toUpperCase();
+        //        if(tag == "P" || tag.indexOf("H") > -1 ||tag == "SPAN")
+        //            return true;
+        //    }
+        //    return false;
+        //});
         this.classes = $body.attr('class');
         if (this.contains('SheetsController@edit'))
             this.executemultiTypeEdtior();

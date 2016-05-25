@@ -1,7 +1,8 @@
 {
-  "ambientDependencies": {
+  "globalDependencies": {
     "bootstrap": "registry:dt/bootstrap#3.3.5+20160316155526",
-    "jquery": "registry:dt/jquery#1.10.0+20160316155526",
-    "jqueryui": "registry:dt/jqueryui#1.9.0+20160317120654"
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "jquery.contextmenu": "registry:dt/jquery.contextmenu#1.7.0+20160316155526",
+    "jqueryui": "registry:dt/jqueryui#1.9.0+20160509160024"
   }
 }

@@ -10,7 +10,7 @@ export class DataBlocksApi
      * @param type the name of the type to use
      * @param value
      * @param sortNumber The sort number to assign to the datablock
- * @param funtionToCall The function to call to give the tag object to
+     * @param funtionToCall The function to call to give the tag object to
      */
     public static create(tagIds : number[], type : string, value : string, sortNumber : number, funtionToCall? : (e : PlainDataBlock) => void) : void
     {
@@ -22,7 +22,7 @@ export class DataBlocksApi
         };
         new Ajax().post("/api/datablocks/create",
             data
-            , (e : AjaxDataBlockReponse) =>
+            ,(e : AjaxDataBlockReponse) =>
             {
                 if (e.success)
                     if (funtionToCall !== undefined)
@@ -45,11 +45,27 @@ export class DataBlocksApi
         };
         new Ajax().post("/api/datablocks/save",
             data
-            , (e : AjaxDataBlockReponse) =>
+            ,(e : AjaxDataBlockReponse) =>
             {
                 if (e.success)
                     if (funtionToCall !== undefined)
                         funtionToCall(e.payload);
+
+            });
+    }
+
+    /**
+     * removes the datablocks from the database.
+     * @param ids The ids of the datablocks to remvoe
+     */
+    public static remove(ids : number[])
+    {
+        var data = {
+            ids:    ids,
+        };
+        new Ajax().post("/api/datablocks/remove/bulk",
+            data
+            ,(e : AjaxResponse) => {
 
             });
     }

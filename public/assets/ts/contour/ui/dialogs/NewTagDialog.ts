@@ -1,11 +1,11 @@
 /**
  * Created by Jason Gallavin on 4/21/2016.
  */
-import {content} from "./templates/NewTagDialogTemplate";
-import {Types, AjaxTagArrayReponse} from "../api/Types";
-import {TagsApi} from "../api/Tags";
-import {PlainTag} from "../data/datatag/DataTag";
-import {PlainType} from "../data/type/DataType";
+import {content} from "./../templates/NewTagDialogTemplate";
+import {Types, AjaxTagArrayReponse} from "../../api/Types";
+import {TagsApi} from "../../api/Tags";
+import {PlainTag} from "../../data/datatag/DataTag";
+import {PlainType} from "../../data/type/DataType";
 import {DialogBox} from "./Dialog";
 
 /**

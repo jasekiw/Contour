@@ -1,8 +1,8 @@
 /**
  * Created by Jason Gallavin on 4/28/2016.
  */
-import {template, style} from "./templates/DialogTemplate";
-import {UIElement} from "./UIElement";
+import {template, style} from "./../templates/DialogTemplate";
+import {UIElement} from "./../UIElement";
 export abstract class DialogBox extends UIElement
 {
 
@@ -36,7 +36,6 @@ export abstract class DialogBox extends UIElement
         });
         $("body").click((e : JQueryEventObject) =>
         {
-
             if (this.isShown() && !this.visible)
                 this.visible = true;
             else {
@@ -90,6 +89,7 @@ export abstract class DialogBox extends UIElement
 
     public hide()
     {
+        this.visible = false;
         this.element.hide();
     }
 }

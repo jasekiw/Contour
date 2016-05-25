@@ -17,6 +17,8 @@ Theme::enqueue_script('context', 'theme/js/plugins/bootstrap-contextmenu/bootstr
 Theme::enqueue_script('jquery-ui', 'theme/js/jquery-ui/jquery-ui-1.10.4.custom.js');
 Theme::enqueue_script('full-height', 'assets/js/full-height/FullHeight.js');
 Theme::enqueue_script('tiny-mce', 'assets/bower_components/tinymce/tinymce.min.js');
+Theme::enqueue_script('jquery-contextMenu', 'assets/js/jquery-contextMenu/jquery.contextMenu.min.js');
+Theme::enqueue_style('jquery-contextMenu-css', 'assets/js/jquery-contextMenu/jquery.contextMenu.min.css');
 //Theme::enqueue_script('application', 'assets/ts/Main/Main.js');
 /**
  * Profile Page

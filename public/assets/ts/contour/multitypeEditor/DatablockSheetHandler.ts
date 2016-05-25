@@ -1,4 +1,4 @@
-import {DataBlocksApi} from "../api/DataBlocks";
+import {DataBlocksApi} from "../api/DataBlocksApi";
 import {DataBlockEditor} from "./DataBlockEditor";
 import {SheetEditor} from "./SheetEditor";
 /**

@@ -1,7 +1,7 @@
 import {DialogBox} from "./Dialog";
-import {PlainTag} from "../data/datatag/DataTag";
-import {mouse} from "../components/MouseHandler";
-import {TagsApi} from "../api/Tags";
+import {PlainTag} from "../../data/datatag/DataTag";
+import {mouse} from "../../components/MouseHandler";
+import {TagsApi} from "../../api/Tags";
 
 var template = `
    <input type="hidden" name="id" value="" />
@@ -19,12 +19,13 @@ export class RenameTagDialog extends DialogBox
 
     }
 
-    public show(onSubmit : (tag : PlainTag) => void, id : number)
+    public show(placeHolder : string, onSubmit : (tag : PlainTag) => void, id : number)
     {
         super._show(onSubmit, mouse.x, mouse.y);
         this.form.find('input[name="id"]').val(id);
-        this.form.find('input[name="newName"]').val("");
+        this.form.find('input[name="newName"]').val(placeHolder);
         this.element.show();
+        console.log("got here");
     }
 
     protected submit(e : JQueryEventObject)

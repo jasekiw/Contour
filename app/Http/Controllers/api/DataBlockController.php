@@ -118,6 +118,20 @@ class DataBlockController extends Controller
         $response->success = true;
         return json_encode($response);
     }
+
+    public function removeBulk()
+    {
+        $response = new AjaxResponse();
+        $ids = Input::get('ids');
+        if($response->reliesOn('ids', $ids))
+        {
+            foreach($ids as $id)
+                DataBlocks::getByID($id)->delete();
+
+            $response->success("successfuly removed");
+        }
+        return $response->send();
+    }
     
 
 }

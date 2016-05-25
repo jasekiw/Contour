@@ -1,6 +1,6 @@
 import {DataBlockEditor} from "./DataBlockEditor";
 import {Ajax} from "../Ajax";
-import {NewTagDialog} from "../ui/NewTagDialog";
+import {NewTagDialog} from "../ui/dialogs/NewTagDialog";
 import {PlainTag} from "../data/datatag/DataTag";
 import {mouse} from "../components/MouseHandler";
 /**

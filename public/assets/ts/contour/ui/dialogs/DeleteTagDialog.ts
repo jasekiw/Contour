@@ -1,6 +1,6 @@
 import {DialogBox} from "./Dialog";
-import {mouse} from "../components/MouseHandler";
-import {TagsApi} from "../api/Tags";
+import {mouse} from "../../components/MouseHandler";
+import {TagsApi} from "../../api/Tags";
 var template = `
 <input type="hidden" name="id" value="" />
 `;
