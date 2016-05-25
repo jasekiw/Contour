@@ -13,7 +13,7 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('./public/assets/sass/'));
 });
 
-gulp.task('compile-typescript-front-end', function () {
+gulp.task('compile-typescript-front-end', ['installTypings'], function () {
     var tsProject = ts.createProject('./public/assets/ts/contour/tsconfig.json');
     var tsResult = tsProject.src() // instead of gulp.src(...)
         .pipe(sourcemaps.init())
@@ -44,7 +44,7 @@ gulp.task('bower', function() {
 
 
 
-gulp.task('build', ['sass', 'installTypings', 'compile-typescript-front-end', 'bower']);
+gulp.task('build', ['sass', 'compile-typescript-front-end', 'bower']);
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
