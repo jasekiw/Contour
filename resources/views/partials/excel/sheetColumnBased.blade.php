@@ -25,7 +25,7 @@ $tag = $sheet->getParentTag();
                         <div class="tag"  tag="{!! $tag->get_id() !!}" >{!! $tag->get_name() !!}</div>
                     @endforeach
                 </div>
-                <div class="sort_number">{!! $y !!}</div>
+                <div class="sort_number arrayHandle">{!! $y !!}</div>
             </td>
             @foreach($sheet->getHeaderTags() as $column)
                 <?php

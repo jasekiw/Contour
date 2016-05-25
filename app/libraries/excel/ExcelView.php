@@ -78,7 +78,7 @@ class ExcelView
         $rowTags = [];
         ksort($rows);
         foreach($rows as $rowNum => $row)
-            $rowTags[$rowNum] = (new DataBlockCollection($row))->getCommonTags()->getAsArray(TagCollection::SORT_TYPE_NONE);
+            $rowTags[$rowNum] = (new DataBlockCollection($row))->getCommonTags(Types::getTagPrimary())->getAsArray(TagCollection::SORT_TYPE_NONE);
         $this->rowTags = $rowTags;
         $this->rows = $rows;
         foreach($composits as $composit)
@@ -218,9 +218,9 @@ class ExcelView
     public function render()
     {
         if($this->orientation == self::ORIENTATION_COLUMN)
-            return View::make('partials.excel.sheet', ['sheet' => $this])->render();
+            return View::make('partials.excel.sheetColumnBased', ['sheet' => $this])->render();
         else
-            return View::make('partials.excel.sheetflipped', ['sheet' => $this])->render();
+            return View::make('partials.excel.sheetRowBased', ['sheet' => $this])->render();
     }
     
     /**

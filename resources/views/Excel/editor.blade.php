@@ -67,9 +67,9 @@ $tabs =  $sheet->getNavTitles();
                     <div class="editor" >
                         <div class="editor__inner_container">
                         @if($tab->excelView->getOrientation() == "column")
-                            {!! View::make('partials.excel.sheet', ['sheet' => $tab->excelView]) !!}
+                            {!! View::make('partials.excel.sheetColumnBased', ['sheet' => $tab->excelView]) !!}
                         @else
-                            {!! View::make('partials.excel.sheetflipped', ['sheet' => $tab->excelView]) !!}
+                            {!! View::make('partials.excel.sheetRowBased', ['sheet' => $tab->excelView]) !!}
                         @endif
                         </div>
                     </div>

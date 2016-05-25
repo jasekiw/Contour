@@ -26,16 +26,7 @@ export abstract class Editor
         return parseInt(this.element.attr("parent"));
     }
 
-    /**
-     * Opens datablock with the datablock editor
-     * @param e
-     */
-    protected openDataBlock(e : JQueryEventObject)
-    {
-        e.preventDefault();
-        var $element = $(e.currentTarget);
-        this.dataBlockEditor.open($element, this.getParentId(), $element.val());
-    }
+
     /**
      * Shows the new tag dialog with the specified type
      * @param type

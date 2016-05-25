@@ -150,13 +150,15 @@ abstract class DataBlockCollectionAbstract
 
     /**
      * Gets the tags that exist amongst all the datablocks in the collection
+     * @param Type| null $ignoredType
      * @return TagCollection
      */
-    public function getCommonTags()
+    public function getCommonTags($ignoredType = null)
     {
         $participatingTags = [];
         $size = sizeof($this->blocks);
         $common = [];
+        /** @var DataTag[] $commonTags */
         $commonTags = []; // the tags that are in all rows
         foreach ($this->blocks as $dataBlock) {
 
@@ -174,6 +176,11 @@ abstract class DataBlockCollectionAbstract
         foreach ($common as $id => $tagCount)
             if ($tagCount == $size)
                 $commonTags[] = $participatingTags[$id];
+
+        if($ignoredType !== null)
+            foreach($commonTags as $key => $tag)
+                if($tag->get_type()->get_id() == $ignoredType->get_id())
+                    unset($commonTags[$key]);
 
         return new TagCollection($commonTags);
     }
