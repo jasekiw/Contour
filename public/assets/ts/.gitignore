@@ -1,4 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-typings/
+/typings/
 /contour/**/*.js
 /contour/**/*.map
