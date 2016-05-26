@@ -12,8 +12,7 @@ export class TagContextMenuHandler
     {
         this.renameDialog = new RenameTagDialog();
         this.deleteDialog = new DeleteTagDialog();
-        $.contextMenu(
-        {
+        $.contextMenu({
             // define which elements trigger this menu
             selector: selector,
             // define the elements of the menu
@@ -21,41 +20,31 @@ export class TagContextMenuHandler
                 Rename: {
                     name: "Rename", callback: (key, opt : JQueryContextMenuRuntimeOptions) =>
                     {
+                        var target = opt.$trigger;
                         this.renameDialog.show(opt.$trigger.text(), (e) =>
                         {
-                            opt.$trigger.text(e.name);
-                        }, parseInt(opt.$trigger.attr("tag")));
+                            target.text(e.name);
+                        }, parseInt(target.attr("tag")));
                     }
                 },
                 Delete: {
                     name: "Delete", callback: (key, opt : JQueryContextMenuRuntimeOptions) =>
                     {
+                        var target = opt.$trigger;
                         this.deleteDialog.show((e : AjaxResponse) =>
                         {
                             if (e.success)
-                                opt.$trigger.remove();
+                                target.remove();
                             else
                                 alert(e.message)
 
-                        }, parseInt(opt.$trigger.attr("tag")));
+                        }, parseInt(target.attr("tag")));
                     }
                 }
-            },
-            build:    ($triggerElement, e) =>
-                      {
-
-                          return !e.ctrlKey;
-
-                      },
-           className : "green-contextMenu"
-
-
+            }
         });
 
-        $(selector).on("contextmenu", (e : JQueryEventObject) =>
-        {
-            return !e.ctrlKey;
-        });
+
 
     }
 }

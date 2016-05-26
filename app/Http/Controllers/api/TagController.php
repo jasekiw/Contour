@@ -51,13 +51,14 @@ class TagController extends Controller
         $name = Input::get("name");
         $parent_id = Input::get("parent_id");
         $type = Input::get("type");
-
-        if ($name !== null && $parent_id !== null && $type !== null) {
+        $sort_number = Input::get("sort_number");
+        if ($name !== null && $parent_id !== null && $type !== null && $sort_number != null) {
             $parent_id = intval($parent_id);
+            $sort_number = intval($sort_number);
             if (Types::exists($type)) {
                 $type = Types::get_type_by_name($type, TypeCategory::getTagCategory());
-
                 $tag = new DataTag($name, $parent_id, $type);
+                $tag->set_sort_number($sort_number);
                 $tag->create();
                 $reponse->setPayload($tag->toStdClass());
                 $reponse->success();

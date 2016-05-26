@@ -33,17 +33,10 @@ export class ListContextMenu
                     }
                 }
             }
-            ,
-            build:    ($triggerElement, e) =>
-                      {
-                          return !e.ctrlKey;
-                      }
+
         });
 
-        $(selector).on("contextmenu", (e : JQueryEventObject) =>
-        {
-            return !e.ctrlKey;
-        });
+
 
     }
 

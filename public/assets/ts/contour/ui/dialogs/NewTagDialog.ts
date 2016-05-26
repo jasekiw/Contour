@@ -3,7 +3,7 @@
  */
 import {content} from "./../templates/NewTagDialogTemplate";
 import {Types, AjaxTagArrayReponse} from "../../api/Types";
-import {TagsApi} from "../../api/Tags";
+import {TagsApi} from "../../api/TagsApi";
 import {PlainTag} from "../../data/datatag/DataTag";
 import {PlainType} from "../../data/type/DataType";
 import {DialogBox} from "./Dialog";
@@ -13,6 +13,7 @@ import {DialogBox} from "./Dialog";
  */
 export class NewTagDialog extends DialogBox
 {
+    protected sortNumber : number;
 
     constructor()
     {
@@ -20,15 +21,17 @@ export class NewTagDialog extends DialogBox
     }
 
     /**
-     *
+     * Shows the dialog to create a new tag
      * @param onSubmit
      * @param parentId
+     * @param sort_number
      * @param types
      * @param x
      * @param y
      */
-    public show(onSubmit : (tag : PlainTag) => void, parentId : number, types : string = "all", x : number, y : number)
+    public show(onSubmit : (tag : PlainTag) => void, parentId : number, sort_number : number, types : string = "all", x : number, y : number)
     {
+        this.sortNumber = sort_number;
         super._show(onSubmit, x, y);
         this.form.find('input[name="parent_id"]').val(parentId);
         this.form.find('input[name="name"]').val("");
@@ -79,7 +82,7 @@ export class NewTagDialog extends DialogBox
         var name = this.form.find('[name="name"]').val();
         var parentId = parseInt(this.form.find('[name="parent_id"]').val());
         var type = this.form.find('[name="type"]').val();
-        TagsApi.create(name, parentId, type, this.onSubmit);
+        TagsApi.create(name, parentId, this.sortNumber, type, this.onSubmit);
         this.hide();
     }
 

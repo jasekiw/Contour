@@ -1,17 +1,19 @@
 import {DataBlockEditor} from "./DataBlockEditor";
 import {PlainTag} from "../data/datatag/DataTag";
 import {cellTemplate} from "../ui/templates/Cell";
-import {Editor} from "./Editor";
-import {TagsApi} from "../api/Tags";
+import {TagsApi} from "../api/TagsApi";
 import {SheetsApi} from "../api/SheetsApi";
 import {Spinner} from "../ui/Spinner";
 import {DatablockSheetHandler} from "./DatablockSheetHandler";
 import {DataBlocksApi} from "../api/DataBlocksApi";
+import {NewTagDialog} from "../ui/dialogs/NewTagDialog";
+import {Ajax} from "../Ajax";
+import {mouse} from "../components/MouseHandler";
 
 /**
  * Sheet Editor Class
  */
-export class SheetEditor extends Editor
+export class SheetEditor
 {
     protected editor : JQuery;
     protected container : JQuery;
@@ -20,6 +22,11 @@ export class SheetEditor extends Editor
     protected addColumnTagElement : JQuery;
     protected spinner : Spinner;
     protected datablockManager : DatablockSheetHandler;
+    protected element : JQuery;
+    public dataBlockEditor : DataBlockEditor;
+    protected ajax : Ajax;
+    protected newTagDialog : NewTagDialog;
+    protected currentText : string;
     /**
      * Constructs the Sheet Editor
      * 
@@ -28,12 +35,43 @@ export class SheetEditor extends Editor
      */
     constructor(element : JQuery, dataBlockEditor : DataBlockEditor)
     {
-        super(element.find(".sheet_editor"), dataBlockEditor);
+        this.element = element.find(".sheet_editor");
+        this.dataBlockEditor = dataBlockEditor;
+        this.ajax = new Ajax();
+        this.newTagDialog = new NewTagDialog();
         this.editor = element;
         this.container = this.editor.find(".editor__inner_container");
         this.setupControls();
         this.setup();
         this.datablockManager = new DatablockSheetHandler(this.element, dataBlockEditor, this);
+    }
+
+
+
+    public getParentId() : number
+    {
+        return parseInt(this.element.attr("parent"));
+    }
+
+
+    /**
+     * Shows the new tag dialog with the specified type
+     * @param type
+     */
+    protected showNewTagDialog(type : string)
+    {
+        if(this.orientation == "column")
+        {
+            let lastSortNumber = parseInt(this.element.find("thead .tag_column").last().attr("sort_number"));
+            this.newTagDialog.show((e : PlainTag) => this.handleNewTag(e), this.getParentId(), lastSortNumber + 1,  type, mouse.x, mouse.y);
+        }
+        else
+        {
+            let lastSortNumber = parseInt(this.element.find("tbody .tag_row").last().attr("sort_number"));
+            this.newTagDialog.show((e : PlainTag) => this.handleNewTag(e), this.getParentId(), lastSortNumber + 1,  type, mouse.x, mouse.y);
+        }
+
+
     }
     protected setup()
     {
@@ -146,7 +184,7 @@ export class SheetEditor extends Editor
 
     protected finishChangingOrientation(startHeight : number, e : string)
     {
-        this.element.find(".tag").off("remove");
+        this.element.find("*").off("remove");
         this.element.replaceWith($(e));
         this.element = this.editor.find(".sheet_editor");
         this.spinner.stop(300);
@@ -228,10 +266,6 @@ export class SheetEditor extends Editor
 
 
 
-   
-
-
-
     protected addRow()
     {
         let columns = this.element.find('thead .tag_column').length;
@@ -275,7 +309,7 @@ export class SheetEditor extends Editor
         this.element.find("thead tr .new_column").before(newTag);
         newTag.on("remove", (e) => this.handleRemovedTag(e));
         // append a new cell for the new column for each row
-        this.addColumn();
+        this.addColumnCells();
     }
 
 
@@ -294,6 +328,10 @@ export class SheetEditor extends Editor
         lastHeader.after(newElement);
         console.log(newElement.find(".sort_number"));
         newElement.find(".sort_number").on("remove", (e) => this.handleRemovedArray(e));
+        this.addColumnCells();
+    }
+    protected addColumnCells()
+    {
         this.element.find("tbody .tag_row").each((index, element) =>
         {
             $(element).append(cellTemplate);
@@ -306,19 +344,27 @@ export class SheetEditor extends Editor
      */
     protected handleNewTag(tag : PlainTag)
     {
-        if (tag.type == "primary")
-            this.handleNewColumnTag(tag);
-        else {
-            let newTag = $(`<td class="row_name tag" tag="` + tag.id + `">` + tag.name + `</td>`);
-            let newWrapper = $(`<tr class="tag_row" tag="` + tag.id + `"></tr>`).append(newTag);
-            this.element.find("tbody .new_row").before(newWrapper);
-            newTag.on("remove", (e) => this.handleRemovedTag(e));
-            let numColumns : number = this.element.find(".tag_column").length;
-            let toAdd : string = "";
-            for (let i = 0; i < numColumns; i++)
-                toAdd += cellTemplate;
-            this.element.find("tbody .tag_row").last().append(toAdd);
+        if(this.orientation == "column")
+        {
+            if (tag.type == "primary")
+                this.handleNewColumnTag(tag);
+            else {
+                let newTag = $(`<td class="row_name tag" tag="` + tag.id + `">` + tag.name + `</td>`);
+                let newWrapper = $(`<tr class="tag_row" tag="` + tag.id + `"></tr>`).append(newTag);
+                this.element.find("tbody .new_row").before(newWrapper);
+                newTag.on("remove", (e) => this.handleRemovedTag(e));
+                let numColumns : number = this.element.find(".tag_column").length;
+                let toAdd : string = "";
+                for (let i = 0; i < numColumns; i++)
+                    toAdd += cellTemplate;
+                this.element.find("tbody .tag_row").last().append(toAdd);
+            }
         }
+        else
+        {
+            //TODO: implement for row.
+        }
+
 
     }
 

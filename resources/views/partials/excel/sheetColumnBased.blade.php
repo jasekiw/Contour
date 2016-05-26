@@ -8,7 +8,7 @@ $tag = $sheet->getParentTag();
         <tr>
             <th></th>
             @foreach($sheet->getHeaderTags() as $column )
-                <th class="tag_column tag" tag="{!!$column->get_id()  !!}" >{!! $column->get_name() !!}</th>
+                <th class="tag_column tag" tag="{!!$column->get_id()  !!}" sort_number="{!! $column->get_sort_number() !!}">{!! $column->get_name() !!}</th>
             @endforeach
         </tr>
     </thead>

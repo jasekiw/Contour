@@ -11,11 +11,12 @@ export class DataTag implements PlainTag, Serializable
         this.parentId = obj.parentId;
         this.type = obj.type;
         this.typeId = obj.typeId;
+        this.sort_number = obj.sort_number;
     }
 
     toPlainObject() : PlainTag
     {
-        return {name: this.name, id: this.id, typeId: this.typeId, type: this.type, parentId: this.parentId};
+        return {name: this.name, id: this.id, typeId: this.typeId, sort_number: this.sort_number, type: this.type, parentId: this.parentId};
     }
 
     public name : string;
@@ -23,6 +24,7 @@ export class DataTag implements PlainTag, Serializable
     public typeId : number;
     public type : string;
     public parentId : number;
+    public sort_number : number;
 
 }
 
@@ -33,4 +35,5 @@ export interface PlainTag
     typeId : number;
     type : string;
     parentId : number;
+    sort_number : number;
 }

@@ -10,15 +10,17 @@ export class TagsApi
      *
      * @param  name the name of the tag
      * @param  parentId the parent id that the tag will reside under
+     * @param sort_number
      * @param  type the name of the type to use
      * @param  funtionToCall The function to call to give the tag object to
      */
-    public static create(name : string, parentId : number, type : string, funtionToCall? : (e : PlainTag) => void) : void
+    public static create(name : string, parentId : number, sort_number : number,  type : string, funtionToCall? : (e : PlainTag) => void) : void
     {
         var data = {
             name:      name,
             parent_id: parentId,
-            type:      type
+            type:      type,
+            sort_number : sort_number
         };
         new Ajax().post("/api/tags/create",
             data
@@ -87,6 +89,18 @@ export class TagsApi
             {
                 if(typeof functionToCall != "undefined")
                     functionToCall();
+            });
+    }
+
+    public static getById(id : number, callback? : (e : PlainTag)=> void)
+    {
+
+        new Ajax().post("/api/tags/get/" + id,
+            {}
+            , (e : AjaxTagReponse) =>
+            {
+                if(typeof callback != "undefined")
+                    callback(e.payload);
             });
     }
 
