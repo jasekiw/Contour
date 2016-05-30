@@ -36,14 +36,17 @@ class ExcelView
     const ORIENTATION_ROW = "row";
     const ORIENATION  = "orientation";
 
-    
+    private $initialized = false;
+
     /**
      * ExcelView constructor.
      *
      * @param DataTag $tag
+     * @param bool $initialize query for all the items. good to not do this with children elements
      */
-    function __construct($tag)
+    function __construct($tag, $initialize = true)
     {
+
         $this->parentTag = $tag;
         $this->orientation = $this->parentTag->getMetaValue(self::ORIENATION); // row  or column // the location that primary tags are displayed
         if($this->orientation == "")
@@ -51,8 +54,17 @@ class ExcelView
             $this->orientation = self::ORIENTATION_COLUMN;
             $this->parentTag->setMetaValue(self::ORIENATION, $this->orientation);
         }
-        $children = $this->parentTag->getSimpleChildren();
+
         $composits = $this->parentTag->getCompositChildren()->getAsArray(TagCollection::SORT_TYPE_NONE);
+        foreach($composits as $composit)
+            $this->composits[] = new ExcelView($composit, false);
+        if($initialize)
+            $this->initialize();
+    }
+
+    function initialize()
+    {
+        $children = $this->parentTag->getSimpleChildren();
         $headers = $children->getTagWithTypesAsArray([Types::getTagPrimary()]);
         /** @var DataBlock[][] $columns */
         $columns = [];
@@ -81,8 +93,17 @@ class ExcelView
             $rowTags[$rowNum] = (new DataBlockCollection($row))->getCommonTags(Types::getTagPrimary())->getAsArray(TagCollection::SORT_TYPE_NONE);
         $this->rowTags = $rowTags;
         $this->rows = $rows;
-        foreach($composits as $composit)
-            $this->composits[] = new ExcelView($composit);
+
+        $this->initialized = true;
+    }
+
+    /**
+     * Checks whether the excel view has been initialized
+     * @return bool
+     */
+    public function isInitialized()
+    {
+        return $this->initialized;
     }
 
     /**

@@ -124,7 +124,7 @@ class SheetsController extends Controller
     public function edit($id)
     {
         $view = \View::make("excel.editor"); // gets the editor view
-        $excelView = new ExcelView(DataTags::get_by_id($id));
+        $excelView = new ExcelView(DataTags::get_by_id($id), false);
         $view->tag = $excelView->parentTag;
         $view->parent = $excelView->parentTag->get_parent();
         $view->title = $excelView->parentTag->get_name();

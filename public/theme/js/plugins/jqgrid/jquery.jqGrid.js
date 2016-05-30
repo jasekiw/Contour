@@ -9745,7 +9745,7 @@ $.jgrid.extend({
 					buttonicon : o.addicon,
 					id : $t.p.id+"_iladd",
 					onClickButton : function () {
-						$($t).jqGrid('addRow', o.addParams);
+						$($t).jqGrid('addGeneralRow', o.addParams);
 						if(!o.addParams.useFormatter) {
 							$("#"+gID+"_ilsave").removeClass('ui-state-disabled');
 							$("#"+gID+"_ilcancel").removeClass('ui-state-disabled');

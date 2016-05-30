@@ -1,6 +1,6 @@
 import {ExcelImportPage} from "excelImport/ExcelImporterPage";
 import {NewFacilityPage} from "newfacility/NewFacilityPage";
-import {MultiTypeEditor} from "./multitypeEditor/MultiTypeEditor";
+import {Editor} from "editor/Editor";
 import {MenuEditor} from "./menu_editor/MenuEditor";
 import {Types} from "./api/Types"
 
@@ -9,7 +9,7 @@ class Main
 
     public excelImportPage : ExcelImportPage;
     public newFacilityPage : NewFacilityPage;
-    private multiTypeEditor : MultiTypeEditor;
+    private multiTypeEditor : Editor;
     private menuEditor : MenuEditor;
     private classes : string;
 
@@ -52,7 +52,7 @@ class Main
 
     private executemultiTypeEdtior()
     {
-        this.multiTypeEditor = new MultiTypeEditor();
+        this.multiTypeEditor = new Editor();
     }
 
     private contains(value : string)

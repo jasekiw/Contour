@@ -22,13 +22,19 @@ export abstract class UIElement
     /**
      * Inserts the element into the dom
      * @param location the selector to append the object
+     * @param show determines whether to hide or show the element when it is added to the dom
      */
-    protected insertElement(location? : string)
+    protected insertElement(location? : string, show = true )
     {
+        let newElem = $(this.template);
+        if(!show)
+            newElem.hide();
         if (location == undefined)
-            $("body").append(this.template);
+            $("body").append(newElem);
         else
-            $(location).append(this.template);
+            $(location).append(newElem);
         this.element = $("#" + this.id);
+
+
     }
 }

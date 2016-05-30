@@ -6,6 +6,7 @@ import {ConfirmDialog} from "../dialogs/ConfirmDialog";
 export class ListContextMenu
 {
     protected confirmDialog : ConfirmDialog;
+    protected editTagsFunction : (elem : JQuery) => void;
 
     constructor(selector : string)
     {
@@ -16,28 +17,30 @@ export class ListContextMenu
             // define the elements of the menu
             items:    {
                 editTags: {
-                    name: "Edit Tags", callback: (key, opt : JQueryContextMenuRuntimeOptions) =>
-                    {
-
-                    }
-                },
+                    name: "Edit Tags", callback: (key, opt : JQueryContextMenuRuntimeOptions) => this.editTags(key, opt)},
                 Delete:   {
-                    name: "Delete", callback: (key, opt : JQueryContextMenuRuntimeOptions) =>
-                    {
-                        var target = opt.$trigger;
-                        console.log(target);
-                        this.confirmDialog.show((e) => {
-                            console.log(target);
-                            target.remove();
-                        });
-                    }
-                }
+                    name: "Delete", callback: (key, opt : JQueryContextMenuRuntimeOptions) => this.deleteList(key, opt)}
             }
 
         });
+    }
 
-
-
+    public setEditTagsFunction(fn : (elem : JQuery) => void)
+    {
+        this.editTagsFunction = fn;
+    }
+    protected editTags(key, opt : JQueryContextMenuRuntimeOptions)
+    {
+        var target = opt.$trigger;
+        if(this.editTagsFunction !== undefined)
+            this.editTagsFunction(target);
+    }
+    protected deleteList(key, opt : JQueryContextMenuRuntimeOptions)
+    {
+        var target = opt.$trigger;
+        this.confirmDialog.show((e) => {
+            target.remove();
+        });
     }
 
 }

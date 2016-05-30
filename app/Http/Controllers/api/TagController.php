@@ -229,32 +229,47 @@ class TagController extends Controller
     }
 
     /**
-     * GET /api/tags/get_children/id
+     * GET /api/tags/children/id
      * Gets the children tags for the given tag
      * @param $id
      * @return string
      */
     public function get_children($id)
     {
-        $answer = new \stdClass();
+        $reponse = new AjaxResponse();
         $parent = DataTags::get_by_id($id);
         if (!isset($parent)) {
-            $answer->success = false;
-            return json_encode($answer);
+            $reponse->fail("parent id not found: " . $id);
+            return $reponse->send();
         }
-
         $children = $parent->get_children()->getAsArray();
-        foreach ($children as $index => $child) {
-            $children[$index] = array(
-                "id" => $child->get_id(),
-                "name" => $child->get_name(),
-                "sort_number" => $child->get_sort_number(),
-                "type" => $child->get_type()->getName()
-            );
-        }
-        $answer->tags = $children;
-        $answer->success = true;
-        return json_encode($answer);
+        foreach ($children as $index => $child)
+            $children[$index] = $child->toStdClass();
+        $reponse->success("");
+        $reponse->setPayload($children);
+        return $reponse->send();
+    }
+
+    public function get($id)
+    {
+        $response = new AjaxResponse();
+        $tag = DataTags::get_by_id($id);
+        if(!isset($tag))
+            $response->fail("tag not found");
+        else
+            $response->setPayload($tag);
+        return $response->send();
+
+    }
+    public function getMulti()
+    {
+        $response = new AjaxResponse();
+        $tag = DataTags::get_by_id($id);
+        if(!isset($tag))
+            $response->fail("tag not found");
+        else
+            $response->setPayload($tag);
+        return $response->send();
     }
 
     /**

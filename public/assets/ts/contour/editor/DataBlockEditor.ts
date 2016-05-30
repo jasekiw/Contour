@@ -1,15 +1,35 @@
 import {Ajax} from "../Ajax";
-import {DataBlockInterfacer} from "./DataBlockInterfacer";
-import {DataTagInterfacer} from "./DataTagInterfacer";
-import {template as editorTemplate} from "./templates/DatablockEditorTemplate";
+var $body = $('body');
+var editorTemplate =
+    `
+<div class="panel panel-default" id="DatablockEditor">
+    <div class="panel-heading">
+        <h3 class="panel-title">Edit Block</h3>
+        <a class="exitButton" href="javascript:void(0);" ><i class="fa fa-times"></i></a>
+    </div>
+    <div class="panel-body">
+        <div class="top_section">
+            <input type="text" name="datablock_value"/>
+            <input type="button" name="calculate" value="Calculate" />
+
+        </div>
+        <div class="bottom_section">
+            <div class="calculated">
+            </div>
+            <div class="options">
+                <input type="submit" value="Save" class="submit" />
+            </div>
+        </div>
+    </div>
+</div>
+`;
+
 /**
  * Created by Jason Gallavin on 12/22/2015.
  */
 
 export class DataBlockEditor
 {
-    private datablockInterfacer : DataBlockInterfacer;
-    private dataTagInterfacer : DataTagInterfacer;
     private dataBlockEditor : JQuery;
     private dataBlockFormula : JQuery;
     private dataBlockContainer : JQuery;
@@ -25,10 +45,7 @@ export class DataBlockEditor
 
     constructor()
     {
-        $('body').append($(editorTemplate));
-        this.datablockInterfacer = new DataBlockInterfacer();
-        this.dataTagInterfacer = new DataTagInterfacer();
-
+        $body.append($(editorTemplate));
         this.dataBlockEditor = $("#DatablockEditor");
         this.dataBlockFormula = this.dataBlockEditor.find("input[name='datablock_value']");
         this.dataBlockContainer = this.dataBlockEditor.find(".datablocks");

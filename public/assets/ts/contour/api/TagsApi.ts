@@ -6,6 +6,7 @@ import {PlainTag} from "../data/datatag/DataTag";
 export class TagsApi
 {
 
+    
     /**
      *
      * @param  name the name of the tag
@@ -14,13 +15,13 @@ export class TagsApi
      * @param  type the name of the type to use
      * @param  funtionToCall The function to call to give the tag object to
      */
-    public static create(name : string, parentId : number, sort_number : number,  type : string, funtionToCall? : (e : PlainTag) => void) : void
+    public static create(name : string, parentId : number, sort_number : number, type : string, funtionToCall? : (e : PlainTag) => void) : void
     {
         var data = {
-            name:      name,
-            parent_id: parentId,
-            type:      type,
-            sort_number : sort_number
+            name:        name,
+            parent_id:   parentId,
+            type:        type,
+            sort_number: sort_number
         };
         new Ajax().post("/api/tags/create",
             data
@@ -80,14 +81,14 @@ export class TagsApi
     public static setMeta(id : number, metaKey : string, metaValue : string, functionToCall? : () => void)
     {
         var data = {
-            metaKey : metaKey,
-            metaValue : metaValue
+            metaKey:   metaKey,
+            metaValue: metaValue
         };
         new Ajax().post("/api/tags/setmeta/" + id,
             data
             , (e : AjaxTagReponse) =>
             {
-                if(typeof functionToCall != "undefined")
+                if (typeof functionToCall != "undefined")
                     functionToCall();
             });
     }
@@ -95,13 +96,38 @@ export class TagsApi
     public static getById(id : number, callback? : (e : PlainTag)=> void)
     {
 
-        new Ajax().post("/api/tags/get/" + id,
-            {}
+        new Ajax().get("/api/tag/" + id
             , (e : AjaxTagReponse) =>
             {
-                if(typeof callback != "undefined")
+                if (typeof callback != "undefined")
                     callback(e.payload);
             });
+    }
+
+    public static getByIds(ids : number[], callback? : (e : PlainTag[])=> void)
+    {
+
+        new Ajax().get("/api/tags/" + ids,
+            (e : AjaxTagsReponse) =>
+            {
+                if (typeof callback != "undefined")
+                    callback(e.payload);
+            });
+    }
+
+    public static getChildren(id : number, callback? : (e : PlainTag[]) => void) : void
+    {
+        new Ajax().get("/api/tags/children/" + id,
+            (e : AjaxTagsReponse) =>
+            {
+                if (typeof callback != "undefined")
+                    callback(e.payload);
+            });
+    }
+
+    public static getChildrenRecursive(id : number, functiontoCall : (e : string) => void) : void
+    {
+        (new Ajax).get('/ajaxtags/get_children_recursive/' + id, functiontoCall);
     }
 
 }
@@ -112,4 +138,9 @@ export class TagsApi
 export interface AjaxTagReponse extends AjaxResponse
 {
     payload : PlainTag;
+}
+
+export interface AjaxTagsReponse extends AjaxResponse
+{
+    payload : PlainTag[];
 }

@@ -61,7 +61,7 @@ class SheetsController extends Controller
     public function show($id)
     {
         $reponse = new AjaxResponse();
-        $excelView = new ExcelView(DataTags::get_by_id($id));
+        $excelView = new ExcelView(DataTags::get_by_id($id), true);
         $reponse->setPayload($excelView->render());
         return $reponse->send();
     }
