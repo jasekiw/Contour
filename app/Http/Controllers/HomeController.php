@@ -69,6 +69,8 @@ class HomeController extends Controller
             if (str_contains($row->revisionable_type, "Tag")) {
 
                 $tag = DataTags::get_by_id($row->revisionable_id);
+                if(!isset($tag))
+                    continue;
                 if ($tag->get_type()->get_id() == $type->get_id())
                     $sheet = $tag;
                 else
@@ -78,6 +80,8 @@ class HomeController extends Controller
                 $this->addSheet($sheet, $date);
             } else if (str_contains($row->revisionable_type, "Data_block")) {
                 $block = DataBlocks::getByID($row->revisionable_id);
+                if(!isset($block))
+                    continue;
                 $tags = $block->getTags();
                 $tagsArray = $tags->getAsArray();
                 if (!empty($tagsArray))

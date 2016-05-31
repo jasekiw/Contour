@@ -43,7 +43,7 @@
             <a href="{!! route('user_access_groups_index') !!}">Cancel</a>
         </div>
     </div>
-    {!! Form::open(['method' => 'PUT', 'url' => route('user_access_groups_save'), 'class' => 'resource_form'] )!!}
+    {!! Form::open(['method' => 'PUT', 'url' => route('user_access_groups_save', ["id" => $group]), 'class' => 'resource_form'] )!!}
         <div class="inside">
             <div class="row border">
                 <div class="col-md-3">

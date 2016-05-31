@@ -8,11 +8,11 @@
     "gulp-clean": "^0.3.2",
     "gulp-sass": "^2.3.1",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-typings": "^2.0.0"
+    "gulp-typings": "^2.0.0",
+    "gulp-typescript": "^2.13.0"
   },
   "dependencies": {
-    "bootstrap-sass": "^3.0.0",
-    "gulp-typescript": "^2.13.0"
+
   },
   "name": "contour",
   "description": "A laravel based cms",

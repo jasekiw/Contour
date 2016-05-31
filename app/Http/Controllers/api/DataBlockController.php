@@ -119,6 +119,19 @@ class DataBlockController extends Controller
         return json_encode($response);
     }
 
+    public function getById($id)
+    {
+        $reponse = new AjaxResponse();
+        $datablock = DataBlocks::getByID($id);
+        if(!isset($datablock))
+        {
+            $reponse->fail("datablock not found");
+           return $reponse->send();
+        }
+        $reponse->setPayload($datablock->toStdClass());
+        return $reponse->send();
+    }
+
     public function removeBulk()
     {
         $response = new AjaxResponse();
@@ -127,7 +140,6 @@ class DataBlockController extends Controller
         {
             foreach($ids as $id)
                 DataBlocks::getByID($id)->delete();
-
             $response->success("successfuly removed");
         }
         return $response->send();

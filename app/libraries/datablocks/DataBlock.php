@@ -228,7 +228,6 @@ class DataBlock extends DataBlockAbstract
         $std->tags = [];
         foreach ($this->getTags()->getAsArray() as $key => $tag)
             $std->tags[$key] = $tag->toStdClass();
-        
         $std->updated_at = $this->updated_at();
         $std->created_at = $this->created_at();
         return $std;

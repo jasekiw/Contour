@@ -9,13 +9,16 @@ var template = `
     </div>
     <div class="panel-body">
         <div class="top_section">
+            <h3>Referenced tags</h3>
             <div class="tagsToUse">
             
             </div>
         </div>
         <div class="bottom_section">
             <div class="currentTags">
+                <h3>Navigation</h3>
                 <div class="tag_navigation"></div>
+                <h3>Available Tags</h3>
                 <div class="general_tags">
                 </div>
             </div>
@@ -28,17 +31,22 @@ var template = `
 `;
 export class TagsEditor extends PopUpScreen
 {
-    protected tagsToUse : PlainTag[];
+    protected tagsToUse : {[name: string] : PlainTag };
     protected currentTags : PlainTag[];
     protected currentParentId : number;
-    protected callback : (tags : PlainTag[]) => void;
-
+    protected callback : (tags : {[name: string] : PlainTag}) => void;
+    protected exitCallBack : () => void;
+    
     constructor()
     {
         super("TagsEditor", template);
+        this.tagsToUse = {};
         this.insertElement(undefined,false);
         this.element.find(".exitButton").click(() => {
+
             this._hide();
+            if(this.exitCallBack != undefined)
+                this.exitCallBack();
         });
         this.element.find('.tag_navigation').on("dblclick",".editor_tag", (e : JQueryEventObject) => {
 
@@ -49,15 +57,22 @@ export class TagsEditor extends PopUpScreen
         this.element.find(".submit").click((e) => this.save());
         this.element.find(".currentTags").find(".general_tags").on("dblclick", ".editor_tag", (e : JQueryEventObject) => {
             this.addTagToUse($(e.target));
-        })
+        });
+        this.element.find(".tagsToUse").on("dblclick", ".editor_tag", (e : JQueryEventObject) => {
+            this.removeTagFromReferenced($(e.target));
+        });
 
     }
 
-    public show(tagIds : number[], parentId: number, callback? : (tags : PlainTag[]) => void) {
+
+    public show(tagIds : number[], parentId: number, callback? : (tags : {[name: string] : PlainTag }) => void, exitCallBack? : () => void) {
         this.callback = callback;
+        this.exitCallBack = exitCallBack;
         this.currentParentId = parentId;
         TagsApi.getByIds(tagIds, (tags) => {
-            this.tagsToUse = tags;
+            tags.forEach((tag, i) => {
+                this.tagsToUse[tag.id] = tag;
+            });
             this.populateTags();
             this.setUpCurrentTags(parentId);
             this._show();
@@ -67,8 +82,15 @@ export class TagsEditor extends PopUpScreen
     {
         let tag = this.fromHtmlTag(e);
         e.detach();
-        this.tagsToUse.push(tag);
+        this.tagsToUse[tag.id] = tag;
         this.element.find('.tagsToUse').append(e);
+    }
+    protected removeTagFromReferenced(e : JQuery)
+    {
+        let tagToRemove = this.fromHtmlTag(e);
+        e.detach();
+        delete this.tagsToUse[tagToRemove.id];
+        this.refreshCurrentTags();
     }
 
     protected save()
@@ -93,10 +115,14 @@ export class TagsEditor extends PopUpScreen
     {
         //
         let $tagsToAdd = $();
-        this.tagsToUse.forEach((tag,index) => {
-            $tagsToAdd = $tagsToAdd.add( this.makeHtmlTag(tag));
-        });
+        for (var key in this.tagsToUse)
+            $tagsToAdd = $tagsToAdd.add( this.makeHtmlTag(this.tagsToUse[key]));
         this.element.find(".tagsToUse").html($tagsToAdd);
+    }
+    protected refreshCurrentTags()
+    {
+        let parentId = parseInt(this.element.find(".currentTags").find(".general_tags").attr("parent"));
+        this.setUpCurrentTags(parentId);
     }
     protected populateCurrentTags(parent : PlainTag)
     {
@@ -120,7 +146,7 @@ export class TagsEditor extends PopUpScreen
 
         });
         this.element.find(".currentTags").find(".general_tags").html(newCurrentTags);
-
+        this.element.find(".currentTags").find(".general_tags").attr("parent", parent.id);
         this.element.find(".currentTags").find(".tag_navigation").html(goUpDirElem.add(newNaviationTags));
     }
 

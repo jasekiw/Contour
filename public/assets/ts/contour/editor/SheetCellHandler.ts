@@ -134,7 +134,9 @@ export class SheetCellHandler
     {
         e.preventDefault();
         var $element = $(e.currentTarget);
-        this.dataBlockEditor.open($element, this.editor.getParentId(), $element.val());
+        this.dataBlockEditor.open($element, this.editor.getParentId(), $element.val(), (block) => {
+            console.log(block);
+        });
     }
 
     /**

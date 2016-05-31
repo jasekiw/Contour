@@ -81,6 +81,7 @@
 
 
 
+
 .tagsEditor {
     .currentTags , .tagsToUse {
         .editor_tag {
@@ -101,5 +102,16 @@
             padding: 20px 0;
             border-bottom: $evergreen_border;
         }
+
+    }
+    .options {
+        padding-top: 20px;
+    }
+    .submit {
+        float: right;
+    }
+    .bottom_section {
+        padding: 20px 0;
     }
 }
+

@@ -73,9 +73,15 @@ export class DataBlocksApi
     }
 
 
-    public static getById(id : number, functiontoCall : ()=> void) : void
+    public static getById(id : number, callback? : (e : PlainDataBlock )=> void) : void
     {
-        (new Ajax).get('/ajaxdatablocks/' + id, functiontoCall);
+        (new Ajax).get('/api/datablock/' + id, (e :AjaxDataBlockReponse) => {
+            if(e.success)
+            {
+                if(callback != undefined)
+                    callback(e.payload);
+            }
+        });
     }
 
     public static getMultipleByTags(tags : string[], functiontoCall : () => void) : void

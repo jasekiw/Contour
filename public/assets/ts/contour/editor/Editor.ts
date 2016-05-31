@@ -17,6 +17,7 @@ export class Editor
     constructor()
     {
         window["editor"] = this;
+        
         this.initialize();
         $(".nav-pills li a").click((e) => this.loadNewEditor(e));
     }
@@ -26,8 +27,9 @@ export class Editor
      */
     protected initialize()
     {
-        this.dataBlockEditor = new DataBlockEditor();
         this.tagsEditor = new TagsEditor();
+        this.dataBlockEditor = new DataBlockEditor(this.tagsEditor);
+        
         this.tagContextMenuHandler = new TagContextMenuHandler(".tag");
         this.listContextMenu = new ListContextMenu(".GeneralListHandle");
         this.listContextMenu.setEditTagsFunction( ($elem) => this.handleEditTagsContextMenu($elem));

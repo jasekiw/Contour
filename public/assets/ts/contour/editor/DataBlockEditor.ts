@@ -1,6 +1,9 @@
 import {Ajax} from "../Ajax";
 import {BackgroundFilter} from "../ui/BackgroundFilter";
 import {PopUpScreen} from "../ui/PopUpScreen";
+import {TagsEditor} from "./TagsEditor";
+import {DataBlocksApi} from "../api/DataBlocksApi";
+import {PlainDataBlock} from "../data/datablock/DataBlock";
 var $body = $('body');
 var editorTemplate =
     `
@@ -21,6 +24,7 @@ var editorTemplate =
             <div class="options">
                 <input type="submit" value="Save" class="submit" />
             </div>
+            <button class="btn btn-default edit-tags">Edit Tags</button>
         </div>
     </div>
 </div>
@@ -42,12 +46,17 @@ export class DataBlockEditor extends PopUpScreen
     private cancelButton : JQuery;
     private calculateButton : JQuery;
     private calculationOutputContainer : JQuery;
+    private tagsEditor : TagsEditor;
+    private parentId : number;
+    private datablock : PlainDataBlock;
+    private onSave : (block : PlainDataBlock) => void;
 
-    constructor()
+    constructor(tagsEditor : TagsEditor)
     {
         super("datablock-editor", editorTemplate);
-        this.insertElement();
 
+        this.insertElement();
+        this.tagsEditor = tagsEditor;
         this.dataBlockFormula = this.element.find("input[name='datablock_value']");
         this.dataBlockContainer = this.element.find(".datablocks");
         this.head = this.element.find(".header_container");
@@ -61,11 +70,8 @@ export class DataBlockEditor extends PopUpScreen
         {
             this.filterView(this.searchBar.val());
         });
-        
-        this.element.find(".exitButton").click(() =>
-        {
-            this.exit();
-        });
+
+        this.element.find(".exitButton").click(() => this.exit());
 
         this.saveButton.on("click", (e) =>
         {
@@ -73,7 +79,24 @@ export class DataBlockEditor extends PopUpScreen
             this.save();
             this.exit();
         });
-
+        this.element.find(".edit-tags").click((e) =>
+        {
+            let tagIds : number[] = [];
+            this.datablock.tags.forEach((tag, i) =>
+            {
+                tagIds.push(tag.id);
+            });
+            this._hide();
+            this.tagsEditor.show(tagIds, this.parentId, (tags) =>
+                {
+                    this.datablock.tags = [];
+                    for (var key in tags) {
+                        this.datablock.tags.push(tags[key]);
+                    }
+                    this._show()
+                },
+                () =>  this._show())
+        });
         this.cancelButton.on("click", (e) =>
         {
             e.preventDefault();
@@ -129,19 +152,25 @@ export class DataBlockEditor extends PopUpScreen
         console.log("filtering for" + filterText);
     }
 
-    public open(cell : JQuery, sheetId : number, value : string) : void
+    public open(cell : JQuery, sheetId : number, value : string, onSave? : (block : PlainDataBlock) => void) : void
     {
+        this.onSave = onSave;
         this.cell = cell;
-        this.show(sheetId, value)
+        DataBlocksApi.getById(parseInt(this.cell.attr("datablock")), (block) =>
+        {
+            this.datablock = block;
+            this.show(sheetId, value)
+        });
     }
 
     /**
      * Show the editor with the current sheet it
-     * @param id
-     * @param value
+     * @param id The sheet id
+     * @param value The value of the cell
      */
     private show(id : number, value : string) : void
     {
+        this.parentId = id;
         this.dataBlockFormula.val(value);
         this.calculationOutputContainer.html("");
         this._show();
@@ -149,7 +178,7 @@ export class DataBlockEditor extends PopUpScreen
 
     public exit() : void
     {
-      this._hide();
+        this._hide();
     }
 
     private save() : void
@@ -158,6 +187,8 @@ export class DataBlockEditor extends PopUpScreen
         {
         });
         this.cell.val(this.dataBlockFormula.val());
+        this.datablock.value = this.dataBlockFormula.val();
+        this.onSave(this.datablock);
     }
 
     /**
@@ -166,10 +197,6 @@ export class DataBlockEditor extends PopUpScreen
      */
     private populateEditor(data : {success : boolean, tags : DataTag[]}) : void
     {
-
-        //var thisfunction = this;
-        console.log(data);
-        console.debug(JSON.stringify(data));
 
         if (data.success) {
             this.removeHeadTags();
