@@ -244,7 +244,13 @@ class TagController extends Controller
         }
         $children = $parent->get_children()->getAsArray();
         foreach ($children as $index => $child)
-            $children[$index] = $child->toStdClass();
+            if($child->has_children())
+            {
+                $child->set_type(Types::get_type_folder());
+                $children[$index] = $child->toStdClass();
+            }
+            else
+                $children[$index] = $child->toStdClass();
         $reponse->success("");
         $reponse->setPayload($children);
         return $reponse->send();
@@ -257,18 +263,33 @@ class TagController extends Controller
         if(!isset($tag))
             $response->fail("tag not found");
         else
-            $response->setPayload($tag);
+            $response->setPayload($tag->toStdClass());
         return $response->send();
 
     }
     public function getMulti()
     {
         $response = new AjaxResponse();
-        $tag = DataTags::get_by_id($id);
-        if(!isset($tag))
-            $response->fail("tag not found");
+        $ids = Input::get('ids');
+        /**
+         * @var DataTag[] $tags
+         */
+        $tags = [];
+        foreach($ids as $id)
+            $tags[] = $tag = DataTags::get_by_id($id);
+        $reponseTags = [];
+        foreach($tags as  $tag)
+            if($tag->has_children())
+            {
+                $tag->set_type(Types::get_type_folder());
+                $reponseTags[] = $tag->toStdClass();
+            }
+            else
+            $reponseTags[] = $tag->toStdClass();
+        if(sizeof($reponseTags) == 0)
+            $response->fail("tags not found");
         else
-            $response->setPayload($tag);
+            $response->setPayload($reponseTags);
         return $response->send();
     }
 

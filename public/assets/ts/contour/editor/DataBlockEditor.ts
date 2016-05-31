@@ -1,8 +1,10 @@
 import {Ajax} from "../Ajax";
+import {BackgroundFilter} from "../ui/BackgroundFilter";
+import {PopUpScreen} from "../ui/PopUpScreen";
 var $body = $('body');
 var editorTemplate =
     `
-<div class="panel panel-default" id="DatablockEditor">
+<div class="panel panel-default datablock_editor popup" id="{id}">
     <div class="panel-heading">
         <h3 class="panel-title">Edit Block</h3>
         <a class="exitButton" href="javascript:void(0);" ><i class="fa fa-times"></i></a>
@@ -28,9 +30,8 @@ var editorTemplate =
  * Created by Jason Gallavin on 12/22/2015.
  */
 
-export class DataBlockEditor
+export class DataBlockEditor extends PopUpScreen
 {
-    private dataBlockEditor : JQuery;
     private dataBlockFormula : JQuery;
     private dataBlockContainer : JQuery;
     private head : JQuery;
@@ -39,42 +40,33 @@ export class DataBlockEditor
     private cell : JQuery;
     private saveButton : JQuery;
     private cancelButton : JQuery;
-    private backGroundFilter : JQuery;
     private calculateButton : JQuery;
     private calculationOutputContainer : JQuery;
 
     constructor()
     {
-        $body.append($(editorTemplate));
-        this.dataBlockEditor = $("#DatablockEditor");
-        this.dataBlockFormula = this.dataBlockEditor.find("input[name='datablock_value']");
-        this.dataBlockContainer = this.dataBlockEditor.find(".datablocks");
-        this.head = this.dataBlockEditor.find(".header_container");
-        this.body = this.dataBlockEditor.find(".row_and_datablock_container");
-        this.searchBar = this.dataBlockEditor.find("[name=search]");
-        this.saveButton = this.dataBlockEditor.find("input.submit");
-        this.cancelButton = this.dataBlockEditor.find("input.cancel");
-        this.calculateButton = this.dataBlockEditor.find("input[name='calculate']");
-        this.calculationOutputContainer = this.dataBlockEditor.find(".calculated");
+        super("datablock-editor", editorTemplate);
+        this.insertElement();
+
+        this.dataBlockFormula = this.element.find("input[name='datablock_value']");
+        this.dataBlockContainer = this.element.find(".datablocks");
+        this.head = this.element.find(".header_container");
+        this.body = this.element.find(".row_and_datablock_container");
+        this.searchBar = this.element.find("[name=search]");
+        this.saveButton = this.element.find("input.submit");
+        this.cancelButton = this.element.find("input.cancel");
+        this.calculateButton = this.element.find("input[name='calculate']");
+        this.calculationOutputContainer = this.element.find(".calculated");
         this.searchBar.change(() =>
         {
             this.filterView(this.searchBar.val());
         });
-        $("body").append('<div class="background_filter"></div>');
-        this.backGroundFilter = $(".background_filter");
-        this.dataBlockEditor.find(".exitButton").click(() =>
+        
+        this.element.find(".exitButton").click(() =>
         {
             this.exit();
         });
-        this.backGroundFilter.css("background", "black")
-            .css("display", "none")
-            .css("top", 0)
-            .css("bottom", "0")
-            .css("left", "0")
-            .css("right", "0")
-            .css("position", "fixed")
-            .css("opacity", "0")
-            .css("z-index", "8000");
+
         this.saveButton.on("click", (e) =>
         {
             e.preventDefault();
@@ -150,49 +142,14 @@ export class DataBlockEditor
      */
     private show(id : number, value : string) : void
     {
-        //DataTagInterfacer.getChildrenRecursive(id, (e) => this.populateEditor(e) );
         this.dataBlockFormula.val(value);
         this.calculationOutputContainer.html("");
-        this.dataBlockEditor.css("opacity", "0");
-
-        this.dataBlockEditor.show();
-        var offsetWidth : number = window.innerWidth / 2;
-        var offsetHeight : number = window.innerHeight / 2;
-        $("body").css("max-height", "100%").css("overflow-y", "hidden");
-        this.dataBlockEditor.css("position", "fixed");
-        this.dataBlockEditor.css("left", 10 + "px");
-        this.dataBlockEditor.css("top", 10 + "px");
-        this.dataBlockEditor.css("bottom", 10 + "px");
-        this.dataBlockEditor.css("right", 10 + "px").css("z-index", "9001");
-        this.backGroundFilter.show();
-        this.backGroundFilter.animate(
-            {
-                opacity: 0.4
-            }, 500
-        );
-        this.dataBlockEditor.animate({
-            opacity: 1
-        }, 300)
+        this._show();
     }
 
     public exit() : void
     {
-        this.backGroundFilter.animate(
-            {
-                opacity: 0
-            }, 300, () =>
-            {
-                this.backGroundFilter.hide();
-            }
-        );
-        this.dataBlockEditor.animate({
-            opacity: 0
-        }, 300, () =>
-        {
-            this.dataBlockEditor.hide();
-        });
-
-        $("body").css("max-height", "").css("overflow-y", "");
+      this._hide();
     }
 
     private save() : void

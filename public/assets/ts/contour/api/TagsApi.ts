@@ -106,8 +106,11 @@ export class TagsApi
 
     public static getByIds(ids : number[], callback? : (e : PlainTag[])=> void)
     {
-
-        new Ajax().get("/api/tags/" + ids,
+        let data = {
+            ids: ids
+        };
+        new Ajax().post("/api/tags",
+            data,
             (e : AjaxTagsReponse) =>
             {
                 if (typeof callback != "undefined")

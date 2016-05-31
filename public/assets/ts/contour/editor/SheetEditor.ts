@@ -64,22 +64,16 @@ export class SheetEditor
     }
     public editTagsOnGeneralList($elem : JQuery)
     {
-        if(this.orientation == "column")
-        {
-
-        }
-        else
-        {
-            let $container = $elem.parent();
-            let tagIdStrings = $container.attr("tags").split(",");
-            let tagIds : number[] = [];
-            for(let i =0; i < tagIdStrings.length; i++)
-                tagIds.push(parseInt(tagIdStrings[i]))
-            this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags) => {
-
-            });
-
-        }
+        
+        let $container = $elem.parent();
+        let tagIdStrings = $container.attr("tags").split(",");
+        let tagIds : number[] = [];
+        for(let i =0; i < tagIdStrings.length; i++)
+            tagIds.push(parseInt(tagIdStrings[i]))
+        this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags) => {
+            
+        });
+        
 
     }
 

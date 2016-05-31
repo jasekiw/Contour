@@ -24,6 +24,7 @@ export class RenameTagDialog extends DialogBox
         super._show(onSubmit, mouse.x, mouse.y);
         this.form.find('input[name="id"]').val(id);
         this.form.find('input[name="newName"]').val(placeHolder);
+        this.element.css("z-index", 10000);
         this.element.show();
         console.log("got here");
     }

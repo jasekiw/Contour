@@ -1,4 +1,39 @@
-#DatablockEditor {
+.datablock_editor {
+
+
+    .options {
+        margin:10px;
+        float:right;
+    }
+
+    .top_section {
+        [name=datablock_value] {
+            width: 100%;
+            height: 50px;
+            border:none;
+            font-size: 24px;
+            padding: 10px 20px;
+        }
+        input[name=calculate]
+        {
+            margin-top: 20px;
+            @include evergreen_button_LightToDark();
+        }
+    }
+
+    .datablock_view {
+        border: 1px solid black;
+        min-height: 100px;
+        margin-top: 40px;
+    }
+
+    .calculated {
+        font-size: 28px;
+        float:left;
+
+    }
+}
+.popup {
     display:none;
     box-shadow: 0 0 20px rgba(0,0,0,1);
     background-color: $evergray;
@@ -20,10 +55,6 @@
         padding-left: 40px;
         padding-right:40px;
     }
-    .options {
-        margin:10px;
-        float:right;
-    }
     .panel-title {
         display: inline-block;
     }
@@ -32,42 +63,43 @@
         color:$evergreen;
         font-size: 32px;
         &:hover {
-        color: black;
+            color: black;
+        }
     }
-    }
+
     .top_section {
         padding: 20px 0;
-        [name=datablock_value] {
-            width: 100%;
-            height: 50px;
-            border:none;
-            font-size: 24px;
-            padding: 10px 20px;
-        }
-        input[name=calculate]
-        {
-            margin-top: 20px;
-            @include evergreen_button_LightToDark();
-        }
         border-bottom: $evergreen_border;
     }
     .bottom_section {
         padding: 20px;
     }
-    .datablock_view {
-        border: 1px solid black;
-        min-height: 100px;
-        margin-top: 40px;
-    }
     .submit {
         @include evergreen_button_DarkToLight()
-    }
-    .calculated {
-        font-size: 28px;
-        float:left;
-
     }
 }
 
 
 
+.tagsEditor {
+    .currentTags , .tagsToUse {
+        .editor_tag {
+            display:inline-block;
+            padding:5px;
+            margin:10px;
+            border-radius:2px;
+            box-shadow: 0 0 1px rgba(20,20,20,0.3);
+            user-select: none;
+            cursor: pointer;
+
+        }
+        .general_tags {
+            padding: 20px 0;
+            border-bottom: $evergreen_border;
+        }
+        .tag_navigation {
+            padding: 20px 0;
+            border-bottom: $evergreen_border;
+        }
+    }
+}

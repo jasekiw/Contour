@@ -3,17 +3,22 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var ts = require('gulp-typescript');
 var sourcemaps = require("gulp-sourcemaps");
+var autoprefixer = require('gulp-autoprefixer');
 var gulpTypings = require("gulp-typings");
 var bower = require('gulp-bower');
+var clean = require('gulp-clean');
+var deleteEmpty = require('delete-empty');
+
 gulp.task('sass', function () {
     return gulp.src('./public/assets/sass/**/*.scss')
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
+        .pipe(autoprefixer())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./public/assets/sass/'));
 });
 
-gulp.task('compile-typescript-front-end', ['installTypings'], function () {
+gulp.task('compile-typescript-front-end', ['installTypings','cleanFolders'], function () {
     var tsProject = ts.createProject('./public/assets/ts/contour/tsconfig.json');
     var tsResult = tsProject.src() // instead of gulp.src(...)
         .pipe(sourcemaps.init())
@@ -42,7 +47,18 @@ gulp.task('bower', function() {
 });
 
 
+gulp.task('clean-maps', function () {
+    return gulp.src('./public/assets/ts/contour/**/*.js.map', {read: false})
+        .pipe(clean());
+});
+gulp.task('clean-scripts', function () {
+    return gulp.src('./public/assets/ts/contour/**/*.js', {read: false})
+        .pipe(clean());
+});
 
+gulp.task('cleanFolders', ['clean-scripts', 'clean-maps'], function() {
+    deleteEmpty.sync('./public/assets/ts/contour/');
+});
 
 gulp.task('build', ['sass', 'compile-typescript-front-end', 'bower']);
 /*
