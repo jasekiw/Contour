@@ -181,6 +181,21 @@ class TagCollection extends TagCollectionAbstract
             return $this->removeByTypes([$input]);
         return false; // integer or string was not given
     }
+
+    /**
+     * @param int $id
+     * @return bool succesfull
+     */
+    public function removeById($id)
+    {
+        foreach ($this->tags as $index => $tag) {
+            if ($tag->get_id() == $id) {
+                unset($this->tags[$index]);
+                return true;
+            }
+        }
+        return false; // not found
+    }
     
     /**
      * @param Type[] $types
@@ -247,11 +262,27 @@ class TagCollection extends TagCollectionAbstract
     {
         if (!isset($tags))
             return false;
+
         if (is_array($tags))
             $this->tags = array_merge($this->tags, $tags);
         else
             $this->tags = array_merge($this->tags, $tags->getAsArray());
+
         return true;
+    }
+
+    /** merges the tags with the current
+     * @param TagCollection $tags
+     */
+    public function mergeAll($tags)
+    {
+        $tagArray = $tags->getAsArray(TagCollection::SORT_TYPE_NONE);
+        foreach($tagArray as $tag)
+        {
+            if($this->get($tag->get_id()) == null)
+                $this->add($tag);
+        }
+
     }
     
     /**

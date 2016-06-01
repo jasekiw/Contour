@@ -4,12 +4,13 @@
 
 export class ExcelImportPage
 {
+    protected importing : boolean = false;
     constructor()
     {
         $(".importButton").on("click", () => this.uploadExcelFile());
     }
 
-    public  uploadExcelFile() : void
+    public uploadExcelFile() : void
     {
         let data = new FormData();
         let input : HTMLInputElement = <HTMLInputElement> $('.btn-file input')[0];
@@ -55,9 +56,44 @@ export class ExcelImportPage
             processData: false,
             type:        'POST',
             timeout:     1200000,
-            complete:    (jqXHR : JQueryXHR) => progress.html(jqXHR.responseText),
+            complete:    (jqXHR : JQueryXHR) => {
+                progress.html(jqXHR.responseText);
+                this.importing = false;
+            },
+            error: (jqXHR : JQueryXHR) => progress.html("ERROR: " + jqXHR.responseText)
+        });
+        this.importing = true;
+        setTimeout(() => this.checkProgress(), 10000);
+    }
+    public checkProgress()
+    {
+        let progress = $(".progress");
+        jQuery.ajax({
+            url:         '/import/check',
+            contentType: false,
+            processData: false,
+            type:        'GET',
+            timeout:     10000,
+            complete:    (jqXHR : JQueryXHR) => this.appendProgress(jqXHR.responseText),
             error:       (jqXHR : JQueryXHR) => progress.html("ERROR: " + jqXHR.responseText)
         });
+    }
+
+    protected appendProgress(data : string)
+    {
+        if(data.indexOf("/") == -1)
+            return;
+        let split = data.split('/');
+        let current = parseInt(split[0]);
+        let max = parseInt(split[1]);
+        if(current >= max)
+        {
+            this.importing = false;
+            return;
+        }
+        $(".progress").html(data);
+        if(this.importing)
+            setTimeout(() => this.checkProgress(), 5000);
     }
 
 }

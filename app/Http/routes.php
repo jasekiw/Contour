@@ -1,4 +1,5 @@
 <?php
+use app\libraries\contour\Contour;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,7 +12,7 @@
 */
 
 
-use app\libraries\contour\Contour;
+
 
 Contour::construct();
 /**
@@ -61,9 +62,11 @@ Route::get('excel/edit/{id}',array('as' => 'edit_excel','middleware' => 'auth', 
 Route::get('excel/show/{id}',array('as' => 'edit_excel','middleware' => 'auth', 'uses' => 'ExcelController@show'));
 Route::get('excel/import',array('as' => 'import_excel','middleware' => 'auth', 'uses' => 'ExcelController@store'));
 Route::get('excel/convert',array('as' => 'convert_excel','middleware' => 'auth', 'uses' => 'ExcelController@convert'));
-Route::resource('import', 'ExcelImporterController', [ 'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('excelimport') ]);
+
 Route::post('import/upload', ['as' => 'excelimport.upload','middleware' => 'auth.admin', 'uses' => 'ExcelImporterController@upload']);
 Route::post('import/start', ['as' => 'excelimport.start','middleware' => 'auth.admin', 'uses' => 'ExcelImporterController@start']);
+Route::get('import/check', ['as' => 'excelimport.check','middleware' => 'auth.admin', 'uses' => 'ExcelImporterController@checkProgress']);
+Route::resource('import', 'ExcelImporterController', [ 'names' => Contour::getRoutesManager()->getResourceRoutesForNameHelper('excelimport') ]);
 /**
  * Ajax Excel Handlers
  */
@@ -97,7 +100,7 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
     /**
      *  Tags subsection
      */
-        Route::post('api/tags',['as' => 'api.tags.getMulti', 'uses' => 'api\TagController@getMulti']);
+        Route::post('api/tags',['as' => 'api.tags.getMulti', 'middleware' => 'auth', 'uses' => 'api\TagController@getMulti']);
         Route::get('api/tags/children/{id}',['as' => 'api.tags.children','middleware' => 'auth', 'uses' => 'api\TagController@get_children']);
         Route::get('api/tags/get_children_recursive/{id}',['as' => 'api_tags_get_children_recursive','middleware' => 'auth', 'uses' => 'api\TagController@get_children_recursive']);
         Route::post('api/tags/getParentTrace',['as' => 'api_tag_getParentTrace','middleware' => 'auth', 'uses' => 'api\TagController@getParentTrace']);
@@ -119,6 +122,11 @@ Route::get('ajaxdatablocks/{id}',['as' => 'index_ajax_datablock','middleware' =>
         Route::post('api/datablocks/create/',['as' => 'api.datablocks.create','middleware' => 'auth', 'uses' => 'api\DataBlockController@create']);
         Route::post('api/datablocks/remove/bulk',['as' => 'api.datablocks.remove.bulk','middleware' => 'auth', 'uses' => 'api\DataBlockController@removeBulk']);
         Route::get('api/datablock/{id}',['as' => 'api.datablock.get','middleware' => 'auth', 'uses' => 'api\DataBlockController@getById']);
+        Route::post('/api/datablock/addTags', ['as' => 'api.datablock.addTags','middleware' => 'auth', 'uses' => 'api\DataBlockController@addTagsToDataBlock']);
+        Route::post('/api/datablock/removeTags', ['as' => 'api.datablock.addTags','middleware' => 'auth', 'uses' => 'api\DataBlockController@removeTagsFromDataBlock']);
+
+        Route::post('/api/datablocks/addTags', ['as' => 'api.datablocks.addTags','middleware' => 'auth', 'uses' => 'api\DataBlockController@addTagsToDataBlocks']);
+        Route::post('/api/datablocks/removeTags', ['as' => 'api.datablocks.addTags','middleware' => 'auth', 'uses' => 'api\DataBlockController@removeTagsFromDataBlocks']);
 
     /**
      * Sheets subsection

@@ -30,4 +30,5 @@ class Tag_meta extends Model
     use SoftDeletes;
     protected  $table = 'tags_meta';
     protected $dates = ['deleted_at'];
+    protected $revisionCreationsEnabled = true;
 }

@@ -31,6 +31,7 @@ class Tag extends Model {
 	use RevisionableTrait;
 	use SoftDeletes;
 	protected $dates = ['deleted_at'];
+    protected $revisionCreationsEnabled = true;
 	protected $fillable = [];
 
 	public static function boot()

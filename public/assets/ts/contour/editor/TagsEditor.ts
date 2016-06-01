@@ -33,16 +33,17 @@ var template = `
 export class TagsEditor extends PopUpScreen
 {
     protected tagsToUse : IntMap<PlainTag>;
+    protected tagsStarted : IntMap<PlainTag>;
     protected currentTags : PlainTag[];
     protected currentParentId : number;
-    protected callback : (tags : IntMap<PlainTag>) => void;
+    protected callback : (addedTags : IntMap<PlainTag>, deletedTags) => void;
     protected exitCallBack : () => void;
     
     constructor()
     {
         super("TagsEditor", template);
         this.tagsToUse = new IntMap<PlainTag>();
-        this.insertElement(undefined,false);
+        this.insertElement( undefined , false);
         this.element.find(".exitButton").click(() => {
 
             this._hide();
@@ -66,7 +67,7 @@ export class TagsEditor extends PopUpScreen
     }
 
 
-    public show(tagIds : number[], parentId: number, callback? : (tags : IntMap<PlainTag>) => void, exitCallBack? : () => void) {
+    public show(tagIds : number[], parentId: number, callback? : (addedTags : IntMap<PlainTag>, deletedTags : IntMap<PlainTag> ) => void, exitCallBack? : () => void) {
         this.callback = callback;
         this.exitCallBack = exitCallBack;
         this.currentParentId = parentId;
@@ -75,6 +76,7 @@ export class TagsEditor extends PopUpScreen
             tags.forEach((tag, i) => {
                 this.tagsToUse.set(tag.id,tag);
             });
+            this.tagsStarted = this.tagsToUse.clone();
             this.populateTags();
             this.setUpCurrentTags(parentId);
             this._show();
@@ -98,7 +100,18 @@ export class TagsEditor extends PopUpScreen
     protected save()
     {
         this._hide();
-        this.callback(this.tagsToUse);
+        let deletedTags = new IntMap<PlainTag>();
+        this.tagsStarted.iterate((index, tag) => {
+            let getter = this.tagsToUse.get(index);
+            if(this.tagsToUse.get(index) == undefined)
+                deletedTags.set(index, tag);
+        });
+        let addedTags = new IntMap<PlainTag>();
+        this.tagsToUse.iterate((index, tag) => {
+            if(this.tagsStarted.get(index) == undefined)
+                addedTags.set(index, tag);
+        });
+        this.callback(addedTags, deletedTags);
     }
 
     protected setUpCurrentTags(parentId)

@@ -162,9 +162,8 @@ abstract class DataBlockCollectionAbstract
         $commonTags = []; // the tags that are in all rows
         foreach ($this->blocks as $dataBlock) {
 
-
+            /** @var DataTag[] $tags */
             $tags = $dataBlock->getTags()->getAsArray(TagCollection::SORT_TYPE_NONE);
-
             foreach ($tags as $tag) {
                 $participatingTags[$tag->get_id()] = $tag;
                 if (!isset($common[$tag->get_id()]))

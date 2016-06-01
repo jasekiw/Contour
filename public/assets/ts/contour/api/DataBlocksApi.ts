@@ -90,6 +90,88 @@ export class DataBlocksApi
         (new Ajax).post('/ajaxdatablocks/get_multiple_by_tags', object, functiontoCall);
     }
 
+    public static addTagsToDatablock(tagIds : number[], datablockId: number, callback? : () => void)
+    {
+        if(tagIds.length == 0)
+        {
+            console.log("no tag ids given");
+            return;
+        }
+        var object = {
+            tagIds: tagIds,
+            datablockId: datablockId
+        };
+        (new Ajax).post('/api/datablock/addTags', object, (e :AjaxDataBlockReponse) => {
+            if(e.success)
+            {
+                if(callback != undefined)
+                    callback();
+            }
+        });
+    }
+
+
+    public static removeTagsFromDatablock(tagIds : number[], datablockId: number, callback? : () => void)
+    {
+        if(tagIds.length == 0)
+        {
+            console.log("no tag ids given");
+            return;
+        }
+        var object = {
+            tagIds: tagIds,
+            datablockId: datablockId
+        };
+        (new Ajax).post('/api/datablock/removeTags', object, (e :AjaxDataBlockReponse) => {
+            if(e.success)
+            {
+                if(callback != undefined)
+                    callback();
+            }
+        });
+    }
+
+    public static addTagsToDatablocks(tagIds : number[], datablockIds: number[], callback? : () => void)
+    {
+        if(tagIds.length == 0)
+        {
+            console.log("no tag ids given");
+            return;
+        }
+        var object = {
+            tagIds: tagIds,
+            datablockIds: datablockIds
+        };
+        (new Ajax).post('/api/datablocks/addTags', object, (e :AjaxDataBlockReponse) => {
+            if(e.success)
+            {
+                if(callback != undefined)
+                    callback();
+            }
+        });
+    }
+
+
+    public static removeTagsFromDatablocks(tagIds : number[], datablockIds: number[], callback? : () => void)
+    {
+        if(tagIds.length == 0)
+        {
+            console.log("no tag ids given");
+            return;
+        }
+        var object = {
+            tagIds: tagIds,
+            datablockIds: datablockIds
+        };
+        (new Ajax).post('/api/datablocks/removeTags', object, (e :AjaxDataBlockReponse) => {
+            if(e.success)
+            {
+                if(callback != undefined)
+                    callback();
+            }
+        });
+    }
+
 }
 
 /**

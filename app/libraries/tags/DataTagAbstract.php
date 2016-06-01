@@ -69,7 +69,7 @@ abstract class DataTagAbstract extends DatabaseObject
      */
     public function get_id()
     {
-        return $this->id;
+        return intval($this->id);
     }
     
     /**

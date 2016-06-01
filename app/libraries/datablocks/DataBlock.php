@@ -17,6 +17,7 @@ use app\libraries\types\Type;
 use app\libraries\types\Types;
 use App\Models\Data_block;
 use App\Models\Tags_reference;
+use PDO;
 
 /**
  * Class DataBlock. Used to hold values and manage tags.
@@ -122,9 +123,9 @@ class DataBlock extends DataBlockAbstract
                 SELECT tags.* FROM tags_reference LEFT JOIN tags ON tags_reference.tag_id = tags.id
                 WHERE 
                 tags_reference.data_block_id = {$this->id} AND
-                tags.deleted_at IS NULL
+                tags_reference.deleted_at IS NULL
             ";
-            $rows = Query::getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+            $rows = Query::getPDO()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             $this->tags = new TagCollection();
             foreach ($rows as $row)
                 $this->tags->add(DataTags::fetchByPDORow($row));
@@ -173,19 +174,33 @@ class DataBlock extends DataBlockAbstract
         $this->id = $datablock->id;
         foreach ($this->tags->getAsArray() as $datatag) {
             /**  @var Tags_reference $reference */
-            $reference = Tags_reference::where('data_block_id', '=', $this->get_id())->where('tag_id', '=', $datatag->get_id())->first();
-            if (!isset($reference)) {
+            $datablockId = $this->get_id();
+            $tagId = $datatag->get_id();
+            //checks if the reference exists even if it was in the trash
+            $result = Tags_reference::withTrashed()->where('data_block_id','=', $datablockId)->where('tag_id','=', $tagId)->first();
+            if (!isset($result)) { // if it does not exist, make the reference
                 
                 $reference = new Tags_reference();
                 $reference->data_block_id = $this->get_id();
                 $reference->tag_id = $datatag->get_id();
                 $reference->save();
-            } else {
-                $reference->data_block_id = $this->get_id();
-                $reference->tag_id = $datatag->get_id();
-                $reference->save();
+            }
+            else if(isset($result->deleted_at)) // if it was deleted but still exists, restore it.
+            {
+//                $result->restore();
+                Tags_reference::withTrashed()->where('data_block_id','=', $datablockId)->where('tag_id','=', $tagId)->restore();
             }
         }
+        $otherReferences = Tags_reference::where('data_block_id', '=', $this->get_id())->get(['*']);
+        $tagsToSave = $this->tags->getAsArray();
+        $tagIdsToSave = [];
+        foreach($tagsToSave as $tag)
+            $tagIdsToSave[] = $tag->get_id();
+        foreach($otherReferences->all() as $reference)
+            if(!in_array($reference->tag_id, $tagIdsToSave))
+                Tags_reference::where('data_block_id', '=',  $this->get_id())->where('tag_id', '=', $reference->tag_id)->delete();
+
+
         return true;
     }
     

@@ -32,6 +32,7 @@ class UserMeta
         $alternate_answer = null;
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
         if ($var == "date_joined")
             $alternate_answer = $user->created_at;
         else if ($var == "email")

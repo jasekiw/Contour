@@ -17,15 +17,21 @@ class HeaderTasksMiddleware
      */
     public function handle($request, Closure $next)
     {
-        \Session::set('uploads_folder', public_path() . DIRECTORY_SEPARATOR . "uploads");
-        \Session::set('uploads_url',url('uploads'));
-        Theme::construct_theme();
-        require_once(app_path("/libraries/theme/includes.php"));
-        
+        if(!$request->ajax())
+        {
+            \Session::set('uploads_folder', public_path() . DIRECTORY_SEPARATOR . "uploads");
+            \Session::set('uploads_url',url('uploads'));
+            Theme::construct_theme();
+            require_once(app_path("/libraries/theme/includes.php"));
+
 //        require_once(base_path() . "/app/libraries/kint/Kint.class.php");
-        //created variables for the theme to use
-        $header_variables = new HeaderTasks();
-        $header_variables->perform();
+            //created variables for the theme to use
+            $header_variables = new HeaderTasks();
+            $header_variables->perform();
+        }
+
+
+
         return $next($request);
     }
 }

@@ -30,5 +30,6 @@ class Data_block_meta extends Model
     use SoftDeletes;
     protected $dates = ['deleted_at'];
     protected  $table = 'datablock_meta';
-    
+    protected $revisionCreationsEnabled = true;
+
 }

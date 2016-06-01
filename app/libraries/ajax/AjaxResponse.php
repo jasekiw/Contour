@@ -72,10 +72,12 @@ class AjaxResponse
         foreach ($arr as $name => $value)
         {
             if($hasValue)
-                if (!isset($value) && empty($value)) {
+            {
+                if (!isset($value) || empty($value)) {
                     $this->fail($name . " is not sent or empty.");
                     return false;
                 }
+            }
             else
                 if (!isset($value)) {
                     $this->fail($name . " is not sent.");
@@ -84,17 +86,21 @@ class AjaxResponse
         }
         return true;
     }
-    
+
     /**
      * Sets the response to fail and give a message
      *
      * @param string $message the message to send to the client
+     * @param bool $send if set to true the reponse will be sent immediately
+     * @return string
      */
-    public function fail($message = null)
+    public function fail($message = null,$send = false)
     {
         $this->success = false;
         if (isset($message))
             $this->message = $message;
+        if($send)
+            return $this->send();
     }
     
     public function success($message = null)

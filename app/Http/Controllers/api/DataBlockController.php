@@ -144,6 +144,135 @@ class DataBlockController extends Controller
         }
         return $response->send();
     }
+
+    /** Adds the specified tags to the datablock
+     * @return string
+     */
+    public function addTagsToDataBlock()
+    {
+        $response = new AjaxResponse();
+        $tagIds = Input::get('tagIds');
+        $datablockId = Input::get('datablockId');
+        if($response->reliesOnMany(['tagIds' => $tagIds, 'datablockId' => $datablockId]))
+        {
+            $collection = new TagCollection();
+            foreach($tagIds as $id)
+            {
+                $tag = DataTags::get_by_id($id);
+                if(!isset($tag))
+                    return $response->fail("could not find tag by the id of " . $id, true);
+                $collection->add($tag);
+            }
+
+
+            $block = DataBlocks::getByID($datablockId);
+            if(!isset($block))
+                return $response->fail("could not find block by the id of " . $datablockId, true);
+            $block->getTags();
+            $block->getTags()->mergeAll($collection);
+            $block->save();
+            $response->success("successfuly added");
+        }
+        return $response->send();
+    }
+
+    /** Adds the specified tags to the datablock
+     * @return string
+     */
+    public function removeTagsFromDataBlock()
+    {
+        $response = new AjaxResponse();
+        $tagIds = Input::get('tagIds');
+        $datablockId = Input::get('datablockId');
+        if($response->reliesOnMany(['tagIds' => $tagIds, 'datablockId' => $datablockId]))
+        {
+            $collection = new TagCollection();
+            foreach($tagIds as $id)
+            {
+                $tag = DataTags::get_by_id($id);
+                if(!isset($tag))
+                    return $response->fail("could not find tag by the id of " . $id, true);
+                $collection->add($tag);
+            }
+
+
+            $block = DataBlocks::getByID($datablockId);
+            if(!isset($block))
+                return $response->fail("could not find block by the id of " . $datablockId, true);
+            foreach($collection->getAsArray(TagCollection::SORT_TYPE_NONE) as $tag)
+                $block->getTags()->removeById($tag->get_id());
+            $block->save();
+            $response->success("successfuly added");
+        }
+        return $response->send();
+    }
+
+
+
+    /** Adds the specified tags to the datablock
+     * @return string
+     */
+    public function addTagsToDataBlocks()
+    {
+        $response = new AjaxResponse();
+        $tagIds = Input::get('tagIds');
+        $datablockIds = Input::get('datablockIds');
+        if($response->reliesOnMany(['tagIds' => $tagIds, 'datablockIds' => $datablockIds]))
+        {
+            $collection = new TagCollection();
+            foreach($tagIds as $id)
+            {
+                $tag = DataTags::get_by_id($id);
+                if(!isset($tag))
+                    return $response->fail("could not find tag by the id of " . $id, true);
+                $collection->add($tag);
+            }
+
+            foreach($datablockIds as $id)
+            {
+                $block = DataBlocks::getByID($id);
+                if(!isset($block))
+                    return $response->fail("could not find block by the id of " . $id, true);
+                $block->getTags()->mergeAll($collection);
+                $block->save();
+            }
+
+            $response->success("successfuly added");
+        }
+        return $response->send();
+    }
+
+    /** Adds the specified tags to the datablock
+     * @return string
+     */
+    public function removeTagsFromDataBlocks()
+    {
+        $response = new AjaxResponse();
+        $tagIds = Input::get('tagIds');
+        $datablockIds = Input::get('datablockIds');
+        if($response->reliesOnMany(['tagIds' => $tagIds, 'datablockIds' => $datablockIds]))
+        {
+            $collection = new TagCollection();
+            foreach($tagIds as $id)
+            {
+                $tag = DataTags::get_by_id($id);
+                if(!isset($tag))
+                    return $response->fail("could not find tag by the id of " . $id, true);
+                $collection->add($tag);
+            }
+            foreach($datablockIds as $id)
+            {
+                $block = DataBlocks::getByID($id);
+                if(!isset($block))
+                    return $response->fail("could not find block by the id of " . $id, true);
+                foreach($collection->getAsArray(TagCollection::SORT_TYPE_NONE) as $tag)
+                    $block->getTags()->removeById($tag->get_id());
+                $block->save();
+            }
+            $response->success("successfuly added");
+        }
+        return $response->send();
+    }
     
 
 }

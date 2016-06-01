@@ -1,5 +1,5 @@
 import {DataBlockEditor} from "./DataBlockEditor";
-import {PlainTag} from "../data/datatag/DataTag";
+import {PlainTag, DataTag} from "../data/datatag/DataTag";
 import {TagsApi} from "../api/TagsApi";
 import {SheetsApi} from "../api/SheetsApi";
 import {Spinner} from "../ui/Spinner";
@@ -9,6 +9,7 @@ import {Ajax} from "../Ajax";
 import {mouse} from "../components/MouseHandler";
 import {SheetTagHandler} from "./SheetTagHandler";
 import {TagsEditor} from "./TagsEditor";
+import {DataBlocksApi} from "../api/DataBlocksApi";
 
 
 /**
@@ -67,13 +68,36 @@ export class SheetEditor
         let tagIds : number[] = [];
         for(let i =0; i < tagIdStrings.length; i++)
             tagIds.push(parseInt(tagIdStrings[i]))
-        this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags) => {
-            let newTagIds = tags.keys();
-            
+        this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags, removedTags) => {
+            let newTagIds : number[] = tags.intKeys();
+            $container.attr("tags", newTagIds.join(",") );
 
+            let $toAdd = $();
+            tags.iterate((i, plainTag) => {
+                var tag = new DataTag();
+                tag.fromPlainObject(plainTag);
+                $toAdd = $toAdd.add(tag.toJQuery());
+            });
+            $container.find(".tags").append($toAdd);
+            removedTags.iterate((index, tag) => {
+                $container.find(".tags").find(".tag[tag='" + tag.id + "']").detach();
+            });
 
+            let cells = this.cellHandler.getCellsByGenericHeader($container);
+            cells.each((index, elem) => {
+               let id =  parseInt($(elem).find("input").attr("datablock"));
+                if(!isNaN(id))
+                {
+                    DataBlocksApi.addTagsToDatablock(newTagIds,id);
+                    DataBlocksApi.removeTagsFromDatablock(removedTags.intKeys(), id);
+                }
+
+            });
         });
     }
+    
+    
+    
 
 
 

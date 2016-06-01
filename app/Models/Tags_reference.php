@@ -2,6 +2,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 
 /**
@@ -20,8 +21,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin \Eloquent
  */
 class Tags_reference extends Model {
+    use RevisionableTrait;
+    use SoftDeletes;
 	protected $fillable = [];
 	protected $table = "tags_reference";
 	protected $dates = ['deleted_at'];
-	use SoftDeletes;
+    protected $revisionCreationsEnabled = true;
+    public static function boot()
+    {
+        parent::boot();
+    }
 }

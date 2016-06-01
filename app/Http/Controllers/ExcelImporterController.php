@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use app\libraries\ajax\AjaxResponse;
 use app\libraries\excel\import\Importer;
 use app\libraries\excel\import\suite\TemplateSuiteManager;
 use app\libraries\contour\Contour;
+use app\libraries\user\UserMeta;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
@@ -45,6 +47,10 @@ class ExcelImporterController extends Controller
         $importLocation = public_path("uploads{$ds}import{$ds}import.xls");
         $message = $importer->run($suite, $importLocation, $importTagLocation);
         echo $message;
+    }
+    public function checkProgress()
+    {
+        echo UserMeta::get('importProgress');
     }
 
     /**

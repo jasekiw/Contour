@@ -188,4 +188,23 @@ export class SheetCellHandler
             cellsToAdd += cellTemplate;
         this.editor.element.find("tbody tr.tag_row").last().append($(cellsToAdd));
     }
+
+    /**
+     * gets a JQuery list of cells that need to be modified in some way
+     * @param $header the table header or tr for the general row/column
+     */
+    public getCellsByGenericHeader($header : JQuery)
+    {
+        if(this.editor.orientation == "column")
+        {
+            return $header.find(".cell");
+        }
+        else
+        {
+            let collection = $();
+            let count = $header.prevAll(".tag_column").length;
+            this.editor.element.find("tbody .tag_row").each((index, elem) => collection = collection.add($(elem).find(".cell").get(count)));
+            return collection;
+        }
+    }
 }

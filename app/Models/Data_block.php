@@ -29,6 +29,7 @@ class Data_block extends Model {
 	use SoftDeletes;
 	protected $dates = ['deleted_at'];
 	protected $fillable = [];
+    protected $revisionCreationsEnabled = true;
 
 	public static function boot()
 	{

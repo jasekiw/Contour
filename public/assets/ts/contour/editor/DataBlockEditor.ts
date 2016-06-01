@@ -4,6 +4,7 @@ import {PopUpScreen} from "../ui/PopUpScreen";
 import {TagsEditor} from "./TagsEditor";
 import {DataBlocksApi} from "../api/DataBlocksApi";
 import {PlainDataBlock} from "../data/datablock/DataBlock";
+import {DataTag} from "../data/datatag/DataTag";
 var $body = $('body');
 var editorTemplate =
     `
