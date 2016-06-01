@@ -90,9 +90,9 @@ export class DataBlockEditor extends PopUpScreen
             this.tagsEditor.show(tagIds, this.parentId, (tags) =>
                 {
                     this.datablock.tags = [];
-                    for (var key in tags) {
-                        this.datablock.tags.push(tags[key]);
-                    }
+                    tags.iterate((i, tag) => {
+                        this.datablock.tags.push(tag);
+                    });
                     this._show()
                 },
                 () =>  this._show())

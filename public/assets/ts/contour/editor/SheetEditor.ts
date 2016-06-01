@@ -68,14 +68,11 @@ export class SheetEditor
         for(let i =0; i < tagIdStrings.length; i++)
             tagIds.push(parseInt(tagIdStrings[i]))
         this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags) => {
-            for (var key in tags)
-            {
-                console.log(tags[key]);
-                //tags[key]
-            }
-        });
-        
+            let newTagIds = tags.keys();
+            
 
+
+        });
     }
 
 

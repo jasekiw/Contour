@@ -1,6 +1,7 @@
 import {TagsApi} from "../api/TagsApi";
 import {PlainTag} from "../data/datatag/DataTag";
 import {PopUpScreen} from "../ui/PopUpScreen";
+import {IntMap} from "../lib/IntMap";
 var template = `
 <div class="panel panel-default tagsEditor popup" id="{id}" style="display:none;">
     <div class="panel-heading">
@@ -31,16 +32,16 @@ var template = `
 `;
 export class TagsEditor extends PopUpScreen
 {
-    protected tagsToUse : {[name: string] : PlainTag };
+    protected tagsToUse : IntMap<PlainTag>;
     protected currentTags : PlainTag[];
     protected currentParentId : number;
-    protected callback : (tags : {[name: string] : PlainTag}) => void;
+    protected callback : (tags : IntMap<PlainTag>) => void;
     protected exitCallBack : () => void;
     
     constructor()
     {
         super("TagsEditor", template);
-        this.tagsToUse = {};
+        this.tagsToUse = new IntMap<PlainTag>();
         this.insertElement(undefined,false);
         this.element.find(".exitButton").click(() => {
 
@@ -65,13 +66,14 @@ export class TagsEditor extends PopUpScreen
     }
 
 
-    public show(tagIds : number[], parentId: number, callback? : (tags : {[name: string] : PlainTag }) => void, exitCallBack? : () => void) {
+    public show(tagIds : number[], parentId: number, callback? : (tags : IntMap<PlainTag>) => void, exitCallBack? : () => void) {
         this.callback = callback;
         this.exitCallBack = exitCallBack;
         this.currentParentId = parentId;
         TagsApi.getByIds(tagIds, (tags) => {
+            this.tagsToUse = new IntMap<PlainTag>();
             tags.forEach((tag, i) => {
-                this.tagsToUse[tag.id] = tag;
+                this.tagsToUse.set(tag.id,tag);
             });
             this.populateTags();
             this.setUpCurrentTags(parentId);
@@ -82,14 +84,14 @@ export class TagsEditor extends PopUpScreen
     {
         let tag = this.fromHtmlTag(e);
         e.detach();
-        this.tagsToUse[tag.id] = tag;
+        this.tagsToUse.set(tag.id, tag);
         this.element.find('.tagsToUse').append(e);
     }
     protected removeTagFromReferenced(e : JQuery)
     {
         let tagToRemove = this.fromHtmlTag(e);
         e.detach();
-        delete this.tagsToUse[tagToRemove.id];
+        this.tagsToUse.remove(tagToRemove.id);
         this.refreshCurrentTags();
     }
 
@@ -115,8 +117,10 @@ export class TagsEditor extends PopUpScreen
     {
         //
         let $tagsToAdd = $();
-        for (var key in this.tagsToUse)
-            $tagsToAdd = $tagsToAdd.add( this.makeHtmlTag(this.tagsToUse[key]));
+        this.tagsToUse.iterate((index, tag) => {
+            $tagsToAdd = $tagsToAdd.add( this.makeHtmlTag(tag));
+        });
+
         this.element.find(".tagsToUse").html($tagsToAdd);
     }
     protected refreshCurrentTags()

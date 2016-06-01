@@ -1,8 +1,9 @@
-import {ExcelImportPage} from "excelImport/ExcelImporterPage";
-import {NewFacilityPage} from "newfacility/NewFacilityPage";
-import {Editor} from "editor/Editor";
+import {ExcelImportPage} from "./excelImport/ExcelImporterPage";
+import {NewFacilityPage} from "./newfacility/NewFacilityPage";
+import {Editor} from "./editor/Editor";
 import {MenuEditor} from "./menu_editor/MenuEditor";
-import {Types} from "./api/Types"
+
+
 
 class Main
 {
