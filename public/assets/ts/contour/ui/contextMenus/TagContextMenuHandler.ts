@@ -21,7 +21,7 @@ export class TagContextMenuHandler
                     name: "Rename", callback: (key, opt : JQueryContextMenuRuntimeOptions) =>
                     {
                         var target = opt.$trigger;
-                        this.renameDialog.show(opt.$trigger.text(), (e) =>
+                        this.renameDialog.show(opt.$trigger.text().trim(), (e) =>
                         {
                             target.text(e.name);
                         }, parseInt(target.attr("tag")));

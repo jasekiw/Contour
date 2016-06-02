@@ -12,11 +12,11 @@ export class Editor
     private tagsEditor : TagsEditor;
     public sheetEditors : {[name : string]: SheetEditor} = {};
     private tagContextMenuHandler : TagContextMenuHandler;
+    private editorTagContextMenuHandler : TagContextMenuHandler;
     private listContextMenu : ListContextMenu;
 
     constructor()
     {
-        window["editor"] = this;
         
         this.initialize();
         $(".nav-pills li a").click((e) => this.loadNewEditor(e));
@@ -29,7 +29,7 @@ export class Editor
     {
         this.tagsEditor = new TagsEditor();
         this.dataBlockEditor = new DataBlockEditor(this.tagsEditor);
-        
+        this.editorTagContextMenuHandler = new TagContextMenuHandler(".tagsEditor .currentTags .general_tags .editor_tag");
         this.tagContextMenuHandler = new TagContextMenuHandler(".tag");
         this.listContextMenu = new ListContextMenu(".GeneralListHandle");
         this.listContextMenu.setEditTagsFunction( ($elem) => this.handleEditTagsContextMenu($elem));

@@ -67,7 +67,13 @@ export class SheetEditor
         let tagIdStrings = $container.attr("tags").split(",");
         let tagIds : number[] = [];
         for(let i =0; i < tagIdStrings.length; i++)
-            tagIds.push(parseInt(tagIdStrings[i]))
+        {
+            let id = parseInt(tagIdStrings[i]);
+            if(!isNaN(id))
+                tagIds.push(id);
+        }
+
+
         this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags, removedTags) => {
             let newTagIds : number[] = tags.intKeys();
             $container.attr("tags", newTagIds.join(",") );
@@ -83,7 +89,7 @@ export class SheetEditor
                 $container.find(".tags").find(".tag[tag='" + tag.id + "']").detach();
             });
 
-            let cells = this.cellHandler.getCellsByGenericHeader($container);
+            let cells = this.cellHandler.getCellsByGenericHeader($container.parent());
             cells.each((index, elem) => {
                let id =  parseInt($(elem).find("input").attr("datablock"));
                 if(!isNaN(id))

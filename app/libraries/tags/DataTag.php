@@ -15,6 +15,7 @@ use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\types\TypeAbstract;
 use app\libraries\types\Types;
+use App\Models\Data_block;
 use App\Models\Tag;
 use app\libraries\types\Type;
 use App\Models\Tag_meta;
@@ -496,6 +497,15 @@ class DataTag extends DataTagAbstract
     {
         Tag::where("id", "=", $this->id)->delete();
         Tag_meta::where('tag_id', '=', $this->id)->delete();
+        if($this->get_type()->get_id() == Types::getTagPrimary())
+        {
+            $references = Tags_reference::where("tag_id", "=", $this->id)->get(['*']);
+            foreach($references as $reference)
+            {
+                Data_block::where('id', '=', $reference->data_block_id)->delete();
+                $reference->delete();
+            }
+        }
         $this->id = null;
     }
     
@@ -506,7 +516,8 @@ class DataTag extends DataTagAbstract
     {
         Tag::where("id", "=", $this->id)->delete();
         Tag_meta::where('tag_id', '=', $this->id)->delete();
-        Tags_reference::where("tag_id", "=", $this->id)->delete();
+
+
         $this->id = null;
     }
     

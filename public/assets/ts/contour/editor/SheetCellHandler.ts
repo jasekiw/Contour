@@ -196,9 +196,7 @@ export class SheetCellHandler
     public getCellsByGenericHeader($header : JQuery)
     {
         if(this.editor.orientation == "column")
-        {
             return $header.find(".cell");
-        }
         else
         {
             let collection = $();

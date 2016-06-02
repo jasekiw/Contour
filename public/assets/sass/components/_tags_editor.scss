@@ -1,0 +1,41 @@
+.tagsEditor {
+    .currentTags , .tagsToUse {
+        .editor_tag {
+            display:inline-block;
+            padding:5px;
+            margin:10px;
+            border-radius:2px;
+            box-shadow: 0 0 1px rgba(20,20,20,0.3);
+            user-select: none;
+            cursor: pointer;
+            background:white;
+
+        }
+        .general_tags {
+            padding: 20px 0;
+            border-bottom: $evergreen_border;
+        }
+        .tag_navigation {
+            padding: 20px 0;
+            border-bottom: $evergreen_border;
+        }
+
+    }
+    .options {
+        padding-top: 20px;
+    }
+    .submit {
+        float: right;
+    }
+    .bottom_section {
+        padding: 20px 0;
+    }
+    .newTagOptions {
+        margin-top: 40px;
+    }
+    input.newTagName {
+        font-size: 24px;
+        margin-right:10px;
+    }
+}
+

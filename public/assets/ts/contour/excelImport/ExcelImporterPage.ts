@@ -67,13 +67,15 @@ export class ExcelImportPage
     }
     public checkProgress()
     {
+        if(!this.importing)
+            return;
         let progress = $(".progress");
         jQuery.ajax({
             url:         '/import/check',
             contentType: false,
             processData: false,
             type:        'GET',
-            timeout:     10000,
+            timeout:     2000,
             complete:    (jqXHR : JQueryXHR) => this.appendProgress(jqXHR.responseText),
             error:       (jqXHR : JQueryXHR) => progress.html("ERROR: " + jqXHR.responseText)
         });
@@ -81,6 +83,10 @@ export class ExcelImportPage
 
     protected appendProgress(data : string)
     {
+        if(this.importing)
+            setTimeout(() => this.checkProgress(), 10000);
+        if(data == undefined)
+            return;
         if(data.indexOf("/") == -1)
             return;
         let split = data.split('/');
@@ -92,8 +98,7 @@ export class ExcelImportPage
             return;
         }
         $(".progress").html(data);
-        if(this.importing)
-            setTimeout(() => this.checkProgress(), 5000);
+
     }
 
 }

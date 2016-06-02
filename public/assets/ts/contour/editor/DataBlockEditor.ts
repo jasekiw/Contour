@@ -25,7 +25,10 @@ var editorTemplate =
             <div class="options">
                 <input type="submit" value="Save" class="submit" />
             </div>
-            <button class="btn btn-default edit-tags">Edit Tags</button>
+            <div style="clear:both">
+                <button class="evergreen_button edit-tags">Edit Tags</button>
+            </div>
+            
         </div>
     </div>
 </div>

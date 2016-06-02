@@ -14,7 +14,7 @@ class CreateTagsReference extends Migration {
 	{
 		Schema::create('tags_reference', function(Blueprint $table)
 		{
-			//$table->increments('id');
+			$table->increments('id');
 			$table->unsignedInteger('data_block_id');
 			$table->unsignedInteger('tag_id');
 			$table->unique(['tag_id', 'data_block_id']);

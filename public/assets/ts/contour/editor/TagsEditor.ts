@@ -22,6 +22,11 @@ var template = `
                 <h3>Available Tags</h3>
                 <div class="general_tags">
                 </div>
+                <div class="newTagOptions">
+                    <input type="text" class="form-inline newTagName" />
+                    <button class="evergreen_button">Add Tag</button>
+                </div>
+               
             </div>
             <div class="options">
                 <input type="submit" value="Save" class="submit" />
@@ -63,6 +68,7 @@ export class TagsEditor extends PopUpScreen
         this.element.find(".tagsToUse").on("dblclick", ".editor_tag", (e : JQueryEventObject) => {
             this.removeTagFromReferenced($(e.target));
         });
+        this.element.find(".newTagOptions button").click(() => this.createTag());
 
     }
 
@@ -71,16 +77,27 @@ export class TagsEditor extends PopUpScreen
         this.callback = callback;
         this.exitCallBack = exitCallBack;
         this.currentParentId = parentId;
-        TagsApi.getByIds(tagIds, (tags) => {
+        if(tagIds.length == 0)
+        {
             this.tagsToUse = new IntMap<PlainTag>();
-            tags.forEach((tag, i) => {
-                this.tagsToUse.set(tag.id,tag);
-            });
             this.tagsStarted = this.tagsToUse.clone();
             this.populateTags();
             this.setUpCurrentTags(parentId);
             this._show();
-        });
+        }
+        else
+            TagsApi.getByIds(tagIds, (tags) => {
+
+                this.tagsToUse = new IntMap<PlainTag>();
+                if(tags != undefined)
+                    tags.forEach((tag, i) => {
+                        this.tagsToUse.set(tag.id,tag);
+                    });
+                this.tagsStarted = this.tagsToUse.clone();
+                this.populateTags();
+                this.setUpCurrentTags(parentId);
+                this._show();
+            });
     }
     protected addTagToUse(e : JQuery)
     {
@@ -88,6 +105,18 @@ export class TagsEditor extends PopUpScreen
         e.detach();
         this.tagsToUse.set(tag.id, tag);
         this.element.find('.tagsToUse').append(e);
+    }
+    protected createTag()
+    {
+        let name = this.element.find(".newTagOptions .newTagName").val();
+        this.element.find(".newTagOptions .newTagName").val("");
+        if(name.length > 0)
+            TagsApi.create(name, this.currentParentId, 0, "general", (tag)=> {
+                this.addTagToCurrent(tag);
+
+            });
+        else
+            alert("please enter a name before adding the tag")
     }
     protected removeTagFromReferenced(e : JQuery)
     {
@@ -165,6 +194,10 @@ export class TagsEditor extends PopUpScreen
         this.element.find(".currentTags").find(".general_tags").html(newCurrentTags);
         this.element.find(".currentTags").find(".general_tags").attr("parent", parent.id);
         this.element.find(".currentTags").find(".tag_navigation").html(goUpDirElem.add(newNaviationTags));
+    }
+    protected addTagToCurrent(tag : PlainTag)
+    {
+        this.element.find(".currentTags").find(".general_tags").append(this.makeHtmlTag(tag));
     }
 
     protected makeHtmlTag(tag : PlainTag) : JQuery
