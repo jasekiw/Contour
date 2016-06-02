@@ -60,6 +60,11 @@ export class SheetEditor
         else
             this.setup();
     }
+
+    /**
+     *
+     * @param $elem
+     */
     public editTagsOnGeneralList($elem : JQuery)
     {
         
@@ -74,12 +79,12 @@ export class SheetEditor
         }
 
 
-        this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (tags, removedTags) => {
-            let newTagIds : number[] = tags.intKeys();
+        this.tagsEditor.show(tagIds,parseInt($container.parents(".sheet_editor").attr("parent")), (addedTags, removedTags) => {
+            let newTagIds : number[] = addedTags.intKeys();
             $container.attr("tags", newTagIds.join(",") );
 
             let $toAdd = $();
-            tags.iterate((i, plainTag) => {
+            addedTags.iterate((i, plainTag) => {
                 var tag = new DataTag();
                 tag.fromPlainObject(plainTag);
                 $toAdd = $toAdd.add(tag.toJQuery());
@@ -101,13 +106,6 @@ export class SheetEditor
             });
         });
     }
-    
-    
-    
-
-
-
-
 
 
     /**
@@ -283,14 +281,6 @@ export class SheetEditor
         this.cellHandler.addColumnCells();
     }
 
-    protected addPrimaryRow()
-    {
-
-    }
-    protected addPrimaryColumn()
-    {
-
-    }
 
     /**
      * handles the removal of a general list. triggeres by the removing of the dom object .GeneralListHandle
@@ -320,11 +310,4 @@ export class SheetEditor
         }
 
     }
-
-
-
- 
-
-    
-
 }

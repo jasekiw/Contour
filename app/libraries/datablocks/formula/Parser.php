@@ -644,7 +644,7 @@ class Parser
     /**
      * Checks the string for the sum function
      */
-    private function prepxrocessSUM()
+    private function preprocessSUM()
     {
         $infixExpression = []; //the infix expression to insert tokens into after the datablocks have been converted
         $index = 0; // the starting index to cycle through the tokens with

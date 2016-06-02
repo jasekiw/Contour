@@ -36,6 +36,7 @@ class DataBlockController extends Controller
         if (!isset($id))
             $id = Input::get('id');
         $value = Input::get("value");
+        
         $datablock = DataBlocks::getByID($id);
         if (isset($datablock)) {
             $datablock->set_value($value);

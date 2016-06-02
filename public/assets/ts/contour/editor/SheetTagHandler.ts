@@ -9,6 +9,7 @@ export class SheetTagHandler
 
     protected editor : SheetEditor;
     protected cellHandler : SheetCellHandler;
+
     constructor(editor : SheetEditor, cellHandler : SheetCellHandler)
     {
         this.editor = editor;

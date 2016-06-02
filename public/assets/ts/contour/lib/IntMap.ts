@@ -44,13 +44,13 @@ export class IntMap<V> implements Cloneable<IntMap<V>>
      *
      * @param callback
      */
-    public iterate(callback : (key : number, val : V) => boolean | void)
+    public iterate(callback : (key : number, val : V) => any)
     {
         for (var akey in this.data) {
             let shallContinue = callback(parseInt(akey), this.data[akey]);
             if (shallContinue == undefined)
                 continue;
-            if (shallContinue == false)
+            if (shallContinue === false)
                 break;
         }
     }
@@ -106,5 +106,26 @@ export class IntMap<V> implements Cloneable<IntMap<V>>
         Object.keys(this.data).forEach((key) => newData[key] = this.data[key]);
         intmap.data = newData;
         return intmap;
+    }
+
+    /**
+     * finds the values by keys that this map has and the other does not and also what the other map has and this does not.
+     * @param othermap
+     * @param callback
+     */
+
+    public diff(othermap : IntMap<V>, callback : (mine : IntMap<V>, theirs : IntMap<V>) => void)
+    {
+        let mine = new IntMap<V>();
+        let theirs = new IntMap<V>();
+        this.iterate((i,v) => {
+            if(othermap.get(i) == undefined)
+                mine.set(i, v);
+        });
+        othermap.iterate((i,v) => {
+            if(this.get(i) == undefined)
+                theirs.set(i, v);
+        });
+        callback(mine, theirs);
     }
 }

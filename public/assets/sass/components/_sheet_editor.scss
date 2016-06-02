@@ -1,16 +1,12 @@
 $editorGray: #8198A3;
-@mixin newIcon(){
-    color:$evergreen;
+@mixin newIcon() {
+    color: $evergreen;
     font-size: 18px;
     cursor: pointer;
 }
-.nav-pills>li.active>a {
-    background-color: $evergreen
-}
-.nav-pills>li>a
-{
-    font-size:20px;
-}
+
+
+
 .editor {
     .new_column {
         i {
@@ -24,13 +20,14 @@ $editorGray: #8198A3;
                 @include newIcon()
             }
             padding: 10px 0;
-            text-align:center;
+            text-align: center;
         }
 
     }
 }
+
 .content-wrapper .fa {
-    color:$evergreen;
+    color: $evergreen;
 }
 
 .sheet_editor {
@@ -39,12 +36,22 @@ $editorGray: #8198A3;
         text-align: center;
 
     }
+    .tag_column .tag:not(.primary)
+    {
+        font-weight: normal;
+    }
     th {
         padding-bottom: 10px;
     }
-
+    .row_head .tag.primary {
+        color: $editorGray;
+        font-weight:bold;
+        padding-right: 10px;
+    }
+    .row_head {
+        //padding-right: 10px;
+    }
     .tag_row {
-
         .row_name {
             padding-right: 20px;
             font-size: 16px;
@@ -84,7 +91,7 @@ $editorGray: #8198A3;
     font-weight: bold;
     padding: 3px 8px;
     border-radius: 3px;
-    margin-left:auto;
+    margin-left: auto;
 
 }
 
@@ -94,28 +101,29 @@ $editorGray: #8198A3;
         margin-top: 10px;
     }
 }
+
 .tag_row {
 
     .sort_number {
-        float:right;
+        float: right;
     }
     .row_head {
-        display:flex;
-        height:35px;
+        display: flex;
+        height: 35px;
         align-items: center;
         justify-content: center;
-        overflow:hidden;
+        overflow: hidden;
     }
     .tags {
-        margin-right:10px;
+        margin-right: 10px;
 
     }
 
-
 }
+
 .tag_column {
-    padding-left:10px;
-    padding-right:10px;
+    padding-left: 10px;
+    padding-right: 10px;
     vertical-align: bottom;
 }
 

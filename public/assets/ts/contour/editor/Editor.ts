@@ -22,6 +22,18 @@ export class Editor
         $(".nav-pills li a").click((e) => this.loadNewEditor(e));
     }
 
+    protected initializeSheetControls()
+    {
+        let newSheetTemplate = `<div class="new_sheet"><i class="fa fa-plus" aria-hidden="true"></i></div>`;
+        let deleteSheeetTemplate = `<div class="delete_sheet"><i class="fa fa-trash" aria-hidden="true"></i></div>`;
+        $('.nav.nav-pills li a').append(newSheetTemplate);
+        $('.nav.nav-pills li a').prepend(deleteSheeetTemplate);
+        $('.nav.nav-pills li a .new_sheet').click((e : JQueryEventObject) => {
+            alert('clicked');
+            e.stopPropagation();
+        });
+    }
+
     /**
      * initializes the editor on the active tab
      */
@@ -36,6 +48,7 @@ export class Editor
         let active = $(".tab-pane.active");
         let id = "#" + active.attr("id");
         this.sheetEditors[id] = (new SheetEditor(active.find(".editor"), this.dataBlockEditor, this.tagsEditor));
+        this.initializeSheetControls();
     }
     protected handleEditTagsContextMenu($elem : JQuery)
     {

@@ -2,6 +2,7 @@ import {DataBlocksApi} from "../api/DataBlocksApi";
 import {DataBlockEditor} from "./DataBlockEditor";
 import {SheetEditor} from "./SheetEditor";
 import {cellTemplate} from "../ui/templates/Cell";
+import {PlainDataBlock} from "../data/datablock/DataBlock";
 
 export class SheetCellHandler
 {
@@ -19,12 +20,12 @@ export class SheetCellHandler
         this.editor.element.on("focusout", ".cell input", (e) => this.saveDataBlock($(e.currentTarget)));
     }
 
-
     /**
      * Creates a datablock based on the element given
      * @param $element
+     * @param onComplete the function called when the datablock is created and the datablock is handed back to
      */
-    protected createDataBlock($element : JQuery)
+    protected createDataBlock($element : JQuery, onComplete? : (block : PlainDataBlock) => void)
     {
 
         if(this.editor.orientation == "column")
@@ -48,6 +49,8 @@ export class SheetCellHandler
             {
                 $element.attr("datablock", block.id);
                 console.log("datablock created with value " + block.value);
+                if(onComplete !== undefined)
+                    onComplete(block);
             });
 
         }
@@ -68,6 +71,8 @@ export class SheetCellHandler
             {
                 $element.attr("datablock", block.id);
                 console.log("datablock created with value " + block.value);
+                if(onComplete !== undefined)
+                    onComplete(block);
             });
         }
         console.log("creating datablock...");
@@ -134,10 +139,41 @@ export class SheetCellHandler
     {
         e.preventDefault();
         var $element = $(e.currentTarget);
-        this.dataBlockEditor.open($element, this.editor.getParentId(), $element.val(), (block) => {
-            console.log(block);
+        let dataBlockId = parseInt($element.attr("datablock"));
+        if(isNaN(dataBlockId))
+            this.createDataBlock($element, (block) => {
+                this.openDataBlockEditor($element, this.editor.getParentId(), $element.val());
+            });
+        else
+            this.openDataBlockEditor($element, this.editor.getParentId(), $element.val());
+
+
+    }
+
+    protected openDataBlockEditor($element : JQuery, parentId, value)
+    {
+        let dataBlockId = parseInt($element.attr("datablock"));
+        this.dataBlockEditor.open(dataBlockId, parentId, value, (block, addedTags, deletedTags) => {
+            $element.val(block.value);
+            if(this.editor.orientation == "column")
+            {
+                let tagsContainerForRow = $element.parent().parent().find(".row_head .tags");
+                deletedTags.iterate((i, tag) => {
+                    tagsContainerForRow.find(".tag[tag='" + tag.id + "']").detach();
+                });
+
+            }
+            else
+            {
+                let columnNumber = $element.parent(".cell").prevAll(".cell").length;
+                let container = $(this.editor.element.find("thead .tag_column.tags").get(columnNumber));
+                deletedTags.iterate((i, tag) => {
+                    container.find(".tag[tag='" + tag.id + "']").detach();
+                });
+            }
         });
     }
+
 
     /**
      * Deletes datablocks from database and from the screen.

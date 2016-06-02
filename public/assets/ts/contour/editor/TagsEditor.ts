@@ -72,7 +72,13 @@ export class TagsEditor extends PopUpScreen
 
     }
 
-
+    /**
+     * 
+     * @param tagIds
+     * @param parentId
+     * @param callback
+     * @param exitCallBack
+     */
     public show(tagIds : number[], parentId: number, callback? : (addedTags : IntMap<PlainTag>, deletedTags : IntMap<PlainTag> ) => void, exitCallBack? : () => void) {
         this.callback = callback;
         this.exitCallBack = exitCallBack;

@@ -3,6 +3,42 @@
     overflow-x: auto;
 
 }
+
 .editor__inner_container {
-    position:relative;
+    position: relative;
 }
+.delete_sheet {
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 5px;
+    padding:4px;
+}
+.nav-pills > li .delete_sheet .fa {
+    color:red;
+}
+.new_sheet {
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 5px;
+    padding:4px;
+}
+
+.nav-pills > li.active .fa {
+    color:white;
+}
+
+.nav-pills > li .new_sheet:hover .fa {
+    color: blue;
+}
+#sheet_tabbed {
+    .nav-pills > li.active > a {
+        background-color: $evergreen
+    }
+
+    .nav-pills > li > a {
+        font-size: 20px;
+    }
+}
+

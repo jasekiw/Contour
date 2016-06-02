@@ -4,7 +4,8 @@ import {PopUpScreen} from "../ui/PopUpScreen";
 import {TagsEditor} from "./TagsEditor";
 import {DataBlocksApi} from "../api/DataBlocksApi";
 import {PlainDataBlock} from "../data/datablock/DataBlock";
-import {DataTag} from "../data/datatag/DataTag";
+import {DataTag, PlainTag} from "../data/datatag/DataTag";
+import {IntMap} from "../lib/IntMap";
 var $body = $('body');
 var editorTemplate =
     `
@@ -40,131 +41,94 @@ var editorTemplate =
 
 export class DataBlockEditor extends PopUpScreen
 {
+    // the field that holds the formula
     private dataBlockFormula : JQuery;
-    private dataBlockContainer : JQuery;
-    private head : JQuery;
-    private body : JQuery;
-    private searchBar : JQuery;
-    private cell : JQuery;
     private saveButton : JQuery;
-    private cancelButton : JQuery;
     private calculateButton : JQuery;
     private calculationOutputContainer : JQuery;
     private tagsEditor : TagsEditor;
     private parentId : number;
     private datablock : PlainDataBlock;
-    private onSave : (block : PlainDataBlock) => void;
+    private onSave : (block : PlainDataBlock, addedTags?: IntMap<PlainTag>, deletedTags? :  IntMap<PlainTag>) => void;
+    private tagsStarted : IntMap<PlainTag>;
+    private currentTags : IntMap<PlainTag>;
 
     constructor(tagsEditor : TagsEditor)
     {
         super("datablock-editor", editorTemplate);
-
         this.insertElement();
         this.tagsEditor = tagsEditor;
         this.dataBlockFormula = this.element.find("input[name='datablock_value']");
-        this.dataBlockContainer = this.element.find(".datablocks");
-        this.head = this.element.find(".header_container");
-        this.body = this.element.find(".row_and_datablock_container");
-        this.searchBar = this.element.find("[name=search]");
         this.saveButton = this.element.find("input.submit");
-        this.cancelButton = this.element.find("input.cancel");
         this.calculateButton = this.element.find("input[name='calculate']");
         this.calculationOutputContainer = this.element.find(".calculated");
-        this.searchBar.change(() =>
-        {
-            this.filterView(this.searchBar.val());
-        });
-
         this.element.find(".exitButton").click(() => this.exit());
-
         this.saveButton.on("click", (e) =>
         {
             e.preventDefault();
             this.save();
             this.exit();
         });
-        this.element.find(".edit-tags").click((e) =>
+        this.element.find(".edit-tags").click((e) => this.editTags());
+        this.calculateButton.on("click", (e) => this.calculate());
+    }
+
+    /**
+     * Calculates the current formula and displays it
+     */
+    protected calculate()
+    {
+        (new Ajax()).post("/api/getValue", {
+            datablock:   this.dataBlockFormula.val(),
+            datablockid: this.datablock.id
+        }, (response : {result : string}) =>
         {
-            let tagIds : number[] = [];
-            this.datablock.tags.forEach((tag, i) =>
-            {
-                tagIds.push(tag.id);
-            });
-            this._hide();
-            this.tagsEditor.show(tagIds, this.parentId, (tags) =>
-                {
-                    this.datablock.tags = [];
-                    tags.iterate((i, tag) => {
-                        this.datablock.tags.push(tag);
-                    });
-                    this._show()
-                },
-                () =>  this._show())
-        });
-        this.cancelButton.on("click", (e) =>
-        {
-            e.preventDefault();
-            this.exit();
-        });
-        this.calculateButton.on("click", (e) =>
-        {
-            (new Ajax()).post("/api/getValue", {
-                datablock:   this.dataBlockFormula.val(),
-                datablockid: this.cell.attr("datablock")
-            }, (response : {result : string}) =>
-            {
-                this.calculationOutputContainer.html(response.result);
-            });
+            this.calculationOutputContainer.html(response.result);
         });
     }
 
     /**
-     * Clears the the datablocks our from the container
+     * shows the tag editor for this datablock
      */
-    private clearDatablocks() : void
+    protected editTags()
     {
-        this.dataBlockContainer.html("");
+        let tagIds : number[] = [];
+        this.datablock.tags.forEach((tag, i) =>
+        {
+            tagIds.push(tag.id);
+        });
+        this._hide();
+        this.tagsEditor.show(tagIds, this.parentId, (addedTags, deletedTags) =>
+            {
+                this.datablock.tags = [];
+                addedTags.iterate((i, tag) => this.currentTags.set(tag.id, tag));
+                deletedTags.iterate((index, tag) => this.currentTags.remove(tag.id));
+                this._show()
+            },
+            () =>  this._show());
+
     }
 
-    private addDataBlock(data : string) : void
-    {
-        this.body.append(data);
-    }
-
-    private addtoHead(data : string) : void
-    {
-        this.head.append(data);
-    }
-
-    private removeDatablocks() : void
-    {
-        this.body.find(".datablock").remove();
-    }
-
-    private removeHeadTags() : void
-    {
-        this.head.html("");
-    }
-
-    private removeRowTags() : void
-    {
-        this.body.find(".rowTag").remove();
-    }
-
-    private filterView(filterText : string) : void
-    {
-        console.log("filtering for" + filterText);
-    }
-
-    public open(cell : JQuery, sheetId : number, value : string, onSave? : (block : PlainDataBlock) => void) : void
+    /**
+     * Opens the datablock editor for editing a datablock
+     * @param datablockId
+     * @param sheetId
+     * @param value
+     * @param onSave
+     */
+    public open(datablockId : number, sheetId : number, value : string, onSave? : (block : PlainDataBlock, addedTags?: IntMap<PlainTag>, deletedTags? :  IntMap<PlainTag>) => void) : void
     {
         this.onSave = onSave;
-        this.cell = cell;
-        DataBlocksApi.getById(parseInt(this.cell.attr("datablock")), (block) =>
+
+        DataBlocksApi.getById(datablockId, (block) =>
         {
             this.datablock = block;
+            this.tagsStarted = new IntMap<PlainTag>();
+            block.tags.forEach((tag, i) => this.tagsStarted.set(tag.id, tag));
+            this.currentTags = this.tagsStarted.clone();
             this.show(sheetId, value)
         });
+
     }
 
     /**
@@ -180,100 +144,31 @@ export class DataBlockEditor extends PopUpScreen
         this._show();
     }
 
+    /**
+     * Hides the window
+     */
     public exit() : void
     {
         this._hide();
     }
 
+    /**
+     * Saves the datablock and calls the callback function with the deleted tags and the added tags
+     */
     private save() : void
     {
-        (new Ajax).post("/api/datablocks/save/" + this.cell.attr("datablock"), {value: this.dataBlockFormula.val()}, () =>
-        {
+        this.tagsStarted.diff(this.currentTags, (deletedTags, addedTags) => {
+            DataBlocksApi.removeTagsFromDatablock(deletedTags.intKeys(),this.datablock.id);
+            DataBlocksApi.addTagsToDatablock(addedTags.intKeys(),this.datablock.id);
+            (new Ajax).post("/api/datablocks/save/" + this.datablock.id, {value: this.dataBlockFormula.val()});
+            this.datablock.tags = [];
+            this.currentTags.iterate((i,tag) => this.datablock.tags.push(tag));
+            this.datablock.value = this.dataBlockFormula.val();
+            this.onSave(this.datablock, addedTags, deletedTags);
         });
-        this.cell.val(this.dataBlockFormula.val());
-        this.datablock.value = this.dataBlockFormula.val();
-        this.onSave(this.datablock);
+        
+
     }
 
-    /**
-     *
-     * @param data
-     */
-    private populateEditor(data : {success : boolean, tags : DataTag[]}) : void
-    {
 
-        if (data.success) {
-            this.removeHeadTags();
-            this.removeRowTags();
-
-            data.tags.forEach((element : { id : number, name : string,  sort_number : number, type : string }, index : number) =>
-            {
-                var dataToAppend = "<tr class='rowTag' tagId='" + element.id + "' sort_number='" + element.sort_number + "' ><td class='tag'>" + element.name + "</td></tr>";
-
-                if (element.type.toUpperCase() == "COLUMN") {
-                    this.head.append("<th class='headTag' tagId='" + element.id + "' sort_number='" + element.sort_number + "' >" + element.name + "</th>");
-                }
-                else if (element.type.toUpperCase() == "ROW") // the element to add is a row tag
-                {
-                    //var numberOfRows = this.body.find(".rowTag").length; // get number of rows
-
-                    if (this.body.find(".rowTag").length > 0) // if there are rows
-                    {
-
-                        if (parseInt(this.body.find(".rowTag").last().attr("sort_number")) < element.sort_number)
-                            this.body.find(".rowTag").last().after(dataToAppend);
-                        else if (parseInt(this.body.find(".rowTag").first().attr("sort_number")) > element.sort_number)
-                            this.body.find(".rowTag").last().before(dataToAppend);
-                        else {
-                            setTimeout(() =>
-                            {
-                                this.cicleThroughandAdd(".rowTag", dataToAppend, element);
-                            }, 1); //fake multithreading
-                        }
-
-                    }
-                    else {
-                        this.body.append(dataToAppend);
-                    }
-
-                }
-
-            });
-
-        }
-        else {
-            window.alert("something went wrong when pupulating the editor");
-        }
-    }
-
-    private cicleThroughandAdd(classtoLoop : string, dataToAppend : string, element) : void
-    {
-        var numberOfRows = this.body.find(".rowTag").length;
-
-        this.body.find(classtoLoop).each((index : number) => //loops through each row
-        {
-            var sortNumber = parseInt($(this).attr("sort_number"));
-            if ((numberOfRows - 1) > index && sortNumber > element.sort_number) // if not last and row's sort is grater than element to add
-            {
-
-                $(this).before(dataToAppend);
-                return false;
-
-            }
-            else if ((numberOfRows - 1) == index) {
-
-                if (sortNumber > element.sortNumber)// if row's sort number is greater than the one to add
-                {
-                    $(this).before(dataToAppend);
-                    return false;
-                }
-                else {
-                    $(this).after(dataToAppend);
-                    return false;
-                }
-
-            }
-
-        });
-    }
 }
