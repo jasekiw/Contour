@@ -31,38 +31,18 @@ export class Editor
         $('.nav.nav-pills li a').prepend(deleteSheeetTemplate);
         $('.nav.nav-pills li a .new_sheet').click((e : JQueryEventObject) =>
         {
+
+            e.stopPropagation();
+        });
+        $('.nav.nav-pills li a .delete_sheet').click((e : JQueryEventObject) =>
+        {
             this.deleteConfirmation.show(() => {
 
             });
             e.stopPropagation();
         });
-        $('.nav.nav-pills li a .delete_sheet').click((e : JQueryEventObject) =>
-        {
-            alert('clicked');
-            e.stopPropagation();
-        });
         //hover animation for sliding effect
-        $('.nav.nav-pills li a').hover((e : JQueryEventObject) =>
-        {
 
-            let target = $(e.target).find(".new_sheet, .delete_sheet");
-            target.show();
-            let startHeight = target.height();
-            console.log(startHeight);
-            target.css({display: ""});
-            target.css({width: 0, height: startHeight, "text-align": "center"});
-            target.animate(
-                {
-                    width: 20.38
-                },
-                150,
-                () => target.css({width: "", height: "", "text-align": ""})
-            );
-
-        },
-            () => void(0) // the hover off function does not need to do anything.
-            //// this is here to allow the first function to only be triggered on hover in
-        );
     }
 
 

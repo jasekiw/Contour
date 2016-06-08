@@ -9,31 +9,26 @@
 
 
 
-
-.new_sheet, .delete_sheet {
-    font-size: 16px;
-    cursor: pointer;
-    padding:4px;
-    display:none;
-}
-
-
-.delete_sheet {
-    margin-right: 5px;
-}
-
-.new_sheet {
-    margin-left: 5px;
-}
-
-
-
 .nav.nav-pills > li {
     transition:150ms;
+
     > a {
         font-size: 20px;
+        line-height: 100%;
+        padding: 15px 15px;
+    }
+    .delete_sheet, .new_sheet {
+        vertical-align: bottom;
+        cursor: pointer;
+
+        transition: width 150ms;
+        width: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+        display: inline-block;
     }
     .delete_sheet {
+        margin-right: 5px;
         .fa {
             color:red;
         }
@@ -44,6 +39,7 @@
         }
     }
     .new_sheet {
+        margin-left: 5px;
         &:hover {
             .fa {
                 color: blue;
@@ -53,7 +49,7 @@
     &:hover {
 
         .delete_sheet, .new_sheet {
-            display:inline-block;
+            width: 20.38px;
         }
     }
     &.active {
