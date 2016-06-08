@@ -3,42 +3,79 @@
     overflow-x: auto;
 
 }
-
 .editor__inner_container {
     position: relative;
 }
+
+
+
+
+.new_sheet, .delete_sheet {
+    font-size: 16px;
+    cursor: pointer;
+    padding:4px;
+    display:none;
+}
+
+
 .delete_sheet {
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
     margin-right: 5px;
-    padding:4px;
 }
-.nav-pills > li .delete_sheet .fa {
-    color:red;
-}
+
 .new_sheet {
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
     margin-left: 5px;
-    padding:4px;
 }
 
-.nav-pills > li.active .fa {
-    color:white;
-}
 
-.nav-pills > li .new_sheet:hover .fa {
-    color: blue;
-}
-#sheet_tabbed {
-    .nav-pills > li.active > a {
-        background-color: $evergreen
-    }
 
-    .nav-pills > li > a {
+.nav.nav-pills > li {
+    transition:150ms;
+    > a {
         font-size: 20px;
     }
+    .delete_sheet {
+        .fa {
+            color:red;
+        }
+        &:hover {
+            .fa {
+                color: darkred;
+            }
+        }
+    }
+    .new_sheet {
+        &:hover {
+            .fa {
+                color: blue;
+            }
+        }
+    }
+    &:hover {
+
+        .delete_sheet, .new_sheet {
+            display:inline-block;
+        }
+    }
+    &.active {
+        .delete_sheet {
+            &:hover {
+                .fa {
+                    color:red;
+                }
+            }
+        }
+        .fa {
+            color:white;
+        }
+        > a {
+            background-color: $evergreen
+        }
+    }
 }
+
+
+
+
+
+
 
