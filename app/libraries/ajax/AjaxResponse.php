@@ -101,13 +101,17 @@ class AjaxResponse
             $this->message = $message;
         if($send)
             return $this->send();
+        return null;
     }
     
-    public function success($message = null)
+    public function success($message = null, $send = false)
     {
         $this->success = true;
         if (isset($message))
             $this->message = $message;
+        if($send)
+            return $this->send();
+        return null;
     }
     
     /**
@@ -120,6 +124,8 @@ class AjaxResponse
         $std->success = $this->success;
         $std->payload = $this->payload;
         $std->message = $this->message;
+        if(!$this->success)
+            $std->payload = $_POST;
         return json_encode($std);
     }
 

@@ -17,7 +17,7 @@ use app\libraries\excel\Point;
  */
 class ImportRulesCollection
 {
-    
+    private $virtualSheet = [];
     /**
      * The import rules
      * @var ImportRule[]
@@ -33,6 +33,15 @@ class ImportRulesCollection
      */
     public function add($importRule)
     {
+        $start = $importRule->getStarting();
+        $end = $importRule->getEnding();
+        for($x = $start->getX(); $x <= $end->getX(); $x++)
+            for($y = $start->getY(); $y <= $end->getY(); $y++)
+            {
+                if(!isset($this->virtualSheet[$x]))
+                    $this->virtualSheet[$x] = [];
+                $this->virtualSheet[$x][$y] = $importRule;
+            }
         array_push($this->importRules, $importRule);
     }
     
@@ -43,7 +52,8 @@ class ImportRulesCollection
      */
     public function addAll($importRules)
     {
-        $this->$importRules = array_merge($this->$importRules, $importRules);
+        foreach($importRules as $importRule)
+            $this->add($importRule);
     }
     
     /**
@@ -107,6 +117,18 @@ class ImportRulesCollection
     public function get($index)
     {
         return $this->importRules[$index];
+    }
+
+    /**
+     * gets the import rule by the location
+     * @param Point $location
+     * @return ImportRule|null
+     */
+    public function getByPoint(Point $location)
+    {
+      if(isset($this->virtualSheet[$location->getX()][$location->getY()]))
+          return $this->virtualSheet[$location->getX()][$location->getY()];
+        return null;
     }
     
     /**

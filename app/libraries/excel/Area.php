@@ -22,12 +22,14 @@ class Area
      * Creates a new area off of the two points
      *
      * @param Point $topLeft
-     * @param Point $bottomRight
+     * @param Point|null $bottomRight The bottom left of the area [optional]
      */
-    public function __construct(Point $topLeft, Point $bottomRight)
+    public function __construct(Point $topLeft, Point $bottomRight = null)
     {
         $this->topLeft = $topLeft;
         $this->bottomRight = $bottomRight;
+        if(!isset($bottomRight))
+            $this->bottomRight = $this->topLeft;
     }
     
     /**

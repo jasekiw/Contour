@@ -146,10 +146,53 @@ export class SheetEditor
         this.spinner = new Spinner(this.editor);
         let changeOrientation = $(`<a title="Change Orientation" href="javascript:void(0);"><i class="fa fa-repeat" aria-hidden="true"></i></a>`);
         let controlsTemplate = $(`<div class="controls"></div>`);
+        let showCalc = $(`<a title="Show Calculcation" href="javascript:void(0);" current="formula"><i class="fa fa-calculator" aria-hidden="true"></i></a>`);
         controlsTemplate.append(changeOrientation);
+        controlsTemplate.append(showCalc);
         this.editor.prepend(controlsTemplate);
+
+
         changeOrientation.click(() => this.changeOrientation());
+        showCalc.click((e) => this.showCalculations(e));
     }
+    protected showCalculations(e : JQueryEventObject)
+    {
+        let $target = $(e.target).parents("a");
+        let $currentView = $target.attr("current");
+        if($currentView == "formula")
+        {
+            this.element.find(".cell input").each((index, elem) => {
+                let $elem = $(elem);
+                let id = parseInt($elem.attr("datablock"));
+                if(!isNaN(id))
+                {
+                    DataBlocksApi.getProcessedValue($elem.val(), id, (e) => {
+                        $elem.val(e);
+                        $elem.off("dblclick");
+                    });
+                }
+                $elem.attr("readonly", "readonly");
+            });
+            $target.attr("current", "processed");
+        }
+        else
+        {
+            this.element.find(".cell input").each((index, elem) => {
+                let $elem = $(elem);
+                let id = parseInt($elem.attr("datablock"));
+                if(!isNaN(id))
+                {
+                    DataBlocksApi.getById(id, (e) => {
+                        $elem.val(e.value);
+
+                    });
+                }
+                $elem.removeAttr("readonly")
+            });
+            $target.attr("current", "formula");
+        }
+    }
+
 
     /**
      * Changes the orientation of the sheet. meta is set and the sheet is reloaded

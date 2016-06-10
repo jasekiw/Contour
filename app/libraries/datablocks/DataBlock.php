@@ -99,7 +99,7 @@ class DataBlock extends DataBlockAbstract
     public function getProccessedValue($useMemory = false)
     {
         $converter = new DataBlockValueConvertor($this, $useMemory);
-        return $converter->getProcessedValue($this->getValue(), $this->getTags()->getRowsAsArray()[0]->get_parent_id());
+        return $converter->getProcessedValue($this->getValue(), $this->getTags()->getTagWithTypesAsArray([Types::getTagPrimary()])[0]->get_parent_id());
     }
     
     /**

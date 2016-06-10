@@ -57,6 +57,9 @@ export class Ajax
         {
 
             console.log("call failed");
+            console.log("sent data:");
+            console.log(data);
+            console.log("recieved data:");
             console.log(e);
             if (functiontoCall !== undefined)
                 functiontoCall(e);

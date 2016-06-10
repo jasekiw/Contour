@@ -244,7 +244,7 @@ class DataBlockQueryEngine
                 $datablockIDQuery .= ") ";
             }
             
-            $query = "SELECT" . " d.id AS id, d.value AS value, d.type_id AS type_id FROM data_blocks AS d WHERE ";
+            $query = "SELECT" . " d.id AS id, d.value AS value, d.type_id AS type_id, d.sort_number as sort_number FROM data_blocks AS d WHERE ";
             if (!$this->showTrashed)
                 $query .= "deleted_at is NULL AND ";
             $query .= "(";

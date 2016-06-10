@@ -11,6 +11,7 @@ namespace app\libraries\datablocks\formula;
 use app\libraries\contour\Contour;
 use app\libraries\database\DataManager;
 use app\libraries\datablocks\DataBlock;
+use app\libraries\datablocks\DataBlockCollection;
 use app\libraries\helpers\StringStack;
 use app\libraries\helpers\TimeTracker;
 use app\libraries\memory\MemoryDataManager;
@@ -274,15 +275,16 @@ class Parser
                 $index++; // skips the ending token
                 $processed = $this->processIdentifer($identifier);
                 if ($processed !== null) {
-                    $subParser = new Parser($this->manager);
-                    $parsed = $subParser->parse($processed->getValue(), $this->evaluatedDatablock->getTags()->getTagWithTypeAsArray(Types::getTagPrimary())[0]->get_parent_id(), $this->evaluatedDatablock->get_id());
-                    if ($subParser->error) {
-                        $this->error = $subParser->error;
-                        $this->error_type = $subParser->error_type;
-                        $this->error_message = $subParser->error_message;
-                        return;
-                    }
-                    $infixExpression[] = new Token($parsed, Token::TOKEN_TYPE_OPERAND); // recursing into
+//                    $subParser = new Parser($this->manager);
+//                    $parsed = $subParser->parse($processed->getValue(), $this->evaluatedDatablock->getTags()->getTagWithTypeAsArray(Types::getTagPrimary())[0]->get_parent_id(), $this->evaluatedDatablock->get_id());
+//                    if ($subParser->error) {
+//                        $this->error = $subParser->error;
+//                        $this->error_type = $subParser->error_type;
+//                        $this->error_message = $subParser->error_message;
+//                        return;
+//                    }
+                //from parsed
+                    $infixExpression[] = new Token($processed->getValue(), Token::TOKEN_TYPE_OPERAND); // recursing into
                     continue;
                 } else if ($this->error_type == self::ERROR_TYPE_WARNING) {
                     /** @var Token $endingToken */
@@ -325,25 +327,63 @@ class Parser
         $datatags = $this->getDataTags($identifiers, $recursived);
         
         if ($this->error) return null;
-        $datablock = $this->manager->dataBlockManager->getByTagsArray($datatags);
-        if ($datablock !== null && $recursived && $datablock->get_id() == $this->recursiveCheckID) {
-            $this->error = true;
-            $this->error_type = self::ERROR_TYPE_FATAL;
-            $this->error_message = "recursive call detected, trying to find " . $this->getTokenArrayAsString($identifiers) . " and got a recursive call";
-            return null;
+//        $datablock = $this->manager->dataBlockManager->getByTagsArray($datatags);
+        $datablocks = $this->manager->dataBlockManager->getMultipleByTagsArray($datatags);
+        $evaluation = 0;
+        foreach($datablocks->getAsArray(DataBlockCollection::SORT_TYPE_NONE) as $datablock)
+        {
+            /**
+             * @var DataBlock $datablock
+             */
+            if ($datablock !== null && $recursived && $datablock->get_id() == $this->recursiveCheckID) {
+                $this->error = true;
+                $this->error_type = self::ERROR_TYPE_FATAL;
+                $this->error_message = "recursive call detected, trying to find " . $this->getTokenArrayAsString($identifiers) . " and got a recursive call";
+                return null;
+            }
+
+            if($this->manager  instanceof MemoryDataManager)
+                $currentValue = $datablock->getProccessedValue(true);
+            else
+                $currentValue = $datablock->getProccessedValue(false);
+
+            if(!is_numeric($currentValue))
+            {
+               $evaluation = strval($evaluation);
+               $evaluation .=  $currentValue;
+            }
+            else if(is_numeric($evaluation))
+                $evaluation += floatval($currentValue);
+            else
+                $evaluation .= $currentValue;
         }
-        if ($datablock === null) {
+//        if ($datablock !== null && $recursived && $datablock->get_id() == $this->recursiveCheckID) {
+//            $this->error = true;
+//            $this->error_type = self::ERROR_TYPE_FATAL;
+//            $this->error_message = "recursive call detected, trying to find " . $this->getTokenArrayAsString($identifiers) . " and got a recursive call";
+//            return null;
+//        }
+//        if ($datablock === null) {
+//            $this->error = true;
+//            $this->error_type = self::ERROR_TYPE_WARNING;
+//            $this->error_message = "could not find " . $this->getTokenArrayAsString($identifiers) . "";
+//            return null;
+//        }
+        if($datablocks->getSize() == 0)
+        {
             $this->error = true;
             $this->error_type = self::ERROR_TYPE_WARNING;
             $this->error_message = "could not find " . $this->getTokenArrayAsString($identifiers) . "";
             return null;
+
         }
-        $this->evaluatedDatablock = $datablock;
+        else
+            $this->evaluatedDatablock = $datablocks->getAsArray(DataBlockCollection::SORT_TYPE_NONE)[0];
         if ($this->debug) {
             $timer->stopTimer("processIdentifer");
             $timer->getResults();
         }
-        return new Token($datablock->getValue(), Token::TOKEN_TYPE_OPERAND, Token::TOKEN_SUBTYPE_NOTHING);
+        return new Token($evaluation, Token::TOKEN_TYPE_OPERAND, Token::TOKEN_SUBTYPE_NOTHING);
     }
     
     /**

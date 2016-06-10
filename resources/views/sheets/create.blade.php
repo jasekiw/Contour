@@ -35,7 +35,7 @@
     {!! Form::close() !!}
 
     <hr>
-    <h2><a href="{!! route("sheet.createfacility", ['id' => $parentID]) !!}">Or add new Facility</a></h2>
+    {{--<h2><a href="{!! route("sheet.createfacility", ['id' => $parentID]) !!}">Or add new Facility</a></h2>--}}
 
 
 @endsection

@@ -48,6 +48,10 @@ class DataBlockController extends Controller
 
         return $response->send();
     }
+    public function getProcessedValue()
+    {
+        
+    }
 
     public function create()
     {

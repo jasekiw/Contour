@@ -37,6 +37,7 @@ class SheetsController extends Controller
         $templateTag = $excel->findChild('templates');
         $templateTags = $templateTag->get_children()->getAsArray(TagCollection::SORT_TYPE_BY_SORT_NUMBER);
         $templates = [];
+        $templates[] = "";
         foreach ($templateTags as $template)
             $templates[$template->get_id()] = $template->get_name();
         $view->templates = $templates;

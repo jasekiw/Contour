@@ -21,16 +21,13 @@ class ExcelView
     public $headerTags;
     /** @var ExcelView[]   */
     public $composits = [];
-    /**
-     * @var DataTag[][]
-     */
+    /** @var DataTag[][] */
     private $rowTags = [];
-    /**
-     * @var DataBlock[][]
-     */
+    /** @var DataBlock[][] */
     private $rows = [];
+    /** @var string */
     private $orientation = "column";
-    
+    /** @var bool  */
     private $loopedChildren = false;
     const ORIENTATION_COLUMN = "column";
     const ORIENTATION_ROW = "row";
@@ -54,8 +51,8 @@ class ExcelView
             $this->orientation = self::ORIENTATION_COLUMN;
             $this->parentTag->setMetaValue(self::ORIENATION, $this->orientation);
         }
-
-        $composits = $this->parentTag->getCompositChildren()->getAsArray(TagCollection::SORT_TYPE_NONE);
+        //$composits = $this->parentTag->getCompositChildren()->getAsArray(TagCollection::SORT_TYPE_NONE);
+        $composits = $this->parentTag->get_children()->getTagWithTypesAsArray([Types::get_type_folder()]);
         foreach($composits as $composit)
             $this->composits[] = new ExcelView($composit, false);
         if($initialize)
@@ -93,7 +90,6 @@ class ExcelView
             $rowTags[$rowNum] = (new DataBlockCollection($row))->getCommonTags(Types::getTagPrimary())->getAsArray(TagCollection::SORT_TYPE_NONE);
         $this->rowTags = $rowTags;
         $this->rows = $rows;
-
         $this->initialized = true;
     }
 

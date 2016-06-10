@@ -31,6 +31,18 @@ export class DataBlocksApi
             });
     }
 
+    public static getProcessedValue(value : string, id : number, callback? : (result :string) => void)
+    {
+        (new Ajax()).post("/api/getValue", {
+            datablock:   value,
+            datablockid: id
+        }, (response : {result : string}) =>
+        {
+            if(callback != undefined)
+                callback(response.result);
+        });
+    }
+
     /**
      *
      * @param id

@@ -167,6 +167,8 @@ class MainBudgetTemplateSuite
          */
         $facilities = new ImportTemplate('facility');
         $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 4), new Point(2, 60)), Types::getTagPrimary(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
+        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 17)), Types::get_type_folder(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
+        $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(2, 31)), Types::get_type_folder(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
         $facilities->getRules()->add(ImportRule::createTagHeaderRule(new Area(new Point(3, 3), new Point(14, 3)), Types::getTagGeneral(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_X ));
         $facilities->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 19), new Point(2, 29)), new Point(2, 17), Types::getTagPrimary() , ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));
         $facilities->getRules()->add(ImportRule::createTagChildOfRule(new Area(new Point(2, 33), new Point(2, 39)), new Point(2, 31), Types::getTagPrimary(), ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y ));

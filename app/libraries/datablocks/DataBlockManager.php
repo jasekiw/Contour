@@ -11,6 +11,7 @@ namespace app\libraries\datablocks;
 use app\libraries\datablocks\DataBlockQueryEngine;
 use app\libraries\database\Query;
 use app\libraries\datablocks\DataBlock;
+use app\libraries\datablocks\staticform\DataBlocks;
 use app\libraries\helpers\TimeTracker;
 use app\libraries\tags\collection\TagCollection;
 use app\libraries\tags\DataTag;
@@ -90,6 +91,25 @@ class DataBlockManager extends DataBlockManagerAbstract
     {
         $queryEngine = new DataBlockQueryEngine($dataTags, $showTrashed);
         return $queryEngine->getDataBlock();
+    }
+
+
+    /**
+     *  returns a Datablock if found. else returns null
+     *
+     * @param DataTag[] $dataTags
+     * @param string    $selectionType
+     * @param bool      $showTrashed
+     * @param bool      $sort
+     *
+     * @return DataBlockCollection
+     */
+    public static function getMultipleByTagsArray($dataTags, $selectionType = DataBlocks::SELCTION_TYPE_LIGHT, $showTrashed = false, $sort = false)
+    {
+        $queryEngine = new DataBlockQueryEngine($dataTags, $showTrashed, $sort);
+        $datablocks = $queryEngine->getDataBlocks();
+        $datablockCollection = new DataBlockCollection($datablocks);
+        return $datablockCollection;
     }
     
     /**

@@ -30,4 +30,12 @@ class ExcelTab
     {
         return str_replace(">", "", $this->name);
     }
+    public function getParentId()
+    {
+        return $this->excelView->getParentTag()->get_parent_id();
+    }
+    public function getId()
+    {
+        return $this->excelView->getParentTag()->get_id();
+    }
 }

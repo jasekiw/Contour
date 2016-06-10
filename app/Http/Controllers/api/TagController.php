@@ -46,41 +46,47 @@ class TagController extends Controller
     public function create()
     {
         $reponse = new AjaxResponse();
-        $reponse->fail();
-        $reponseData = new stdClass();
         $name = Input::get("name");
+        if(empty($name))
+            return $reponse->fail("name is empty or not sent", true);
         $parent_id = Input::get("parent_id");
+        if(!is_numeric($parent_id))
+            return $reponse->fail("parent id is not a valid number", true);
         $type = Input::get("type");
+        if(empty($type))
+            return $reponse->fail("type is empty or not sent", true);
         $sort_number = Input::get("sort_number");
-        if ($name !== null && $parent_id !== null && $type !== null && $sort_number != null) {
-            $parent_id = intval($parent_id);
-            $sort_number = intval($sort_number);
-            if (Types::exists($type)) {
-                $type = Types::get_type_by_name($type, TypeCategory::getTagCategory());
-                $tag = new DataTag($name, $parent_id, $type);
-                $tag->set_sort_number($sort_number);
-                $tag->create();
-                $reponse->setPayload($tag->toStdClass());
-                $reponse->success();
-            }
-        }
+        
+
+        $parent_id = intval($parent_id);
+        $sort_number = intval($sort_number);
+        if (!Types::exists($type))
+            return $reponse->fail("That type does not exist", true);
+
+
+        $type = Types::get_type_by_name($type, TypeCategory::getTagCategory());
+        $tag = new DataTag($name, $parent_id, $type);
+        if(is_numeric($sort_number))
+            $tag->set_sort_number(intval($sort_number));
+        $tag->create();
+        $reponse->setPayload($tag->toStdClass());
+        $reponse->success("tag successfully created");
+
+
         return $reponse->send();
     }
 
     public function delete()
     {
         $reponse = new AjaxResponse();
-        $reponse->fail("unkown id");
         $id = intval(Input::get("id"));
-
-        if (isset($id)) {
-            $dataTag = DataTags::get_by_id($id);
-            if (isset($dataTag)) {
-                $dataTag->fullDelete();
-                $reponse->success();
-            }
-        }
-        return $reponse->send();
+        if($id == 0)
+            return $reponse->fail("not a valid id",true);
+        $dataTag = DataTags::get_by_id($id);
+        if (!isset($dataTag)) 
+            return $reponse->fail("tag with that id not found",true);
+        $dataTag->delete();
+        return $reponse->success("successfully deleted", true);
     }
 
     /**

@@ -36,6 +36,12 @@ export abstract class GeneralDialogBox extends UIElement
     protected $body : JQuery;
     private visible = false;
 
+    /**
+     *
+     * @param title
+     * @param submitText
+     * @param content
+     */
     constructor(title : string, submitText : string, content : string)
     {
         super("dialog", style + template);

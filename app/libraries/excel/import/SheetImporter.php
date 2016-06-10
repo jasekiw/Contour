@@ -119,11 +119,13 @@ class SheetImporter
         /** cells in excluded areas are not processed */
         if ($this->template->getRules()->inExludedArea($column_number, $row_number))
             return;
-        
+
         /** If in any rules and the cell actually has a value then continue */
         if ($this->template->getRules()->InAnyRules($column_number, $row_number)) {
             /** Gets the rule that applies to the coords */
-            $rule = $this->template->getRules()->getRuleIn($column_number, $row_number);
+
+            $rule = $this->template->getRules()->getByPoint(new Point($column_number, $row_number));
+
             $rules = $this->template->getRules()->getRulesIn($column_number, $row_number);
             $location = new Point($column_number, $row_number);
 
@@ -223,13 +225,9 @@ class SheetImporter
         if ($function == ImportRule::TAG_HEADER_FUNCTION || $function == ImportRule::TAG_CHILD_OF_FUNCTION) {
 
             if($axis == ImportRule::ONE_DIMENSIONS_TAG_AXIS_X)
-            {
                 $this->column_titles[$column] = $tag;
-            }
             else if($axis == ImportRule::ONE_DIMENSIONS_TAG_AXIS_Y)
-            {
                 $this->row_titles[$row] = $tag;
-            }
             else if ($typeName == Types::get_type_row()->getName() || $typeName == Types::getTagGeneral()->getName() )
                 $this->row_titles[$row] = $tag;
             else if ($typeName == Types::get_type_column()->getName() ||

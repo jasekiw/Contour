@@ -45,7 +45,7 @@ $tabs =  $sheet->getNavTitles();
 <div class="upper-controls">
     <a href="{!! route('sheetcategories_show', [$parent->get_id()]) !!}">Back to {{ $parent->get_name() }}</a>
     <div class="right">
-        <a href="{!! route('sheet_delete', [ $tag->get_id() ]) !!}">Delete Sheet</a>
+        <a href="{!! route('sheet_delete', [ $tag->get_id() ]) !!}" class="delete">Delete Sheet</a>
     </div>
 </div>
 
@@ -55,7 +55,7 @@ $tabs =  $sheet->getNavTitles();
 
                 @foreach($tabs as $key => $tab)
                     <li @if($key == 0) class="active" @endif>
-                        <a href="#{{$tab->getCodeName()}}" data-toggle="tab" >{{$tab->name}}</a>
+                        <a href="#{{$tab->getCodeName()}}" data-toggle="tab" parent="{{$tab->getParentId()}}" id="{{$tab->getId()}}" >{{$tab->name}}</a>
                     </li>
                 @endforeach
             </ul>

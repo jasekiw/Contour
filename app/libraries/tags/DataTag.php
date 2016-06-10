@@ -306,8 +306,13 @@ class DataTag extends DataTagAbstract
     {
         if (isset($this->sort_number))
             $tag->sort_number = $this->sort_number;
-        else
-            $tag->sort_number = -1;
+//        else
+//        {
+        //TODO: this currently crashes. please fix
+//            $maxSort = Tag::selectRaw("max(sort_number) as max_sort")->where("parent_tag_id", '=', $this->parent_id)->first(['max_sort']);
+//            $tag->sort_number = $maxSort + 1;
+//        }
+
     }
     
     /**
@@ -495,9 +500,11 @@ class DataTag extends DataTagAbstract
      */
     public function delete()
     {
+        foreach ($this->get_children_recursive()->getAsArray() as $child)
+            $child->delete();
         Tag::where("id", "=", $this->id)->delete();
         Tag_meta::where('tag_id', '=', $this->id)->delete();
-        if($this->get_type()->get_id() == Types::getTagPrimary())
+        if($this->get_type()->get_id() == Types::getTagPrimary()->get_id())
         {
             $references = Tags_reference::where("tag_id", "=", $this->id)->get(['*']);
             foreach($references as $reference)
@@ -509,17 +516,7 @@ class DataTag extends DataTagAbstract
         $this->id = null;
     }
     
-    /**
-     * Deletes the tag and all associated datablocks
-     */
-    public function fullDelete()
-    {
-        Tag::where("id", "=", $this->id)->delete();
-        Tag_meta::where('tag_id', '=', $this->id)->delete();
 
-
-        $this->id = null;
-    }
     
     /**
      * Deletes this tag and all children

@@ -52,4 +52,20 @@ class TagCollection extends TagCollectionAbstract
                 $rows[] = $tag;
         return $rows;
     }
+    /**
+     * @param Type[] $types
+     *
+     * @return \app\libraries\tags\DataTag[]
+     */
+    public function getTagWithTypesAsArray($types)
+    {
+        $nameArray = [];
+        foreach ($types as $type)
+            array_push($nameArray, $type->getName());
+        $tags = [];
+        foreach ($this->tags as $tag)
+            if (in_array($tag->get_type()->getName(), $nameArray))
+                array_push($tags, $tag);
+        return $tags;
+    }
 }

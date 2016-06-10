@@ -9,11 +9,9 @@
 namespace app\libraries\tags\collection;
 
 use app\libraries\memory\types\Type as MemoryType;
-use app\libraries\tags\DataTagAbstract;
 use app\libraries\types\Type;
 use app\libraries\tags\DataTag;
 use app\libraries\memory\tags\DataTag as MemoryTag;
-use Exception;
 
 /**
  * Class TagCollectionAbstract
