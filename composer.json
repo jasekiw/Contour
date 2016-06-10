@@ -32,8 +32,8 @@
           "app\\": "app/"
         },
         "files": [
-            "app/libraries/HelperMethods/Strings/functions.php",
-            "app/libraries/HelperMethods/Conversion/functions.php"
+            "app/libraries/helperMethods/Strings/functions.php",
+            "app/libraries/helperMethods/Conversion/functions.php"
         ],
         "exclude-from-classmap": [
             "app/libraries/kint"

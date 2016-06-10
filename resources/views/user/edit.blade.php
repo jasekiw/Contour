@@ -51,7 +51,7 @@
         </div>
         <div class="col-md-9">
             {!! Form::label('User Level') !!}
-            {!! Form::select('group', \app\libraries\ModelHelpers\UserAccessGroups::getAssociativeArray(), $user->user_access_group_id) !!}
+            {!! Form::select('group', \app\libraries\modelHelpers\UserAccessGroups::getAssociativeArray(), $user->user_access_group_id) !!}
         </div>
 
     </div>
