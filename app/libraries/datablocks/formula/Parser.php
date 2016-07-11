@@ -12,7 +12,7 @@ use app\libraries\contour\Contour;
 use app\libraries\database\DataManager;
 use app\libraries\datablocks\DataBlock;
 use app\libraries\datablocks\DataBlockCollection;
-use app\libraries\helpers\StringStack;
+use app\libraries\helpers\stacks\StringStack;
 use app\libraries\helpers\TimeTracker;
 use app\libraries\memory\MemoryDataManager;
 use app\libraries\tags\DataTag;
@@ -357,18 +357,6 @@ class Parser
             else
                 $evaluation .= $currentValue;
         }
-//        if ($datablock !== null && $recursived && $datablock->get_id() == $this->recursiveCheckID) {
-//            $this->error = true;
-//            $this->error_type = self::ERROR_TYPE_FATAL;
-//            $this->error_message = "recursive call detected, trying to find " . $this->getTokenArrayAsString($identifiers) . " and got a recursive call";
-//            return null;
-//        }
-//        if ($datablock === null) {
-//            $this->error = true;
-//            $this->error_type = self::ERROR_TYPE_WARNING;
-//            $this->error_message = "could not find " . $this->getTokenArrayAsString($identifiers) . "";
-//            return null;
-//        }
         if($datablocks->getSize() == 0)
         {
             $this->error = true;

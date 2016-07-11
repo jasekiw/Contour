@@ -50,7 +50,7 @@ export class SheetTagHandler
      */
     protected handleNewPrimaryColumnTag(tag : PlainTag)
     {
-        let newTag = $(`<th class="tag_column tag" tag="` + tag.id + `">` + tag.name + `</th>`);
+        let newTag = $(`<th class="tag_column tag" tag="` + tag.id + `" sort_number="` + tag.sort_number + `">` + tag.name + `</th>`);
         this.editor.element.find("thead tr .new_column").before(newTag);
         newTag.on("remove", (e) => this.handleRemovedPrimaryTag(e));
         this.cellHandler.addColumnCells();

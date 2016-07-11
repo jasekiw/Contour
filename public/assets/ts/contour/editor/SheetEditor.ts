@@ -282,10 +282,12 @@ export class SheetEditor
     {
         if (this.orientation == "column") {
             let lastSortNumber = parseInt(this.element.find("thead .tag_column").last().attr("sort_number"));
+            let test = "";
             this.newTagDialog.show((e : PlainTag) => this.tagHandler.handleNewTag(e), this.getParentId(), lastSortNumber + 1, type, mouse.x, mouse.y);
         }
         else {
             let lastSortNumber = parseInt(this.element.find("tbody .tag_row").last().attr("sort_number"));
+            let test = "";
             this.newTagDialog.show((e : PlainTag) => this.tagHandler.handleNewTag(e), this.getParentId(), lastSortNumber + 1, type, mouse.x, mouse.y);
         }
 

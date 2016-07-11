@@ -2,6 +2,7 @@ import {ExcelImportPage} from "./excelImport/ExcelImporterPage";
 import {NewFacilityPage} from "./newfacility/NewFacilityPage";
 import {Editor} from "./editor/Editor";
 import {MenuEditor} from "./menu_editor/MenuEditor";
+import {TagManager} from "./tag/TagManager";
 
 
 
@@ -12,6 +13,7 @@ class Main
     public newFacilityPage : NewFacilityPage;
     private multiTypeEditor : Editor;
     private menuEditor : MenuEditor;
+    private tagManager : TagManager;
     private classes : string;
 
     constructor()
@@ -65,6 +67,10 @@ class Main
     {
 
         this.menuEditor = new MenuEditor($(".menuEditor"));
+    }
+    private executeTagManagement()
+    {
+        this.tagManager = new TagManager();
     }
 
 }

@@ -10,6 +10,8 @@ use app\libraries\types\Types;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
+use Input;
+use Redirect;
 use View;
 
 class SheetsController extends Controller
@@ -92,17 +94,17 @@ class SheetsController extends Controller
      */
     public function store(Request $request)
     {
-        $parentID = \Input::get('parent');
+        $parentID = Input::get('parent');
         $parent = DataTags::get_by_id($parentID);
 
-        $name = \Input::get('name');
-        $template = \Input::get('template');
+        $name = Input::get('name');
+        $template = Input::get('template');
         $templateTag = DataTags::get_by_id($template);
         $newSheet = new DataTag($name, $parentID, Types::get_type_sheet());
         $newSheet->create();
         if(isset($templateTag))
             $newSheet->clone_children($templateTag);
-        return \Redirect::route('sheetcategories_show', [$parentID]);
+        return Redirect::route('sheet_edit', [$newSheet->get_id()]);
     }
 
     /**
@@ -130,7 +132,6 @@ class SheetsController extends Controller
         $view->parent = $excelView->parentTag->get_parent();
         $view->title = $excelView->parentTag->get_name();
         $view->sheet = $excelView;
-//        $hasData = $excelView->summarySheet->hasData();
         return $this->render($view);
     }
 
@@ -157,6 +158,6 @@ class SheetsController extends Controller
         $tag = DataTags::get_by_id($id);
         $parent = $tag->get_parent_id();
         $tag->force_delete_recursive();
-        return \Redirect::route('sheetcategories_show', [$parent]);
+        return Redirect::route('sheetcategories_show', [$parent]);
     }
 }

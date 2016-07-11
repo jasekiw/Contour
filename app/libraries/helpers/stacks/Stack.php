@@ -6,7 +6,7 @@
  * Time: 4:22 PM
  */
 
-namespace app\libraries\helpers;
+namespace app\libraries\helpers\stacks;
 
 /**
  * Class Stack

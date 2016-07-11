@@ -49,8 +49,8 @@ functions
 	
 	call it by
 	
-	#(myTag:arg(true)) 	= "some text"
-	#(myTag:arg(false)) = "some other text"
+	#(myTag):args(true,,,) 	= "some text"
+	#(myTag):args(true,,,) = "some other text"
 	
 	
 	using multiple tags

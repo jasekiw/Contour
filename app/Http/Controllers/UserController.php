@@ -53,6 +53,7 @@ class UserController extends Controller
         $view->title = "Create a new user";
         $view->groups = $groups;
         return $this->render($view);
+
     }
 
     /**
