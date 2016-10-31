@@ -1,10 +1,6 @@
 <?php
 declare(strict_types = 1);
-/**
- * @author Jason Gallavin
- * Date: 7/15/2015
- * Time: 1:30 PM
- */
+
 
 namespace app\libraries\tags;
 
