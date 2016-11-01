@@ -35,6 +35,9 @@
         </div>
     @endif
     <div class="upper-controls">
+        <div class="left">
+            <a href="{!! route('users_index') !!}">Back</a>
+        </div>
         <div class="right">
             <a href="{!! route('users_index') !!}">Cancel</a>
         </div>
