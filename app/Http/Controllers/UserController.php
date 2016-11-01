@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Input;
 use Redirect;
 use Response;
 use Auth;
@@ -64,10 +65,10 @@ class UserController extends Controller
      */
     public function store()
     {
-        $username = \Input::get("username");
-        $password = \Input::get("password");
-        $userAccessId = \Input::get("group");
-        $email = \Input::get("email");
+        $username = Input::get("username");
+        $password = Input::get("password");
+        $userAccessId = Input::get("group");
+        $email = Input::get("email");
         $user = new User();
         $user->username = $username;
         $user->password = \Hash::make($password);
@@ -118,10 +119,16 @@ class UserController extends Controller
     public function update($id)
     {
         $user = User::where('id', '=', $id)->first();
-        $newPassword = \Input::get('password');
+        $email = Input::get('email', '');
+        $username = Input::get('username',  "");
+        $newPassword = Input::get('password');
         if ($newPassword !== null || strlen($newPassword) != 0)
             $user->password = \Hash::make($newPassword);
-        $user->user_access_group_id = \Input::get('group');
+        $user->user_access_group_id = Input::get('group');
+        if(strlen($username) > 2)
+            $user->username = $username;
+        if(strlen($email) > 2)
+            $user->email = $email;
         $user->save();
         return Redirect::route('users_show', [$id])->with("message", "Successfully Saved");
     }
