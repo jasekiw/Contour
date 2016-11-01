@@ -25,6 +25,7 @@ export abstract class DialogBox extends UIElement
         });
         this.form = this.element.find("form");
         this.form.find('[type="submit"]').click((e) => this.submit(e));
+        this.form.submit((e) => this.submit(e));
         this.element.find('form .cancel').click((e) =>
         {
             e.preventDefault();

@@ -57,6 +57,8 @@ export abstract class GeneralDialogBox extends UIElement
                 this.$body.height() - this.element.height() - 50]
         });
         this.form = this.element.find("form");
+        this.form.submit(e => this.submit(e));
+        this.form.find('[name="name"]')
         this.form.find('[type="submit"]').click((e) => this.submit(e));
         this.element.find('form .cancel').click((e) =>
         {

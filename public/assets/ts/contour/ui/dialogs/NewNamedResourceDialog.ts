@@ -14,11 +14,19 @@ export class NewNamedResourceDialog extends GeneralDialogBox
             <label>Name</label>
             <input class="form-control" type="text" name="name" value="" />
         </div>`);
+
+        this.form.find('input[name="name"]').on("keydown",(event) => {
+            console.log("key up! keycode: " + event.keyCode);
+            if(event.keyCode == 13) // enter
+                this.form.submit();
+        });
+
     }
 
     public show(onSubmit : (name : string) => void, startingName? : string)
     {
         super._show(onSubmit, mouse.x, mouse.y);
+        this.form.find('input[name="name"]').focus();
         if(startingName != undefined)
             this.form.find("[name=name]").val(startingName);
         this.element.show();

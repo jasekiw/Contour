@@ -8,6 +8,7 @@ import {PlainTag} from "../../data/datatag/DataTag";
 import {PlainType} from "../../data/type/DataType";
 import {DialogBox} from "./Dialog";
 
+
 /**
  * The dialog used to create a new tag
  */
@@ -18,6 +19,11 @@ export class NewTagDialog extends DialogBox
     constructor()
     {
         super("Create", "Create", content, "/tags/create");
+        this.form.find('input[name="name"]').on("keydown",(event) => {
+            console.log("key up! keycode: " + event.keyCode);
+            if(event.keyCode == 13) // enter
+                this.form.submit();
+        });
     }
 
     /**
@@ -33,8 +39,11 @@ export class NewTagDialog extends DialogBox
     {
         this.sortNumber = sort_number;
         super._show(onSubmit, x, y);
+
         this.form.find('input[name="parent_id"]').val(parentId);
         this.form.find('input[name="name"]').val("");
+
+
         if (types == "all")
             this.populateTypes();
         else {
@@ -42,6 +51,7 @@ export class NewTagDialog extends DialogBox
             this.form.find('select[name="type"]').html(this.getTypeOption(types))
         }
         this.element.show();
+        this.form.find('input[name="name"]').focus();
     }
 
     /**
