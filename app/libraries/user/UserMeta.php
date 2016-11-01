@@ -11,6 +11,7 @@ namespace app\libraries\user;
 use App\Models\User_Meta;
 use Auth;
 use app\libraries\contour\Contour;
+use Config;
 
 /**
  * Class UserMeta
@@ -58,9 +59,11 @@ class UserMeta
     {
         if (\Input::hasFile($name)) {
             $filename = \Input::file($name)->getClientOriginalName();
-            \Input::file($name)->move(Contour::getConfigManager()->get('constants.uploads_folder'), $filename);
-            self::save($name, Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename);
-            return Contour::getConfigManager()->get('constants.uploads_url') . DIRECTORY_SEPARATOR . $filename;
+            $uploadsDir = base_path(Config::get('constants.uploads_folder'));
+            \Input::file($name)->move($uploadsDir, $filename);
+            $uploadsUrl = Config::get('constants.uploads_url');
+            self::save($name, $uploadsUrl . DIRECTORY_SEPARATOR . $filename);
+            return $uploadsUrl . DIRECTORY_SEPARATOR . $filename;
         }
         return '';
     }

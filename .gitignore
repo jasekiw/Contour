@@ -10,7 +10,8 @@ app/docs/
 app/phpDocumentor.phar
 app/docs.zip
 /public/xdebug-gui
-/public/uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
 /public/tracereader
 /phpunit.phar
 /public/assets/bower_components/

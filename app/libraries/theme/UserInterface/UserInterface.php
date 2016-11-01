@@ -39,7 +39,7 @@ class UserInterface
     {
         return '<div class="mini_dropzone_container"><div id="dropzone" class="' . $name . '">
                     <div>dropzone</div>
-                    <input type="file" accept="image/png, application/pdf" />
+                    <input type="file" accept="image/*" />
                 </div></div>';
     }
     

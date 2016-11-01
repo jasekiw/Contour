@@ -6,4 +6,7 @@
  * Time: 11:44 AM
  */
 
-return [];
+return [
+    'uploads_folder' => 'public/uploads',
+    'uploads_url' => '/uploads'
+];
