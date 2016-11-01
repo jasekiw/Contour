@@ -40,10 +40,10 @@ use app\libraries\theme\userInterface\UserInterface;
                             <i class="fa fa-circle green-font online-icon"></i><sup class="sr-only">online</sup>
                         </h2>
                         <div class="contact">
-                            <a href="#" class="btn btn-block btn-custom-primary"><i class="fa fa-envelope-o"></i> Send
-                                Message</a>
-                            <a href="#" class="btn btn-block btn-custom-secondary"><i class="fa fa-book"></i> Add To
-                                Contact</a>
+                            {{--<a href="#" class="btn btn-block btn-custom-primary"><i class="fa fa-envelope-o"></i> Send--}}
+                                {{--Message</a>--}}
+                            {{--<a href="#" class="btn btn-block btn-custom-secondary"><i class="fa fa-book"></i> Add To--}}
+                                {{--Contact</a>--}}
 
                         </div>
                     </div>
@@ -106,7 +106,24 @@ use app\libraries\theme\userInterface\UserInterface;
                     <li>
                         <i class="fa fa-pencil activity-icon pull-left"></i>
                         <p>
-                            <a href="#">{{ $user->username  }}</a> {{$historyItem->action}} {{$historyItem->subject}} from "{{$historyItem->oldValue}}" to "{{$historyItem->newValue}}"<span class="timestamp">{{$historyItem->time  }}</span>
+                            @if($historyItem->action == "created")
+                                <a href="#">{{ $user->username  }}</a>
+                                {{$historyItem->action}}
+                                a
+                                {{$historyItem->subject}}
+                                <span class="timestamp">{{$historyItem->time  }}</span>
+                            @else
+                                <a href="#">{{ $user->username  }}</a>
+                                {{$historyItem->action}}
+                                a
+                                {{$historyItem->subject}}
+                                from
+                                "{{$historyItem->oldValue}}"
+                                to
+                                "{{$historyItem->newValue}}"
+                                <span class="timestamp">{{$historyItem->time  }}</span>
+                            @endif
+
                         </p>
                     </li>
                 @endforeach

@@ -42,7 +42,7 @@ class ProfileController extends Controller
         $view->company = UserMeta::get('company');
         $view->about = UserMeta::get('about');
         $view->user = Auth::user();
-        $revisions = Revision::where('user_id', '=', $user->id)->get();
+        $revisions = Revision::where('user_id', '=', $user->id)->limit(50)->get();
         $history = [];
         foreach ($revisions as $revision) {
             $subject = $revision->revisionable_type;
@@ -53,6 +53,8 @@ class ProfileController extends Controller
                 $action = "renamed";
             else if ($revision->value == 'name')
                 $action = "edited";
+            if ($revision->key == 'created_at')
+                $action = "created";
             $historyItem = new \stdClass();
             $historyItem->subject = $subject;
             $historyItem->action = $action;
